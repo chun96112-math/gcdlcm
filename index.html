@@ -1,0 +1,2577 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PASSION-因倍數奇幻大冒險</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        pastel: {
+                            blue: '#E0F2FE',
+                            indigo: '#EEF2FF',
+                            purple: '#F3E8FF',
+                            pink: '#FCE7F3',
+                            green: '#DCFCE7',
+                            yellow: '#FEF9C3',
+                            orange: '#FFEDD5',
+                            card: '#FFFFFF'
+                        },
+                        brand: {
+                            primary: '#4F46E5',
+                            secondary: '#06B6D4',
+                            accent: '#F59E0B',
+                            success: '#10B981',
+                            danger: '#EF4444'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans TC', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts: Noto Sans TC -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- MathJax 3 Engine Configuration & Script -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background: linear-gradient(135deg, #e0f2fe 0%, #f3e8ff 50%, #fce7f3 100%);
+            min-height: 100vh;
+            font-size: 1.1rem; /* 提升基礎字型大小 */
+        }
+
+        /* 數學方程式全域字級加大 */
+        .MathJax {
+            font-size: 150% !important;
+        }
+        div.MathJax {
+            font-size: 150% !important;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Interactive cards hover animation */
+        .hover-card-pop {
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .hover-card-pop:hover {
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 12px 24px -10px rgba(79, 70, 229, 0.2);
+        }
+
+        /* Canvas Particle Layer */
+        #celebrationCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Short Division Table Custom Styles - 加大數字 */
+        .short-div-table {
+            border-collapse: collapse;
+            margin: 0 auto;
+            font-family: monospace;
+            font-weight: 700;
+        }
+        .short-div-table td {
+            padding: 8px 16px;
+            text-align: center;
+            font-size: 1.5rem; /* 字級加大 */
+        }
+        .short-div-divisor {
+            border-right: 3px solid #4F46E5;
+            color: #4F46E5;
+        }
+        .short-div-row-border {
+            border-bottom: 3px solid #4F46E5;
+        }
+        .l-highlight-left {
+            background-color: #EEF2FF;
+            border-radius: 8px 0 0 8px;
+        }
+        .l-highlight-bottom {
+            background-color: #ECFDF5;
+            border-radius: 0 0 8px 8px;
+        }
+
+        /* Animation keyframes */
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.9; }
+        }
+        .animate-pulse-glow {
+            animation: pulseGlow 2s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="text-slate-800 pb-12 text-base">
+
+    <!-- Celebration Canvas Layer for Flower Petal / Confetti Rain -->
+    <canvas id="celebrationCanvas"></canvas>
+
+    <!-- Top Navigation Header -->
+	<header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md shadow-md border-b border-indigo-100">
+		<div class="max-w-6xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-3">
+			<!-- App Title & Logo -->
+			<div class="flex items-center gap-3 cursor-pointer group" onclick="switchTab('tab-prereq')">
+				<div class="w-12 h-12 bg-gradient-to-tr from-indigo-500 to-purple-500 rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg shadow-indigo-300/50 group-hover:scale-105 transition-transform">
+					<i class="fa-solid fa-shapes"></i>
+				</div>
+				<div>
+					<h1 class="text-2xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600">
+						因倍數奇幻大冒險
+					</h1>
+					<!-- 調整：text-base (16px) -> text-lg (18px)，並將深色文字設為 text-slate-600 -->
+					<p class="text-lg text-slate-600 font-semibold">國小數學玩家的冒險基地</p>
+				</div>
+			</div>
+
+			<!-- Player Status Bar (Gamification) -->
+			<div class="flex items-center gap-2 md:gap-3 bg-slate-50 p-2.5 px-4 rounded-2xl border border-slate-200/80 shadow-inner w-full md:w-auto justify-between md:justify-end">
+				<!-- Level Badge & EXP -->
+				<div class="flex items-center gap-2.5">
+					<div id="playerBadgeIcon" class="w-10 h-10 rounded-full bg-amber-100 border-2 border-amber-400 text-amber-700 flex items-center justify-center text-lg font-black shadow-sm">
+						LV1
+					</div>
+					<div class="flex flex-col gap-1">
+						<span id="playerLevelTitle" class="text-base font-bold text-indigo-900 leading-none">LV1 數字冒險家</span>
+						<!-- EXP Progress Bar (高度增加至 h-3，加上邊框讓進度更顯眼) -->
+						<div class="w-28 bg-slate-200 h-3 rounded-full overflow-hidden border border-slate-300/60 p-0.5">
+							<div id="expBar" class="bg-gradient-to-r from-indigo-500 to-purple-500 h-full rounded-full transition-all duration-300" style="width: 25%"></div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Score Counter (放大數字與單位，提高成就感) -->
+				<div class="flex items-center gap-1.5 bg-white px-3.5 py-1.5 rounded-xl shadow-sm border border-slate-200">
+					<i class="fa-solid fa-star text-amber-400 text-xl"></i>
+					<span id="playerScore" class="font-black text-indigo-950 text-xl tracking-tight">0</span>
+					<span class="text-base font-bold text-slate-600">星</span>
+				</div>
+
+				<!-- Combo Counter (燃燒火苗效果與放大數字) -->
+				<div class="flex items-center gap-1.5 bg-amber-50 px-3.5 py-1.5 rounded-xl shadow-sm border border-amber-300">
+					<i class="fa-solid fa-fire text-orange-500 text-xl animate-bounce"></i>
+					<span id="playerCombo" class="font-black text-orange-600 text-xl tracking-tight">0</span>
+					<span class="text-base font-bold text-orange-600">連擊</span>
+				</div>
+			</div>
+		</div>
+
+		<!-- Navigation Tabs (字級調整與點擊區域最佳化) -->
+		<nav class="max-w-6xl mx-auto px-4 mt-1 flex space-x-2 overflow-x-auto no-scrollbar pb-2">
+			<button onclick="switchTab('tab-prereq')" id="btn-tab-prereq" class="tab-btn px-4 py-2.5 rounded-xl text-lg md:text-xl font-bold flex items-center gap-2 transition-all shrink-0 bg-indigo-600 text-white shadow-md">
+				<i class="fa-solid fa-book-open"></i> 1. 新手任務
+			</button>
+			<button onclick="switchTab('tab-concepts')" id="btn-tab-concepts" class="tab-btn px-4 py-2.5 rounded-xl text-lg md:text-xl font-bold flex items-center gap-2 transition-all shrink-0 bg-white text-slate-700 hover:bg-slate-100 border border-slate-200/60">
+				<i class="fa-solid fa-lightbulb text-amber-500"></i> 2. 技能解鎖
+			</button>
+			<button onclick="switchTab('tab-quiz')" id="btn-tab-quiz" class="tab-btn px-4 py-2.5 rounded-xl text-lg md:text-xl font-bold flex items-center gap-2 transition-all shrink-0 bg-white text-slate-700 hover:bg-slate-100 border border-slate-200/60">
+				<i class="fa-solid fa-gamepad text-indigo-500"></i> 3. 闖關挑戰
+			</button>
+			<button onclick="switchTab('tab-dashboard')" id="btn-tab-dashboard" class="tab-btn px-4 py-2.5 rounded-xl text-lg md:text-xl font-bold flex items-center gap-2 transition-all shrink-0 bg-white text-slate-700 hover:bg-slate-100 border border-slate-200/60">
+				<i class="fa-solid fa-trophy text-yellow-500"></i> 4. 我的戰績
+			</button>
+		</nav>
+	</header>
+
+	<!-- Main Content Body -->
+	<main class="max-w-6xl mx-auto px-4 mt-6">
+
+		<!-- ================= MODULE 1: 新手任務 ================= -->
+		<section id="tab-prereq" class="tab-content space-y-8">
+			<!-- Header Banner (大字級與顯眼標籤) -->
+			<div class="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 rounded-3xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden">
+				<div class="relative z-10 space-y-2">
+					<span class="inline-block px-4 py-1.5 bg-white/20 rounded-full text-lg font-bold backdrop-blur-md">出發前檢查</span>
+					<h2 class="text-3xl md:text-4xl font-extrabold tracking-wide">🔓 解鎖「整除」技能</h2>
+					<p class="text-blue-50 text-lg md:text-xl font-medium mt-2 leading-relaxed">
+						平均分一分，剛好一個也不剩，這就是「整除」！準備好了嗎？來試著分分看！
+					</p>
+				</div>
+				<i class="fa-solid fa-calculator absolute -right-6 -bottom-6 text-9xl text-white/10 transform -rotate-12"></i>
+			</div>
+
+			<!-- Concept Card：整除概念 -->
+			<div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border-2 border-slate-100 space-y-5">
+				<div class="flex items-center gap-3">
+					<div class="w-14 h-14 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-2xl shrink-0">
+						<i class="fa-solid fa-circle-info"></i>
+					</div>
+
+					<div>
+						<div class="text-sm font-bold text-blue-600 mb-1">🔓 技能解鎖</div>
+						<h3 class="text-2xl font-extrabold text-slate-800">1. 平均分，剛好分完</h3>
+					</div>
+				</div>
+
+				<p class="text-lg text-slate-700 leading-relaxed font-medium">
+					把 12 個糖果平均分給 3 個人，每個人拿到 4 個，<strong class="text-indigo-700">一個也沒有剩下！</strong>
+				</p>
+
+				<div class="bg-slate-50 p-5 rounded-2xl border border-slate-200/80 space-y-4">
+					<div class="text-lg font-bold text-indigo-900">👀 看看分完的結果：</div>
+					<div class="text-center py-4 text-2xl text-indigo-900 bg-white rounded-xl border border-slate-200 shadow-sm font-black">
+						<span class="text-purple-600">$12$</span>
+						$\div$
+						<span class="text-red-600">$3$</span>
+						$=$
+						<span class="text-red-600">$4$</span><span class="text-slate-600 text-xl ml-1">（餘數 $0$）</span>
+					</div>
+
+					<div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-center">
+						<span class="text-emerald-700 font-extrabold text-lg">🎉 剛好分完！</span>
+						<span class="text-emerald-800 font-medium mt-1">餘數是 $0$，所以可以「整除」。</span>
+					</div>
+
+					<div class="pt-1">
+						<div class="text-base md:text-lg text-slate-700 font-medium leading-relaxed">
+							👉 當一個數除以另一個數，<strong class="text-blue-600">餘數是 $0$</strong>，
+							我們就說它可以被<strong class="text-purple-600">整除</strong>。
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Interactive Section: 積木分分看 -->
+			<div class="bg-white rounded-3xl p-6 md:p-8 shadow-md border-2 border-indigo-100 space-y-6">
+				<!-- 標題 -->
+				<div class="flex items-center justify-between flex-wrap gap-4">
+					<div class="flex items-center gap-3.5">
+						<div class="w-14 h-14 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-2xl shrink-0">
+							<i class="fa-solid fa-cubes"></i>
+						</div>
+
+						<div>
+							<div class="text-sm font-bold text-amber-600 mb-1">🧩 動手玩一玩</div>
+							<h3 class="text-2xl font-extrabold text-slate-800">積木分分看！</h3>
+							<p class="text-base md:text-lg text-slate-600 font-medium">動手分一分，看看能不能剛好分完！</p>
+						</div>
+					</div>
+
+					<!-- Quick Try Presets -->
+					<div class="flex items-center gap-2 flex-wrap text-base font-bold">
+						<span class="text-slate-700">快速挑戰：</span>
+
+						<button
+							onclick="setCalcPreset(12, 3)"
+							class="px-3.5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-800 rounded-xl border border-indigo-200/80 transition-all text-base active:scale-95 cursor-pointer">
+							12 個 → 分成 3 組
+						</button>
+
+						<button
+							onclick="setCalcPreset(14, 4)"
+							class="px-3.5 py-2 bg-rose-50 hover:bg-rose-100 text-rose-800 rounded-xl border border-rose-200/80 transition-all text-base active:scale-95 cursor-pointer">
+							14 個 → 分成 4 組
+						</button>
+
+						<button
+							onclick="setCalcPreset(15, 5)"
+							class="px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-xl border border-emerald-200/80 transition-all text-base active:scale-95 cursor-pointer">
+							15 個 → 分成 5 組
+						</button>
+					</div>
+				</div>
+
+				<!-- 控制面板 -->
+				<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-slate-50 p-5 md:p-6 rounded-2xl items-end border border-slate-200/60">
+
+					<!-- 總數 -->
+					<div>
+						<label
+							for="calcDividend"
+							class="block text-base md:text-lg font-bold text-slate-800 mb-2">
+							🧱 一共有幾塊積木？<span class="text-slate-500 text-sm">（1～36）</span>
+						</label>
+
+						<input
+							type="number"
+							id="calcDividend"
+							value="12"
+							min="1"
+							max="36"
+							aria-label="積木總數"
+							class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl font-extrabold text-indigo-900 text-xl focus:outline-none focus:border-indigo-500 bg-white">
+					</div>
+
+					<!-- 分組數 -->
+					<div>
+						<label
+							for="calcDivisor"
+							class="block text-base md:text-lg font-bold text-slate-800 mb-2">
+							📦 要平均分成幾組？<span class="text-slate-500 text-sm">（1～12）</span>
+						</label>
+
+						<input
+							type="number"
+							id="calcDivisor"
+							value="3"
+							min="1"
+							max="12"
+							aria-label="分組數"
+							class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl font-extrabold text-indigo-900 text-xl focus:outline-none focus:border-indigo-500 bg-white">
+					</div>
+
+					<!-- 開始 -->
+					<button
+						onclick="calculateDivisibility()"
+						class="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-extrabold text-lg rounded-xl shadow-lg shadow-indigo-200 hover:opacity-95 active:scale-95 transition-all flex items-center justify-center gap-2.5 cursor-pointer">
+						<i class="fa-solid fa-play text-xl"></i>
+						開始分積木！
+					</button>
+				</div>
+
+				<!-- Visual Blocks Display -->
+				<div class="bg-indigo-50/40 p-6 rounded-2xl border-2 border-dashed border-indigo-200/80 space-y-4">
+					<div class="text-base md:text-lg font-bold text-indigo-950 flex items-center gap-2">
+						<i class="fa-solid fa-eye text-indigo-600 text-xl"></i>
+						看看你的分組結果
+					</div>
+
+					<div
+						id="blockVisualArea"
+						class="flex flex-wrap gap-4 justify-center items-start min-h-[100px] p-3">
+						<!-- Dynamic visual block groups injected by Javascript -->
+					</div>
+				</div>
+
+				<!-- Result & Explanation Box -->
+				<div
+					id="calcResultBox"
+					class="p-6 rounded-2xl bg-white border-2 border-slate-200 text-slate-800 min-h-[100px] shadow-sm flex flex-col justify-center text-lg">
+					<!-- Dynamic Javascript Content Populates Here -->
+				</div>
+			</div>
+
+			<!-- 底部過渡引導按鈕：引導前往第 2 頁 -->
+			<div class="pt-2 text-center">
+				<button onclick="switchTab('tab-concepts')" class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-extrabold text-lg md:text-xl rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all inline-flex items-center justify-center gap-3 cursor-pointer">
+					<span>學會整除了！前往「技能解鎖」</span>
+					<i class="fa-solid fa-arrow-right"></i>
+				</button>
+			</div>
+		</section>
+
+        <!-- ================= MODULE 2: 技能解鎖 ================= -->
+        <section id="tab-concepts" class="tab-content hidden space-y-6">
+            <!-- Header Banner -->
+            <div class="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-600 rounded-3xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden">
+                <div class="relative z-10">
+                    <span class="inline-block px-3.5 py-1 bg-white/20 rounded-full text-lg font-semibold backdrop-blur-md mb-2">觀念解密館</span>
+                    <h2 class="text-3xl md:text-4xl font-extrabold">⚔️ 因倍數特訓</h2>
+                    <p class="text-teal-50 text-lg md:text-xl mt-2 leading-relaxed">
+                        按照步驟修練，一步步掌握因數與倍數的核心技能！
+                    </p>
+                </div>
+                <i class="fa-solid fa-lightbulb absolute -right-6 -bottom-6 text-9xl text-white/10 transform rotate-12"></i>
+            </div>
+
+			<!-- 步驟進度條 / 頂部燈號導覽 (保留自由點擊切換) -->
+            <div class="bg-white rounded-2xl p-2 md:p-3 shadow-sm border border-slate-200">
+                <div class="grid grid-cols-3 gap-2">
+                    <button onclick="switchConceptSubTab('c-sub-factors')" id="btn-c-sub-factors" class="c-sub-btn py-3 px-2 rounded-xl text-center font-bold text-base md:text-lg transition-all bg-indigo-600 text-white shadow-md">
+                        <span class="block text-xs font-normal opacity-80">STEP 1</span>
+                        <span>找因數、找倍數</span>
+                    </button>
+                    <button onclick="switchConceptSubTab('c-sub-gcd')" id="btn-c-sub-gcd" class="c-sub-btn py-3 px-2 rounded-xl text-center font-bold text-base md:text-lg transition-all bg-slate-100 text-slate-600 hover:bg-slate-200">
+                        <span class="block text-xs font-normal opacity-60">STEP 2</span>
+                        <span>公因數 → 最大公因數</span>
+                    </button>
+                    <button onclick="switchConceptSubTab('c-sub-lcm')" id="btn-c-sub-lcm" class="c-sub-btn py-3 px-2 rounded-xl text-center font-bold text-base md:text-lg transition-all bg-slate-100 text-slate-600 hover:bg-slate-200">
+                        <span class="block text-xs font-normal opacity-60">STEP 3</span>
+                        <span>公倍數 → 最小公倍數</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Subtab 1: Factors Rainbow & Multiples Expansion -->
+            <div id="c-sub-factors" class="concept-sub-content space-y-6">
+
+                <!-- 從「整除」銜接至「因倍數」的引言過渡卡片 -->
+                <div class="bg-gradient-to-br from-purple-50 to-indigo-50/50 rounded-2xl p-5 md:p-6 border border-purple-100 shadow-sm space-y-3">
+                    <div class="flex items-center gap-2 text-purple-700 font-bold text-xl md:text-2xl">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        <h3>一個算式，找到因數和倍數</h3>
+                    </div>
+                    <p class="text-base md:text-lg text-slate-600 leading-relaxed">
+                        當我們寫出一個乘法算式，例如 <strong class="text-indigo-900">$3 \times 4 = 12$</strong>，裡面其實就藏著因數和倍數的關係喔！
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-center pt-1">
+                        <div class="bg-white p-3.5 rounded-xl border border-purple-200 text-slate-800 shadow-sm">
+                            <span class="text-red-600 font-bold">$3$</span> 和 <span class="text-red-600 font-bold">$4$</span> 是 <strong class="text-purple-700">$12$ 的因數</strong>
+                        </div>
+                        <div class="bg-white p-3.5 rounded-xl border border-purple-200 text-slate-800 shadow-sm">
+                            <span class="text-purple-600 font-bold">$12$</span> 是 <strong class="text-red-600">$3$ 和 $4$ 的倍數</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Rainbow Listing Card -->
+                    <div class="bg-white rounded-2xl p-6 md:p-7 shadow-sm border border-slate-100 space-y-4">
+                        <div class="flex items-center gap-2 text-indigo-600 font-bold text-2xl">
+                            <i class="fa-solid fa-rainbow"></i>
+                            <h3>彩虹配對法（尋找因數）</h3>
+                        </div>
+                        <p class="text-base md:text-lg text-slate-600 leading-relaxed">
+                            從 $1$ 開始，從小到大一頭一尾成對尋找！兩數相乘等於原數就連成一條彩虹拱橋。例如要找 $18$ 的所有因數：
+                        </p>
+                        <!-- Integrated Visual Rainbow Diagram for 18 -->
+                        <div class="bg-gradient-to-b from-indigo-50/50 to-amber-50/30 p-5 rounded-xl border border-indigo-100 space-y-4">
+                            <div class="text-lg font-bold text-indigo-900 text-center">$18$ 的彩虹拱橋連線圖解：</div>
+                            <div class="w-full overflow-x-auto flex justify-center">
+                                <svg viewBox="0 0 320 140" class="w-full max-w-sm">
+                                    <!-- Outer Arc (1 & 18) -->
+                                    <path d="M 30 100 A 130 75 0 0 1 290 100" fill="none" stroke="#EF4444" stroke-width="4" stroke-linecap="round" />
+                                    <!-- Middle Arc (2 & 9) -->
+                                    <path d="M 80 100 A 85 50 0 0 1 240 100" fill="none" stroke="#10B981" stroke-width="4" stroke-linecap="round" />
+                                    <!-- Inner Arc (3 & 6) -->
+                                    <path d="M 130 100 A 30 25 0 0 1 190 100" fill="none" stroke="#3B82F6" stroke-width="4" stroke-linecap="round" />
+
+                                    <!-- Factor Nodes -->
+                                    <!-- 1 -->
+                                    <circle cx="30" cy="100" r="15" fill="#EF4444" />
+                                    <text x="30" y="105" text-anchor="middle" fill="white" font-size="13" font-weight="bold">1</text>
+                                    <!-- 2 -->
+                                    <circle cx="80" cy="100" r="15" fill="#10B981" />
+                                    <text x="80" y="105" text-anchor="middle" fill="white" font-size="13" font-weight="bold">2</text>
+                                    <!-- 3 -->
+                                    <circle cx="130" cy="100" r="15" fill="#3B82F6" />
+                                    <text x="130" y="105" text-anchor="middle" fill="white" font-size="13" font-weight="bold">3</text>
+                                    <!-- 6 -->
+                                    <circle cx="190" cy="100" r="15" fill="#3B82F6" />
+                                    <text x="190" y="105" text-anchor="middle" fill="white" font-size="13" font-weight="bold">6</text>
+                                    <!-- 9 -->
+                                    <circle cx="240" cy="100" r="15" fill="#10B981" />
+                                    <text x="240" y="105" text-anchor="middle" fill="white" font-size="13" font-weight="bold">9</text>
+                                    <!-- 18 -->
+                                    <circle cx="290" cy="100" r="15" fill="#EF4444" />
+                                    <text x="290" y="105" text-anchor="middle" fill="white" font-size="12" font-weight="bold">18</text>
+                                </svg>
+                            </div>
+                            <div class="grid grid-cols-3 gap-2 text-center text-sm md:text-base font-bold">
+                                <div class="bg-red-100 text-red-700 py-1.5 rounded-lg">$1 × 18 = 18$</div>
+                                <div class="bg-emerald-100 text-emerald-700 py-1.5 rounded-lg">$2 × 9 = 18$</div>
+                                <div class="bg-blue-100 text-blue-700 py-1.5 rounded-lg">$3 × 6 = 18$</div>
+                            </div>
+                            <div class="pt-1 text-center text-indigo-900 font-extrabold text-base md:text-lg">
+                                $18$ 的所有因數：$1, 2, 3, 6, 9, 18$
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Multiples Expansion Card -->
+                    <div class="bg-white rounded-2xl p-6 md:p-7 shadow-sm border border-slate-100 space-y-4">
+                        <div class="flex items-center gap-2 text-teal-600 font-bold text-2xl">
+                            <i class="fa-solid fa-arrow-trend-up"></i>
+                            <h3>乘法擴大（尋找倍數）</h3>
+                        </div>
+                        <p class="text-base md:text-lg text-slate-600 leading-relaxed">
+                            將數字依序乘以 $1, 2, 3, 4, 5 \dots$ 就能得到這個數的倍數。<br>例如 $15$ 的倍數：
+                        </p>
+                        <div class="bg-teal-50/50 p-5 rounded-xl border border-teal-200 text-center space-y-3">
+                            <div class="text-base font-bold text-teal-900">前 5 個倍數計算：</div>
+                            <div class="text-sm sm:text-base text-slate-700 font-mono space-y-2">
+                                <div>$15 \times 1 = 15$ </div>
+                                <div>$15 \times 2 = 30$ </div>
+                                <div>$15 \times 3 = 45$ </div>
+                                <div>$15 \times 4 = 60$ </div>
+                                <div>$15 \times 5 = 75$ </div>
+                            </div>
+                            <div class="pt-2 text-teal-900 font-bold text-base">
+                                $15$ 的前 5 個倍數：$15, 30, 45, 60, 75$
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+				<!-- 第三段：獨立獨立「探索實驗室」卡片（產生器獨立區塊） -->
+				<div class="bg-gradient-to-br from-indigo-50 to-purple-50 p-6 md:p-8 rounded-3xl border-2 border-indigo-100 shadow-md">
+					<div class="flex items-center gap-3 mb-4">
+						<span class="p-3 bg-indigo-600 text-white rounded-2xl text-xl shadow-sm">
+							<i class="fa-solid fa-flask"></i>
+						</span>
+						<div>
+							<h3 class="text-2xl font-extrabold text-slate-800">彩虹因數探索實驗室</h3>
+							<p class="text-base md:text-lg text-slate-500">輸入任意數字，親手驗證彩虹拱橋配對！</p>
+						</div>
+					</div>
+
+					<!-- 產生器輸入區 -->
+					<div class="flex gap-3 mb-6">
+						<input type="number" id="rainbow-input" value="36" class="px-4 py-3 rounded-xl border border-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white font-bold text-xl w-32 text-center shadow-inner">
+						<button onclick="generateRainbow()" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white text-xl font-bold rounded-xl shadow-md transition-all cursor-pointer">
+							生成圖案
+						</button>
+					</div>
+
+					<!-- 畫布與算式展示區 -->
+					<div id="rainbow-display-area" class="bg-white p-6 rounded-2xl border border-indigo-100 shadow-sm relative">
+						<!-- SVG / 畫布畫在這裡 -->
+						<!-- 提示：針對數字重疊問題，可在文字標籤 Style 上加上 pointer-events-none 與適當的 translateY 偏移 -->
+					</div>
+				</div>
+
+                <!-- Step 1 底部引導按鈕 -->
+                <div class="pt-2 text-center">
+                    <button onclick="switchConceptSubTab('c-sub-gcd')" class="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold text-lg md:text-xl rounded-2xl shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-all inline-flex items-center justify-center gap-3">
+                        <span>我學會了！挑戰公因數</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Subtab 2: Common Factors & GCD -->
+            <div id="c-sub-gcd" class="concept-sub-content hidden space-y-6">
+                <div class="bg-white p-6 md:p-7 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+                    <!-- 標題與換數字按鈕 -->
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+                        <h3 class="text-2xl font-bold text-indigo-900 flex items-center gap-2">
+                            <i class="fa-solid fa-diagram-project"></i> 什麼是「公因數」與「最大公因數」？
+                        </h3>
+                        <button onclick="changeGcdNumbers()" class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 font-bold rounded-xl text-base transition-all active:scale-95 shadow-sm">
+                            <i class="fa-solid fa-rotate"></i> 換一組數字試試
+                        </button>
+                    </div>
+                    
+                    <p class="text-base md:text-lg text-slate-600 leading-relaxed">
+                        公因數，就是兩個數共同擁有的因數。其中最大的那一個，就叫做<b>「最大公因數」</b>。
+                    </p>
+
+                    <!-- 動態渲染區域 -->
+                    <div id="gcd-demo-area" class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                        <!-- JS 會自動填入內容 -->
+                    </div>
+                </div>
+
+                <!-- Step 2 底部引導按鈕 -->
+                <div class="pt-2 text-center">
+                    <button onclick="switchConceptSubTab('c-sub-lcm')" class="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold text-lg md:text-xl rounded-2xl shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-all inline-flex items-center justify-center gap-3">
+                        <span>繼續前進！挑戰公倍數</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Subtab 3: Common Multiples & LCM -->
+            <div id="c-sub-lcm" class="concept-sub-content hidden space-y-6">
+                <div class="bg-white p-6 md:p-7 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+                    <!-- 標題與換數字按鈕 -->
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+                        <h3 class="text-2xl font-bold text-teal-900 flex items-center gap-2">
+                            <i class="fa-solid fa-layer-group"></i> 什麼是「公倍數」與「最小公倍數」？
+                        </h3>
+                        <button onclick="changeLcmNumbers()" class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-teal-50 hover:bg-teal-100 text-teal-600 font-bold rounded-xl text-base transition-all active:scale-95 shadow-sm">
+                            <i class="fa-solid fa-rotate"></i> 換一組數字試試
+                        </button>
+                    </div>
+                    
+                    <p class="text-base md:text-lg text-slate-600 leading-relaxed">
+                        公倍數，就是兩個數共同擁有的倍數。其中最小的那一個，就是<b>「最小公倍數」</b>。
+                    </p>
+
+                    <!-- 動態渲染區域 -->
+                    <div id="lcm-demo-area" class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                        <!-- JS 會自動填入內容 -->
+                    </div>
+                </div>
+
+                <!-- Step 3 底部引導按鈕 (跳轉至第 3 頁闖關測試) -->
+                <div class="pt-2 text-center">
+                    <button onclick="switchTab('tab-quiz')" class="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold text-lg md:text-xl rounded-2xl shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-all inline-flex items-center justify-center gap-3">
+                        <span>特訓完成！開始闖關測驗</span>
+                        <i class="fa-solid fa-trophy"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+		<!-- ================= MODULE 3: 闖關挑戰 ================= -->
+		<section id="tab-quiz" class="tab-content hidden space-y-6">
+		<!-- Header Banner -->
+		<div class="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 rounded-3xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden">
+			<div class="relative z-10">
+				<span class="inline-block px-3.5 py-1 bg-white/20 rounded-full text-sm font-semibold backdrop-blur-md mb-2">極限挑戰館</span>
+				<h2 class="text-3xl md:text-4xl font-extrabold">因倍數大冒險：關卡挑戰</h2>
+				<p class="text-amber-50 text-base md:text-lg mt-2 leading-relaxed opacity-95">
+					選擇關卡開始挑戰！連續答對賺取高分與經驗值，觸發精彩連擊 Bonus 與落花慶賀！
+				</p>
+			</div>
+			<i class="fa-solid fa-gamepad absolute -right-6 -bottom-6 text-9xl text-white/10 transform -rotate-12 pointer-events-none"></i>
+		</div>
+
+		<!-- Stage Selector Cards Screen (優化版 2x2 雙排大卡片，相容原本 JS 邏輯) -->
+		<div id="quizStageSelectScreen" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+			
+			<!-- Stage 1 Card -->
+			<div onclick="startQuizStage(1)" class="bg-white rounded-3xl p-6 border-2 border-indigo-100 hover:border-indigo-500 hover:shadow-xl transition-all cursor-pointer flex flex-col justify-between group relative overflow-hidden">
+				<div class="space-y-3">
+					<div class="flex items-start justify-between">
+						<div class="flex items-center gap-3">
+							<div class="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-extrabold text-xl shadow-md group-hover:scale-105 transition-transform">
+								1
+							</div>
+							<div>
+								<h3 class="font-extrabold text-slate-800 group-hover:text-indigo-600 transition-colors text-2xl">關卡 1：因倍數</h3>
+								<span class="text-sm font-bold text-amber-500 inline-flex items-center gap-1 mt-0.5">
+									<i class="fa-solid fa-star"></i> 最高紀錄：<span id="score-stage-1">未挑戰</span>
+								</span>
+							</div>
+						</div>
+						<span class="px-3 py-1 bg-indigo-50 text-indigo-600 text-sm font-extrabold rounded-full">基礎篇</span>
+					</div>
+					<p class="text-lg text-slate-500 leading-relaxed">測驗對單一數字的因數與倍數認知，建立基本算力！</p>
+				</div>
+				<button class="w-full mt-6 py-3.5 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-extrabold rounded-2xl text-xl shadow-md transition-all flex items-center justify-center gap-2">
+					<i class="fa-solid fa-play text-xl"></i> 開始關卡
+				</button>
+			</div>
+
+			<!-- Stage 2 Card -->
+			<div onclick="startQuizStage(2)" class="bg-white rounded-3xl p-6 border-2 border-purple-100 hover:border-purple-500 hover:shadow-xl transition-all cursor-pointer flex flex-col justify-between group relative overflow-hidden">
+				<div class="space-y-3">
+					<div class="flex items-start justify-between">
+						<div class="flex items-center gap-3">
+							<div class="w-12 h-12 rounded-2xl bg-purple-600 text-white flex items-center justify-center font-extrabold text-xl shadow-md group-hover:scale-105 transition-transform">
+								2
+							</div>
+							<div>
+								<h3 class="font-extrabold text-slate-800 group-hover:text-purple-600 transition-colors text-2xl">關卡 2：公因數與最大公因數</h3>
+								<span class="text-sm font-bold text-amber-500 inline-flex items-center gap-1 mt-0.5">
+									<i class="fa-solid fa-star"></i> 最高紀錄：<span id="score-stage-2">未挑戰</span>
+								</span>
+							</div>
+						</div>
+						<span class="px-3 py-1 bg-purple-50 text-purple-600 text-sm font-extrabold rounded-full">進階篇</span>
+					</div>
+					<p class="text-lg text-slate-500 leading-relaxed">計算兩數的公因數與最大公因數，掌握列舉與短除法技巧。</p>
+				</div>
+				<button class="w-full mt-6 py-3.5 bg-purple-600 hover:bg-purple-700 active:scale-95 text-white font-extrabold rounded-2xl text-xl shadow-md transition-all flex items-center justify-center gap-2">
+					<i class="fa-solid fa-play text-xl"></i> 開始關卡
+				</button>
+			</div>
+
+			<!-- Stage 3 Card -->
+			<div onclick="startQuizStage(3)" class="bg-white rounded-3xl p-6 border-2 border-teal-100 hover:border-teal-500 hover:shadow-xl transition-all cursor-pointer flex flex-col justify-between group relative overflow-hidden">
+				<div class="space-y-3">
+					<div class="flex items-start justify-between">
+						<div class="flex items-center gap-3">
+							<div class="w-12 h-12 rounded-2xl bg-teal-600 text-white flex items-center justify-center font-extrabold text-xl shadow-md group-hover:scale-105 transition-transform">
+								3
+							</div>
+							<div>
+								<h3 class="font-extrabold text-slate-800 group-hover:text-teal-600 transition-colors text-2xl">關卡 3：公倍數與最小公倍數</h3>
+								<span class="text-sm font-bold text-amber-500 inline-flex items-center gap-1 mt-0.5">
+									<i class="fa-solid fa-star"></i> 最高紀錄：<span id="score-stage-3">未挑戰</span>
+								</span>
+							</div>
+						</div>
+						<span class="px-3 py-1 bg-teal-50 text-teal-600 text-sm font-extrabold rounded-full">進階篇</span>
+					</div>
+					<p class="text-lg text-slate-500 leading-relaxed">尋找兩數的公倍數與最小公倍數，靈活運用觀念！</p>
+				</div>
+				<button class="w-full mt-6 py-3.5 bg-teal-600 hover:bg-teal-700 active:scale-95 text-white font-extrabold rounded-2xl text-xl shadow-md transition-all flex items-center justify-center gap-2">
+					<i class="fa-solid fa-play text-xl"></i> 開始關卡
+				</button>
+			</div>
+
+			<!-- Stage 4 Card -->
+			<div onclick="startQuizStage(4)" class="bg-white rounded-3xl p-6 border-2 border-amber-100 hover:border-amber-500 hover:shadow-xl transition-all cursor-pointer flex flex-col justify-between group relative overflow-hidden">
+				<div class="space-y-3">
+					<div class="flex items-start justify-between">
+						<div class="flex items-center gap-3">
+							<div class="w-12 h-12 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 text-white flex items-center justify-center font-extrabold text-xl shadow-md group-hover:scale-105 transition-transform">
+								4
+							</div>
+							<div>
+								<h3 class="font-extrabold text-slate-800 group-hover:text-amber-500 transition-colors text-2xl">關卡 4：生活應用大挑戰</h3>
+								<span class="text-sm font-bold text-amber-500 inline-flex items-center gap-1 mt-0.5">
+									<i class="fa-solid fa-crown"></i> 最高紀錄：<span id="score-stage-4">未挑戰</span>
+								</span>
+							</div>
+						</div>
+						<span class="px-3 py-1 bg-amber-50 text-amber-600 text-sm font-extrabold rounded-full">素養挑戰</span>
+					</div>
+					<p class="text-lg text-slate-500 leading-relaxed">解決日常生活中常見的因倍數素養問題，挑戰大滿貫！</p>
+				</div>
+				<button class="w-full mt-6 py-3.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 active:scale-95 text-white font-extrabold rounded-2xl text-xl shadow-md transition-all flex items-center justify-center gap-2">
+					<i class="fa-solid fa-fire text-xl"></i> 挑戰終極關卡
+				</button>
+			</div>
+
+		</div>
+
+				<!-- Active Quiz Screen (維持原樣，不影響測驗功能) -->
+				<div id="activeQuizArea" class="hidden bg-white rounded-3xl p-6 md:p-8 shadow-xl border border-indigo-100 space-y-6">
+					<!-- Top Status Bar in Quiz -->
+					<div class="flex justify-between items-center border-b border-slate-100 pb-4">
+						<div class="flex items-center gap-2">
+							<span id="currentStageBadge" class="px-3.5 py-1 bg-indigo-100 text-indigo-700 font-extrabold text-sm rounded-full">
+								關卡 1
+							</span>
+							<span class="text-xs text-slate-400 font-semibold">隨機出題中</span>
+						</div>
+						<button onclick="exitQuizToStageSelect()" class="text-slate-400 hover:text-slate-600 text-sm font-bold flex items-center gap-1 cursor-pointer">
+							<i class="fa-solid fa-xmark"></i> 離開關卡
+						</button>
+					</div>
+
+					<!-- Question Prompt Container -->
+					<div class="space-y-4">
+						<div class="text-sm font-bold text-indigo-600 uppercase tracking-wider">題目：</div>
+						<div id="quizQuestionContainer" class="text-xl md:text-2xl font-bold text-slate-800 bg-slate-50 p-6 rounded-2xl border border-slate-200/80 min-h-[100px] leading-relaxed block">
+							<!-- Dynamic Question injected here -->
+						</div>
+					</div>
+
+					<!-- Answer Input or Options Area -->
+					<div id="quizAnswerArea" class="space-y-4">
+						<!-- Dynamic JavaScript choices or numerical inputs -->
+					</div>
+
+					<!-- Action Button -->
+					<div id="quizActionContainer" class="pt-2">
+						<button id="btnSubmitAnswer" onclick="submitCurrentAnswer()" class="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-extrabold rounded-2xl shadow-lg hover:shadow-indigo-300 hover:opacity-95 active:scale-98 transition-all text-lg cursor-pointer">
+							提交答案
+						</button>
+					</div>
+
+					<!-- Explanation Feedback Overlay / Modal Inline -->
+					<div id="quizFeedbackBox" class="hidden p-6 rounded-2xl space-y-4 border transition-all">
+						<!-- Feedback content dynamically updated -->
+					</div>
+				</div>
+			</section>
+
+		<!-- ================= MODULE 4: 英雄榜 (大字清晰版) ================= -->
+		<section id="tab-dashboard" class="tab-content hidden space-y-6">
+			<!-- Banner 標頭 -->
+			<div class="bg-gradient-to-r from-yellow-500 via-amber-500 to-orange-500 rounded-3xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden">
+				<div class="relative z-10">
+					<span class="inline-block px-4 py-1.5 bg-white/20 rounded-full text-base font-bold backdrop-blur-md mb-2">英雄殿堂</span>
+					<h2 class="text-3xl md:text-4xl font-black">玩家戰績與榮譽勳章</h2>
+					<p class="text-amber-50 text-base md:text-xl mt-2 leading-relaxed opacity-95 font-medium">
+						檢視你的冒險戰績、累積經驗值與積分，解鎖屬於你的專屬玩家榮譽勳章！
+					</p>
+				</div>
+				<i class="fa-solid fa-trophy absolute -right-6 -bottom-6 text-9xl text-white/10 transform rotate-12 pointer-events-none"></i>
+			</div>
+
+			<!-- 玩家專屬英雄頭像與 EXP 進度卡 -->
+			<div class="bg-white p-6 md:p-7 rounded-3xl border border-slate-200 shadow-sm flex flex-col md:flex-row items-center gap-6">
+				<div id="playerLevelBadge" class="w-22 h-22 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center font-black text-3xl shadow-lg shrink-0 px-4 py-3">
+					LV1
+				</div>
+				<div class="flex-1 w-full space-y-3">
+					<div class="flex justify-between items-center">
+						<div>
+							<h3 id="playerTitleName" class="text-2xl font-black text-slate-800">數字冒險家</h3>
+							<p class="text-sm font-bold text-slate-600 mt-1">繼續答對題目來提升等級吧！</p>
+						</div>
+						<span id="playerExpText" class="text-base font-black text-indigo-700 bg-indigo-100 px-4 py-1.5 rounded-full">0 / 100 EXP</span>
+					</div>
+					<!-- EXP 進度條 -->
+					<div class="w-full bg-slate-100 h-4 rounded-full overflow-hidden shadow-inner border border-slate-200">
+						<div id="playerExpBar" class="bg-gradient-to-r from-indigo-500 to-purple-500 h-full w-0 transition-all duration-500 rounded-full"></div>
+					</div>
+				</div>
+			</div>
+
+			<!-- 數據四大天王 (文字與數據全面放大) -->
+			<div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+				<div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center gap-4">
+					<div class="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-2xl shrink-0">
+						<i class="fa-solid fa-circle-check"></i>
+					</div>
+					<div>
+						<div class="text-sm font-bold text-slate-600">總答對題數</div>
+						<div id="statTotalCorrect" class="text-3xl md:text-4xl font-black text-slate-800 mt-0.5">0</div>
+					</div>
+				</div>
+
+				<div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center gap-4">
+					<div class="w-14 h-14 rounded-2xl bg-orange-50 text-orange-500 flex items-center justify-center text-2xl shrink-0">
+						<i class="fa-solid fa-fire-flame-curved"></i>
+					</div>
+					<div>
+						<div class="text-sm font-bold text-slate-600">最高連擊數</div>
+						<div id="statMaxCombo" class="text-3xl md:text-4xl font-black text-orange-500 mt-0.5">0</div>
+					</div>
+				</div>
+
+				<div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center gap-4">
+					<div class="w-14 h-14 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center text-2xl shrink-0">
+						<i class="fa-solid fa-crown"></i>
+					</div>
+					<div>
+						<div class="text-sm font-bold text-slate-600">目前玩家等級</div>
+						<div id="statPlayerLevel" class="text-3xl md:text-4xl font-black text-purple-600 mt-0.5">LV1</div>
+					</div>
+				</div>
+
+				<div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center gap-4">
+					<div class="w-14 h-14 rounded-2xl bg-amber-50 text-amber-500 flex items-center justify-center text-2xl shrink-0">
+						<i class="fa-solid fa-award"></i>
+					</div>
+					<div>
+						<div class="text-sm font-bold text-slate-600">解鎖勳章</div>
+						<div id="statBadgesCount" class="text-3xl md:text-4xl font-black text-amber-500 mt-0.5">0 / 5</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- 成就勳章牆 -->
+			<div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
+				<div class="flex items-center justify-between border-b border-slate-100 pb-4">
+					<h3 class="text-2xl font-black text-slate-800 flex items-center gap-2">
+						<i class="fa-solid fa-award text-amber-500 text-3xl"></i> 成就勳章牆
+					</h3>
+					<span class="text-sm font-bold text-slate-500">達成指定條件自動解鎖</span>
+				</div>
+
+				<div id="badgesContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+					<!-- Badge 1 -->
+					<div id="badge-card-1" class="p-5 rounded-2xl border-2 border-slate-200 bg-slate-50 flex items-center gap-4 transition-all">
+						<div id="badge-icon-box-1" class="w-14 h-14 rounded-2xl bg-slate-200 text-slate-400 flex items-center justify-center text-3xl shrink-0">
+							<i class="fa-solid fa-seedling"></i>
+						</div>
+						<div class="flex-1">
+							<div class="font-black text-lg text-slate-700 flex items-center justify-between">
+								因數新手
+								<i id="badge-lock-1" class="fa-solid fa-lock text-sm text-slate-400"></i>
+							</div>
+							<div class="text-sm font-semibold text-slate-500 mt-1">答對第 1 道題目即可解鎖</div>
+						</div>
+					</div>
+
+					<!-- Badge 2 -->
+					<div id="badge-card-2" class="p-5 rounded-2xl border-2 border-slate-200 bg-slate-50 flex items-center gap-4 transition-all">
+						<div id="badge-icon-box-2" class="w-14 h-14 rounded-2xl bg-slate-200 text-slate-400 flex items-center justify-center text-3xl shrink-0">
+							<i class="fa-solid fa-fire"></i>
+						</div>
+						<div class="flex-1">
+							<div class="font-black text-lg text-slate-700 flex items-center justify-between">
+								連擊之星
+								<i id="badge-lock-2" class="fa-solid fa-lock text-sm text-slate-400"></i>
+							</div>
+							<div class="text-sm font-semibold text-slate-500 mt-1">達成 3 連擊以上即可解鎖</div>
+						</div>
+					</div>
+
+					<!-- Badge 3 -->
+					<div id="badge-card-3" class="p-5 rounded-2xl border-2 border-slate-200 bg-slate-50 flex items-center gap-4 transition-all">
+						<div id="badge-icon-box-3" class="w-14 h-14 rounded-2xl bg-slate-200 text-slate-400 flex items-center justify-center text-3xl shrink-0">
+							<i class="fa-solid fa-bolt"></i>
+						</div>
+						<div class="flex-1">
+							<div class="font-black text-lg text-slate-700 flex items-center justify-between">
+								短除法大師
+								<i id="badge-lock-3" class="fa-solid fa-lock text-sm text-slate-400"></i>
+							</div>
+							<div class="text-sm font-semibold text-slate-500 mt-1">在關卡 2 或 3 答對 5 題</div>
+						</div>
+					</div>
+
+					<!-- Badge 4 -->
+					<div id="badge-card-4" class="p-5 rounded-2xl border-2 border-slate-200 bg-slate-50 flex items-center gap-4 transition-all">
+						<div id="badge-icon-box-4" class="w-14 h-14 rounded-2xl bg-slate-200 text-slate-400 flex items-center justify-center text-3xl shrink-0">
+							<i class="fa-solid fa-graduation-cap"></i>
+						</div>
+						<div class="flex-1">
+							<div class="font-black text-lg text-slate-700 flex items-center justify-between">
+								進階冒險家
+								<i id="badge-lock-4" class="fa-solid fa-lock text-sm text-slate-400"></i>
+							</div>
+							<div class="text-sm font-semibold text-slate-500 mt-1">等級達到 LV5 以上</div>
+						</div>
+					</div>
+
+					<!-- Badge 5 -->
+					<div id="badge-card-5" class="p-5 rounded-2xl border-2 border-slate-200 bg-slate-50 flex items-center gap-4 transition-all">
+						<div id="badge-icon-box-5" class="w-14 h-14 rounded-2xl bg-slate-200 text-slate-400 flex items-center justify-center text-3xl shrink-0">
+							<i class="fa-solid fa-gem"></i>
+						</div>
+						<div class="flex-1">
+							<div class="font-black text-lg text-slate-700 flex items-center justify-between">
+								無失誤王者
+								<i id="badge-lock-5" class="fa-solid fa-lock text-sm text-slate-400"></i>
+							</div>
+							<div class="text-sm font-semibold text-slate-500 mt-1">達成 8 連擊霸業</div>
+						</div>
+					</div>
+
+					<!-- Badge 6 (新補充：完美填滿排版與 LV10 終極大獎) -->
+					<div id="badge-card-6" class="p-5 rounded-2xl border-2 border-slate-200 bg-slate-50 flex items-center gap-4 transition-all">
+						<div id="badge-icon-box-6" class="w-14 h-14 rounded-2xl bg-slate-200 text-slate-400 flex items-center justify-center text-3xl shrink-0">
+							<i class="fa-solid fa-crown"></i>
+						</div>
+						<div class="flex-1">
+							<div class="font-black text-lg text-slate-700 flex items-center justify-between">
+								至尊掌門人
+								<i id="badge-lock-6" class="fa-solid fa-lock text-sm text-slate-400"></i>
+							</div>
+							<div class="text-sm font-semibold text-slate-500 mt-1">達成 LV10 頂峰榮譽</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+    </main>
+
+    <!-- Fullscreen Celebration Modal for Level Up -->
+    <div id="levelUpModal" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl p-8 max-w-sm w-full text-center space-y-6 shadow-2xl transform transition-all border-4 border-amber-300 animate-bounce-short">
+            <div class="w-20 h-20 mx-auto rounded-full bg-gradient-to-tr from-amber-400 to-yellow-300 text-white flex items-center justify-center text-4xl shadow-lg shadow-amber-300/50">
+                <i class="fa-solid fa-ranking-star"></i>
+            </div>
+            <div>
+                <span class="text-xs font-bold text-amber-600 uppercase tracking-widest">LEVEL UP! 升級慶賀</span>
+                <h3 id="modalLevelTitle" class="text-2xl font-black text-slate-800 mt-1">恭喜晉升 LV2 因數獵人！</h3>
+                <p class="text-sm text-slate-500 mt-2">你對因數與倍數的概念越來越熟練囉！繼續保持！🎉</p>
+            </div>
+            <button onclick="closeLevelUpModal()" class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-extrabold rounded-2xl shadow-md hover:opacity-90 text-base">
+                領取獎勵並繼續
+            </button>
+        </div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        /* ==========================================================================
+           1. GAME STATE & LOCAL DATA
+           ========================================================================== */
+        const gameState = {
+            score: 0,
+            combo: 0,
+            maxCombo: 0,
+            level: 1,
+            exp: 0,
+            totalCorrect: 0,
+            gcdLcmCorrectCount: 0,
+            unlockedBadges: new Set(),
+            currentStage: 1,
+            currentQuestion: null,
+            selectedOptionIndex: null
+        };
+
+		const LEVEL_TITLES = [
+			"LV1 數字初心者",
+			"LV2 因數小學徒",
+			"LV3 倍數小達人",
+			"LV4 短除法專家",
+			"LV5 質數解密手",
+			"LV6 解題大高手",
+			"LV7 思考特攻隊",
+			"LV8 數感大專家",
+			"LV9 邏輯大魔王",
+			"LV10 數學至尊王"
+		];
+        const PRAISE_MESSAGES = [
+            "太強了！完全精準命中！ 🎉",
+            "這題秒殺！實力太狂了！ 🌟",
+            "思路超清晰，輕鬆破關！ 🚀",
+            "操作太神了，完美答對！ 💡",
+            "讚啦！這波思考超流暢！ 🔥"
+        ];
+
+        const ENCOURAGE_MESSAGES = [
+            "沒關係，調整好狀態再挑戰！ 💪",
+            "差一點點就破解！再來一次！ 🎯",
+            "沒事沒事，看一下提示就能通關！ ✨",
+            "這題有點燒腦，重新思考一定行！ 🔥"
+        ];
+
+        /* ==========================================================================
+           2. MATHJAX DYNAMIC RENDERER HELPER
+           ========================================================================== */
+        async function triggerMathJax(targetElement = null) {
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                try {
+                    await window.MathJax.typesetPromise(targetElement ? [targetElement] : undefined);
+                } catch (err) {
+                    console.error("MathJax typesetting error:", err);
+                }
+            }
+        }
+
+        /* ==========================================================================
+           3. WEB AUDIO API SYNTHESIZER
+           ========================================================================== */
+        let audioCtx = null;
+
+        function getAudioContext() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContext();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        function playCorrectSound() {
+            try {
+                const ctx = getAudioContext();
+                const now = ctx.currentTime;
+                
+                const osc1 = ctx.createOscillator();
+                const osc2 = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc1.type = 'triangle';
+                osc2.type = 'sine';
+
+                osc1.frequency.setValueAtTime(523.25, now);
+                osc1.frequency.setValueAtTime(659.25, now + 0.1);
+                osc1.frequency.setValueAtTime(783.99, now + 0.2);
+                osc1.frequency.setValueAtTime(1046.50, now + 0.3);
+
+                osc2.frequency.setValueAtTime(261.63, now);
+
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+
+                osc1.connect(gain);
+                osc2.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc1.start(now);
+                osc2.start(now);
+                osc1.stop(now + 0.6);
+                osc2.stop(now + 0.6);
+            } catch (e) {
+                console.warn("Audio Context play blocked or error", e);
+            }
+        }
+
+        function playWrongSound() {
+            try {
+                const ctx = getAudioContext();
+                const now = ctx.currentTime;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(220, now);
+                osc.frequency.setValueAtTime(196, now + 0.15);
+
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.start(now);
+                osc.stop(now + 0.4);
+            } catch (e) {
+                console.warn("Audio Context play blocked", e);
+            }
+        }
+
+        function playLevelUpSound() {
+            try {
+                const ctx = getAudioContext();
+                const now = ctx.currentTime;
+                const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+                
+                notes.forEach((freq, idx) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, now + idx * 0.1);
+                    gain.gain.setValueAtTime(0.2, now + idx * 0.1);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.1 + 0.4);
+                    
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now + idx * 0.1);
+                    osc.stop(now + idx * 0.1 + 0.4);
+                });
+            } catch (e) {
+                console.warn("Audio Context play error", e);
+            }
+        }
+
+        /* ==========================================================================
+           4. CANVAS FLOWER PETAL / CONFETTI RAIN ANIMATION SYSTEM
+           ========================================================================== */
+        const canvas = document.getElementById('celebrationCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let animationFrameId = null;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class PetalParticle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = -20 - Math.random() * 50;
+                this.size = Math.random() * 10 + 6;
+                this.speedY = Math.random() * 2 + 1.5;
+                this.speedX = Math.random() * 2 - 1;
+                this.angle = Math.random() * Math.PI * 2;
+                this.spin = Math.random() * 0.05 - 0.025;
+                const colors = ['#F472B6', '#FB7185', '#FBBF24', '#38BDF8', '#A78BFA', '#34D399'];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += Math.sin(this.y * 0.02) + this.speedX;
+                this.angle += this.spin;
+
+                if (this.y > canvas.height + 20) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle);
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.ellipse(0, 0, this.size, this.size / 2, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function triggerPetalRain(durationMs = 2500) {
+            particles = Array.from({ length: 60 }, () => new PetalParticle());
+            const startTime = Date.now();
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+
+                if (Date.now() - startTime < durationMs) {
+                    animationFrameId = requestAnimationFrame(animate);
+                } else {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    particles = [];
+                }
+            }
+
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+            animate();
+        }
+
+        /* ==========================================================================
+           5. TAB & UI NAVIGATION
+           ========================================================================== */
+	function switchTab(tabId) {
+		const targetTabId = tabId.startsWith('tab-') ? tabId : `tab-${tabId}`;
+		// 隱藏所有主分頁
+		document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+		
+		// 重置頂部選單按鈕
+		document.querySelectorAll('.tab-btn').forEach(btn => {
+			btn.classList.remove('bg-indigo-600', 'text-white', 'shadow-md');
+			btn.classList.add('bg-white', 'text-slate-600');
+		});
+
+		// 顯示目標分頁
+		const activeTab = document.getElementById(targetTabId);
+		if (activeTab) {
+			activeTab.classList.remove('hidden');
+		}
+		
+		// 高亮頂部頁籤按鈕
+		const activeBtn = document.getElementById(`btn-${targetTabId}`) || document.getElementById(`btn-${tabId.replace('tab-', '')}`);
+		if (activeBtn) {
+			activeBtn.classList.remove('bg-white', 'text-slate-600');
+			activeBtn.classList.add('bg-indigo-600', 'text-white', 'shadow-md');
+		}
+		
+		// 若切換到「技能解鎖」，自動預設回到 STEP 1
+		if (targetTabId === 'tab-concepts') {
+			switchConceptSubTab('c-sub-factors');
+		}
+		
+		// 觸發 MathJax
+		if (typeof triggerMathJax === 'function') {
+			triggerMathJax(activeTab);
+		}
+
+		// 強制置頂：同時支援 window 與 documentElement/body
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+		document.documentElement.scrollTop = 0;
+		document.body.scrollTop = 0;
+	}
+		
+	function switchConceptSubTab(subTabId) {
+		// 1. 隱藏所有技能解鎖的子分頁
+		document.querySelectorAll('.concept-sub-content').forEach(el => {
+			el.classList.add('hidden');
+		});
+
+		// 2. 重置 STEP 1-3 所有按鈕樣式為「未選取（灰底黑字）」
+		document.querySelectorAll('.c-sub-btn').forEach(btn => {
+			btn.className = 'c-sub-btn py-3 px-2 rounded-xl text-center font-bold text-base md:text-lg transition-all bg-slate-100 text-slate-700 hover:bg-slate-200 cursor-pointer';
+			const stepSpan = btn.querySelector('span');
+			if (stepSpan) {
+				stepSpan.className = 'block text-xs font-normal text-slate-500';
+			}
+		});
+
+		// 3. 顯示選取的目標子分頁
+		const targetSubTab = document.getElementById(subTabId);
+		if (targetSubTab) {
+			targetSubTab.classList.remove('hidden');
+		}
+
+		// 4. 高亮當前選取的 STEP 按鈕（紫藍底白字）
+		const activeBtn = document.getElementById(`btn-${subTabId}`);
+		if (activeBtn) {
+			activeBtn.className = 'c-sub-btn py-3 px-2 rounded-xl text-center font-bold text-base md:text-lg transition-all bg-indigo-600 text-white shadow-md cursor-pointer';
+			const stepSpan = activeBtn.querySelector('span');
+			if (stepSpan) {
+				stepSpan.className = 'block text-xs font-normal opacity-90 text-white';
+			}
+    }
+
+    // 5. 子頁籤切換時自動置頂
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+        /* ==========================================================================
+           6. MODULE 1: ENHANCED VISUAL ARRAY CALCULATOR
+           ========================================================================== */
+        function setCalcPreset(dividend, divisor) {
+            document.getElementById('calcDividend').value = dividend;
+            document.getElementById('calcDivisor').value = divisor;
+            calculateDivisibility();
+        }
+
+
+		function calculateDivisibility() {
+
+			let a = parseInt(document.getElementById('calcDividend').value) || 0;
+			let b = parseInt(document.getElementById('calcDivisor').value) || 0;
+
+			// ========================================
+			// 限制輸入範圍
+			// ========================================
+
+			if (a > 36) a = 36;
+			if (b > 12) b = 12;
+
+			document.getElementById('calcDividend').value = a;
+			document.getElementById('calcDivisor').value = b;
+
+			const visualArea = document.getElementById('blockVisualArea');
+			const resultBox = document.getElementById('calcResultBox');
+
+			// ========================================
+			// 檢查輸入
+			// ========================================
+
+			if (b <= 0 || a <= 0) {
+
+				resultBox.innerHTML = `
+					<span class="text-rose-500 font-bold text-lg">
+						請輸入大於 0 的數字喔！
+					</span>
+				`;
+
+				visualArea.innerHTML = '';
+
+				return;
+			}
+
+			// ========================================
+			// 計算
+			// ========================================
+
+			const groupCount = Math.floor(a / b);
+			const remainder = a % b;
+			const isDivisible = (remainder === 0);
+
+			// ========================================
+			// Generate Visual Blocks HTML
+			// ========================================
+
+			let visualHTML = '';
+
+			// ========================================
+			// 完整分組
+			// ========================================
+
+			for (let g = 0; g < groupCount; g++) {
+
+				visualHTML += `
+					<div class="
+						bg-white
+						p-4 md:p-5
+						rounded-2xl
+						border-2 border-indigo-200
+						shadow-sm
+						space-y-3
+						text-center
+					">
+				`;
+
+				// 分組標題：放大
+				visualHTML += `
+					<div class="
+						text-base md:text-lg
+						font-extrabold
+						text-indigo-600
+					">
+						第 ${g + 1} 組（${b} 顆）
+					</div>
+				`;
+
+				// 積木區：增加間距與寬度
+				visualHTML += `
+					<div class="
+						flex flex-wrap
+						gap-2
+						justify-center
+						max-w-[180px]
+						mx-auto
+					">
+				`;
+
+				// ========================================
+				// 產生每一顆積木
+				// ========================================
+
+				for (let i = 0; i < b; i++) {
+
+					visualHTML += `
+						<div class="
+							w-9 h-9
+							md:w-10 md:h-10
+							rounded-xl
+							bg-gradient-to-tr
+							from-indigo-500
+							to-purple-500
+							shadow-sm
+							flex items-center
+							justify-center
+							text-white
+							text-base md:text-lg
+						">
+							<i class="fa-solid fa-cube"></i>
+						</div>
+					`;
+
+				}
+
+				visualHTML += `</div>`;
+				visualHTML += `</div>`;
+			}
+
+			// ========================================
+			// 剩餘積木
+			// ========================================
+
+			if (remainder > 0) {
+
+				visualHTML += `
+					<div class="
+						bg-rose-50
+						p-4 md:p-5
+						rounded-2xl
+						border-2 border-rose-300
+						shadow-sm
+						space-y-3
+						text-center
+						animate-pulse
+					">
+				`;
+
+				// 剩餘區標題：放大
+				visualHTML += `
+					<div class="
+						text-base md:text-lg
+						font-extrabold
+						text-rose-600
+					">
+						剩餘區（${remainder} 顆）
+					</div>
+				`;
+
+				// 剩餘積木區
+				visualHTML += `
+					<div class="
+						flex flex-wrap
+						gap-2
+						justify-center
+						max-w-[180px]
+						mx-auto
+					">
+				`;
+
+				// ========================================
+				// 產生剩餘積木
+				// ========================================
+
+				for (let i = 0; i < remainder; i++) {
+
+					visualHTML += `
+						<div class="
+							w-9 h-9
+							md:w-10 md:h-10
+							rounded-xl
+							bg-gradient-to-tr
+							from-rose-400
+							to-red-500
+							shadow-sm
+							flex items-center
+							justify-center
+							text-white
+							text-base md:text-lg
+						">
+							<i class="fa-solid fa-xmark"></i>
+						</div>
+					`;
+
+				}
+
+				visualHTML += `</div>`;
+				visualHTML += `</div>`;
+			}
+
+			// 顯示積木結果
+			visualArea.innerHTML = visualHTML;
+
+			// ========================================
+			// Generate Explanation Text
+			// ========================================
+
+			if (isDivisible) {
+
+				resultBox.innerHTML = `
+
+					<div class="space-y-3">
+
+						<!-- 成功標題 -->
+						<div class="
+							flex items-center gap-2
+							text-emerald-600
+							font-extrabold
+							text-xl md:text-2xl
+						">
+
+							<i class="
+								fa-solid
+								fa-circle-check
+								text-2xl
+							"></i>
+
+							完美平分！
+							$${a}$ 可以被
+							$${b}$
+							【整除】！
+
+						</div>
+
+						<!-- 成功說明 -->
+						<div class="
+							text-lg md:text-xl
+							text-slate-700
+							bg-emerald-50/50
+							p-4 md:p-5
+							rounded-xl
+							border border-emerald-200
+							space-y-2
+							leading-relaxed
+						">
+
+							<div>
+								<b>平分算式：</b>
+								$${a} \\div ${b} = ${groupCount} \\dots 0$
+								（餘數為 0，剛好分成 ${groupCount} 組）
+							</div>
+
+							<div>
+								<b>因倍數關係：</b>
+								<b>${b}</b> 與
+								<b>${groupCount}</b>
+								都是
+								<b>${a}</b>
+								的
+
+								<span class="
+									text-emerald-700
+									font-bold
+									underline
+								">
+									因數
+								</span>；
+
+								而
+								<b>${a}</b>
+								是
+								<b>${b}</b>
+								與
+								<b>${groupCount}</b>
+								的
+
+								<span class="
+									text-indigo-700
+									font-bold
+									underline
+								">
+									倍數
+								</span>！
+							</div>
+
+						</div>
+
+					</div>
+
+				`;
+
+			} else {
+
+				resultBox.innerHTML = `
+
+					<div class="space-y-3">
+
+						<!-- 無法平分標題 -->
+						<div class="
+							flex items-center gap-2
+							text-rose-600
+							font-extrabold
+							text-xl md:text-2xl
+						">
+
+							<i class="
+								fa-solid
+								fa-triangle-exclamation
+								text-2xl
+							"></i>
+
+							無法完美平分！
+							有剩下的積木！
+
+						</div>
+
+						<!-- 失敗說明 -->
+						<div class="
+							text-lg md:text-xl
+							text-slate-700
+							bg-rose-50/50
+							p-4 md:p-5
+							rounded-xl
+							border border-rose-200
+							space-y-2
+							leading-relaxed
+						">
+
+							<div>
+								<b>平分算式：</b>
+								$${a} \\div ${b}
+								= ${groupCount}
+								\\dots ${remainder}$
+
+								（分完
+								${groupCount}
+								組後，
+
+								還
+								<b>
+									剩下 ${remainder} 顆
+								</b>）
+							</div>
+
+							<div>
+								<b>結論：</b>
+
+								因為有餘數
+								$${remainder} \\neq 0$，
+
+								所以
+								<b>${b}</b>
+
+								<span class="
+									text-rose-700
+									font-bold
+									underline
+								">
+									不是
+								</span>
+
+								<b>${a}</b>
+								的因數！
+							</div>
+
+						</div>
+
+					</div>
+
+				`;
+			}
+
+			// ========================================
+			// 重新渲染 MathJax
+			// ========================================
+
+			triggerMathJax(resultBox);
+		}
+
+		/* ==========================================================================
+		   7. MODULE 2: FACTOR RAINBOW GENERATOR
+		   ========================================================================== */
+		function getFactors(num) {
+			const factors = [];
+			for (let i = 1; i <= num; i++) {
+				if (num % i === 0) factors.push(i);
+			}
+			return factors;
+		}
+
+		function generateRainbow() {
+			// 1. 修正 ID 抓取（對應 HTML 的 rainbow-input 與 rainbow-display-area）
+			const inputEl = document.getElementById('rainbow-input');
+			const displayArea = document.getElementById('rainbow-display-area');
+			
+			if (!inputEl || !displayArea) return;
+
+			const num = parseInt(inputEl.value) || 36;
+			const factors = getFactors(num);
+			const len = factors.length;
+
+			const rainbowColors = [
+				'#BE123C', '#F97316', '#FACC15', '#16A34A', '#06B6D4', '#1D4ED8', '#7C3AED', '#DB2777'
+			];
+
+			const itemWidth = 55;
+			const width = Math.max(340, len * itemWidth + 60);
+			const height = 240; // 增加 SVG 高度，給拱橋與文字更多垂直空間
+			const startX = 40;
+			const endX = width - 40;
+			const step = len > 1 ? (endX - startX) / (len - 1) : 0;
+			const baselineY = 195; // 往下移，避免文字頂到 SVG 最上方
+
+			let svgHTML = `<svg viewBox="0 0 ${width} ${height}" class="w-full max-w-2xl mx-auto overflow-visible">`;
+
+			const pairCount = Math.ceil(len / 2);
+			for (let i = 0; i < pairCount; i++) {
+				const idx1 = i;
+				const idx2 = len - 1 - i;
+				const x1 = startX + idx1 * step;
+				const x2 = startX + idx2 * step;
+				const color = rainbowColors[i % rainbowColors.length];
+
+				if (idx1 === idx2) {
+					svgHTML += `
+						<g>
+							<!-- 中間完全平方數的虛線小圓弧 -->
+							<path d="M ${x1 - 14} ${baselineY - 12} A 16 16 0 1 1 ${x1 + 14} ${baselineY - 12}" 
+								  fill="none" stroke="${color}" stroke-width="3" stroke-dasharray="4,3" />
+
+							<!-- 底層：純白粗描邊（負責遮擋背景線條，解決黑色描邊問題） -->
+							<text x="${x1}" y="${baselineY - 40}" text-anchor="middle" fill="none" stroke="white" stroke-width="6" stroke-linejoin="round" font-size="14" font-weight="900">${factors[i]} × ${factors[i]} = ${num}</text>
+
+							<!-- 頂層：彩虹顏色文字 -->
+							<text x="${x1}" y="${baselineY - 40}" text-anchor="middle" fill="${color}" font-size="14" font-weight="900">${factors[i]} × ${factors[i]} = ${num}</text>
+						</g>
+					`;
+				} else {
+					const rx = (x2 - x1) / 2;
+					const ry = Math.min(rx * 0.75, baselineY - 45);
+					svgHTML += `
+						<path d="M ${x1} ${baselineY - 16} A ${rx} ${ry} 0 0 1 ${x2} ${baselineY - 16}" 
+							  fill="none" 
+							  stroke="${color}" 
+							  stroke-width="4" 
+							  stroke-linecap="round" 
+							  class="transition-all hover:stroke-width-6 opacity-90 cursor-pointer" />
+					`;
+				}
+			}
+
+			// 繪製數字圓圈
+			factors.forEach((f, idx) => {
+				const x = startX + idx * step;
+				const pairIdx = idx < len / 2 ? idx : len - 1 - idx;
+				const color = rainbowColors[pairIdx % rainbowColors.length];
+
+				svgHTML += `
+					<g class="cursor-pointer">
+						<circle cx="${x}" cy="${baselineY}" r="16" fill="${color}" class="shadow-md" />
+						<text x="${x}" y="${baselineY + 5}" text-anchor="middle" fill="white" font-size="13" font-weight="800">${f}</text>
+					</g>
+				`;
+			});
+
+			svgHTML += `</svg>`;
+
+			let html = `
+				<div class="space-y-4">
+					<div class="text-xl font-bold text-indigo-900">$${num}$ 的彩虹因數圖案（共 $${len}$ 個因數）：</div>
+					<div class="bg-white p-4 rounded-2xl border border-indigo-100 shadow-inner">
+						${svgHTML}
+					</div>
+					<div class="text-xl font-semibold text-slate-500">成對乘法算式列表：</div>
+					<div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-lg font-mono text-slate-700">
+			`;
+
+			for (let i = 0; i < pairCount; i++) {
+				const p1 = factors[i];
+				const p2 = factors[len - 1 - i];
+				const color = rainbowColors[i % rainbowColors.length];
+				html += `
+					<div class="bg-white p-2.5 rounded-xl border-l-4 shadow-sm" style="border-left-color: ${color}">
+						$${p1} \\times ${p2} = ${num}$
+					</div>
+				`;
+			}
+
+			html += `</div></div>`;
+			displayArea.innerHTML = html;
+
+			// 渲染 MathJax 算式
+			if (typeof triggerMathJax === 'function') {
+				triggerMathJax(displayArea);
+			}
+		}
+
+		// 頁面載入時自動執行一次，讓預設值 36 直接顯示彩虹
+		document.addEventListener('DOMContentLoaded', () => {
+			generateRainbow();
+		});
+
+        /* ==========================================================================
+           8. MODULE 3: GAMIFIED QUIZ ENGINE & STYLED SHORT DIVISION GENERATOR
+           ========================================================================== */
+        function gcd(a, b) {
+            return b === 0 ? a : gcd(b, a % b);
+        }
+
+        function lcm(a, b) {
+            return (a * b) / gcd(a, b);
+        }
+
+        function generateShortDivisionHTML(a, b, highlightL = false) {
+            const g = gcd(a, b);
+            const remA = a / g;
+            const remB = b / g;
+
+            const highlightLeftClass = 'l-highlight-left';
+            const highlightBottomClass = highlightL ? 'l-highlight-bottom font-bold text-teal-800' : 'text-slate-600';
+
+            return `
+                <div class="bg-white p-3 rounded-xl border border-indigo-100 shadow-sm my-2 inline-block">
+                    <table class="short-div-table">
+                        <tr>
+                            <td class="short-div-divisor ${highlightLeftClass}">${g}</td>
+                            <td class="short-div-row-border">${a}</td>
+                            <td class="short-div-row-border">${b}</td>
+                        </tr>
+                        <tr>
+                            <td class="${highlightLeftClass}"></td>
+                            <td class="${highlightBottomClass}">${remA}</td>
+                            <td class="${highlightBottomClass}">${remB}</td>
+                        </tr>
+                    </table>
+                </div>
+            `;
+        }
+
+        function generateQuestion(stage) {
+            let q = {};
+            const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+            if (stage === 1) {
+                const type = randInt(1, 3);
+                if (type === 1) {
+                    const base = randInt(2, 9) * 4;
+                    const factors = getFactors(base);
+                    const correctChoice = factors[randInt(1, factors.length - 1)];
+                    let wrongChoices = [];
+                    while (wrongChoices.length < 3) {
+                        let w = randInt(2, base + 5);
+                        if (!factors.includes(w) && !wrongChoices.includes(w)) wrongChoices.push(w);
+                    }
+                    const options = [correctChoice, ...wrongChoices].sort(() => Math.random() - 0.5);
+                    
+                    q = {
+                        type: 'choice',
+                        prompt: `下列哪一個數字是 $${base}$ 的<b>因數</b>？`,
+                        options: options.map(o => `$${o}$`),
+                        correctIndex: options.indexOf(correctChoice),
+                        solution: `$${base} \\div ${correctChoice} = ${base / correctChoice} \\dots 0$，餘數為 0，所以 $${correctChoice}$ 是 $${base}$ 的因數！`
+                    };
+                } else if (type === 2) {
+                    const num = randInt(3, 12);
+                    const correctChoice = num * randInt(2, 6);
+                    let wrongChoices = [];
+                    while (wrongChoices.length < 3) {
+                        let w = randInt(10, 60);
+                        if (w % num !== 0 && !wrongChoices.includes(w)) wrongChoices.push(w);
+                    }
+                    const options = [correctChoice, ...wrongChoices].sort(() => Math.random() - 0.5);
+
+                    q = {
+                        type: 'choice',
+                        prompt: `下列哪一個數字是 $${num}$ 的<b>倍數</b>？`,
+                        options: options.map(o => `$${o}$`),
+                        correctIndex: options.indexOf(correctChoice),
+                        solution: `$${correctChoice} \\div ${num} = ${correctChoice / num}$，沒有餘數，因此 $${correctChoice}$ 是 $${num}$ 的倍數。`
+                    };
+                } else {
+                    const num = randInt(12, 30);
+                    const factors = getFactors(num);
+                    q = {
+                        type: 'choice',
+                        prompt: `數字 $${num}$ 一共有幾個因數？`,
+                        options: [factors.length, factors.length + 1, Math.max(1, factors.length - 1), factors.length + 2].sort(() => Math.random() - 0.5).map(o => `$${o}$ 個`),
+                        correctIndex: null,
+                        solution: `$${num}$ 的所有因數為：$${factors.join(', ')}$，總共有 $${factors.length}$ 個。`
+                    };
+                    const correctStr = `$${factors.length}$ 個`;
+                    q.correctIndex = q.options.indexOf(correctStr);
+                }
+            } else if (stage === 2) {
+                const num1 = randInt(2, 6) * 3;
+                const num2 = randInt(2, 6) * 4;
+                const g = gcd(num1, num2);
+                const shortDivHTML = generateShortDivisionHTML(num1, num2, false);
+
+                q = {
+                    type: 'input',
+                    prompt: `請計算 $${num1}$ 與 $${num2}$ 的<b>最大公因數</b>：`,
+                    correctAnswer: g.toString(),
+                    solution: `短除法計算過程：<br>${shortDivHTML}<br>最大公因數為左側公因數：<b>$${g}$</b>。`
+                };
+            } else if (stage === 3) {
+                const a = randInt(3, 8);
+                const b = randInt(4, 10);
+                const l = lcm(a, b);
+                const shortDivHTML = generateShortDivisionHTML(a, b, true);
+
+                q = {
+                    type: 'input',
+                    prompt: `請計算 $${a}$ 與 $${b}$ 的<b>最小公倍數</b>：`,
+                    correctAnswer: l.toString(),
+                    solution: `短除法 L 形大包圍計算過程：<br>${shortDivHTML}<br>最小公倍數為左側與底部數字全部相乘：<b>$${l}$</b>。`
+                };
+            } else {
+                const templateType = randInt(1, 7);
+
+                if (templateType === 1) {
+                    const vars = [
+                        { p1: '被除數、除數、商', p2: '0', symbol: '' },
+                        { p1: 'A、B、C', p2: '0', symbol: '『A ÷ B ＝ C … D』，當 A、B、C 都是整數，且 D 是' },
+                        { p1: '甲、乙、丙', p2: '0', symbol: '『甲 ÷ 乙 ＝ 丙 … 丁』，當甲、乙、丙都是整數，且丁是' }
+                    ];
+                    const v = vars[randInt(0, vars.length - 1)];
+                    const promptText = v.symbol ? 
+                        `在除法算式中，可以寫成${v.symbol} ${v.p2}時，叫作什麼？` :
+                        `在除法算式中，當被除數、除數、商都是整數，且餘數是 0 時，叫作什麼？`;
+                    
+                    const options = ['(A) 整數', '(B) 整除', '(C) 除名', '(D) 除盡'];
+                    q = {
+                        type: 'choice',
+                        prompt: `【觀念判斷】${promptText}`,
+                        options: options,
+                        correctIndex: 1,
+                        solution: `當整數相除沒有餘數（餘數為 0）時，這種情況稱為<b>「整除」</b>。`
+                    };
+
+                } else if (templateType === 2) {
+                    const tripleSets = [
+                        { a: 144, x: 12, y: 12, b: 132, z: 11 },
+                        { a: 209, x: 11, y: 19, b: 132, z: 12 },
+                        { a: 39, x: 3, y: 13, b: 26, z: 2 }
+                    ];
+                    const set = tripleSets[randInt(0, tripleSets.length - 1)];
+                    
+                    const correctOptions = [
+                        `$${set.x}$ 是 $${set.a}$ 的因數`,
+                        `$${set.x}$ 是 $${set.b}$ 的因數`,
+                        `$${set.x}$ 是 $${set.a}$ 和 $${set.b}$ 的公因數`
+                    ];
+                    const falseOption = `$${set.b}$ 是 $${set.a}$ 的因數`;
+
+                    const options = [...correctOptions, falseOption].sort(() => Math.random() - 0.5);
+                    q = {
+                        type: 'choice',
+                        prompt: `已知「$${set.a} = ${set.x} \\times ${set.y}$」、「$${set.b} = ${set.z} \\times ${set.x}$」，下面哪一個敘述是<b>錯誤</b>的？`,
+                        options: options,
+                        correctIndex: options.indexOf(falseOption),
+                        solution: `$${set.b}$ 不能整除 $${set.a}$（$${set.a} \\div ${set.b} = ${(set.a/set.b).toFixed(2)}\\dots$），所以 $${set.b}$ 不是 $${set.a}$ 的因數。`
+                    };
+
+                } else if (templateType === 3) {
+                    const paperSizes = [
+                        { w: 18, h: 24, impossible: 8, valid: [2, 3, 6] },
+                        { w: 24, h: 36, impossible: 8, valid: [2, 4, 12] },
+                        { w: 36, h: 54, impossible: 4, valid: [3, 9, 18] },
+                        { w: 30, h: 45, impossible: 8, valid: [3, 5, 15] }
+                    ];
+                    const paper = paperSizes[randInt(0, paperSizes.length - 1)];
+                    const options = [...paper.valid.map(v => `$${v}$ 公分`), `$${paper.impossible}$ 公分`].sort(() => Math.random() - 0.5);
+
+                    q = {
+                        type: 'choice',
+                        prompt: `在一張長 $${paper.w}$ 公分、寬 $${paper.h}$ 公分的白紙上畫滿相同大小的正方形，則正方形的邊長<b>不可能是</b>下面哪一個長度？`,
+                        options: options,
+                        correctIndex: options.indexOf(`$${paper.impossible}$ 公分`),
+                        solution: `正方形的邊長必須是長 $${paper.w}$ 與寬 $${paper.h}$ 的公因數。$${paper.impossible}$ 不能整除 $${paper.w}$ 或 $${paper.h}$，所以不可能是 $${paper.impossible}$ 公分。`
+                    };
+
+                } else if (templateType === 4) {
+                    const stories = [
+                        { name: '小螞蟻丁丁', unit: '粒米', daily: 3, weeks: 5, total: 105, factors: [3, 5, 7] },
+                        { name: '體育選手', unit: '公里', daily: 3, weeks: 5, total: 105, factors: [3, 5, 7] },
+                        { name: '長跑好手義傑', unit: '公里', daily: 5, weeks: 11, total: 385, factors: [5, 7, 11] }
+                    ];
+                    const s = stories[randInt(0, stories.length - 1)];
+                    const fStr = s.factors.join('、');
+
+                    const correctText = `$${s.total}$ 是 $${fStr}$ 共同的倍數`;
+                    const wrongText1 = `$${s.total}$ 不是 $${s.factors[0]}$ 的倍數`;
+                    const wrongText2 = `$${s.total}$ 不是 $${s.factors[1]}$ 的倍數`;
+                    const wrongText3 = `$${s.total}$ 不是 $${s.factors[2]}$ 的倍數`;
+
+                    const options = [correctText, wrongText1, wrongText2, wrongText3].sort(() => Math.random() - 0.5);
+
+                    q = {
+                        type: 'choice',
+                        prompt: `${s.name}每天進行 $${s.daily}$ ${s.unit}，經過 $${s.weeks}$ 個星期（共 $${s.weeks * 7}$ 天）後累積了 $${s.total}$ ${s.unit}。下面哪一個選項是正確的？`,
+                        options: options,
+                        correctIndex: options.indexOf(correctText),
+                        solution: `因為 $${s.total} = ${s.daily} \\times ${s.weeks} \\times 7$，所以 $${s.total}$ 可以被 $${s.factors[0]}$、$${s.factors[1]}$ 及 $7$（與 $${s.factors[2]}$）整除，是它們共同的倍數！`
+                    };
+
+                } else if (templateType === 5) {
+                    const baseDiv = randInt(6, 9);
+                    const mult = randInt(6, 12);
+                    const rem = randInt(1, baseDiv - 1);
+                    const original = baseDiv * mult + rem;
+
+                    const correctSub = rem;
+                    let wrongSubs = [];
+                    while (wrongSubs.length < 3) {
+                        let w = randInt(1, baseDiv + 5);
+                        if (w !== correctSub && !wrongSubs.includes(w) && (original - w) % baseDiv !== 0) {
+                            wrongSubs.push(w);
+                        }
+                    }
+
+                    const options = [correctSub, ...wrongSubs].sort(() => Math.random() - 0.5).map(v => `$${v}$`);
+
+                    q = {
+                        type: 'choice',
+                        prompt: `$${original}$ 減掉下列哪一個數後，會變成 $${baseDiv}$ 的倍數？`,
+                        options: options,
+                        correctIndex: options.indexOf(`$${correctSub}$`),
+                        solution: `$${original} \\div ${baseDiv} = ${mult} \\dots ${rem}$，餘數是 $${rem}$。所以扣掉 $${rem}$ 之後（$${original - rem} = ${baseDiv} \\times ${mult}$），就會變成 $${baseDiv}$ 的倍數！`
+                    };
+
+                } else if (templateType === 6) {
+                    const ruleTypes = [
+                        { rule: 3, name: '3 的倍數', check: n => n % 3 === 0, hint: '各位數字相加總和是 3 的倍數' },
+                        { rule: 5, name: '5 的倍數', check: n => n % 5 === 0, hint: '個位數字是 0 或 5' },
+                        { rule: 2, name: '2 的倍數', check: n => n % 2 === 0, hint: '個位數字是偶數（0, 2, 4, 6, 8）' }
+                    ];
+                    const rt = ruleTypes[randInt(0, ruleTypes.length - 1)];
+                    
+                    let correctNum = randInt(10, 99);
+                    while (!rt.check(correctNum)) correctNum++;
+
+                    let wrongNums = [];
+                    while (wrongNums.length < 3) {
+                        let w = randInt(11, 99);
+                        if (!rt.check(w) && !wrongNums.includes(w)) wrongNums.push(w);
+                    }
+
+                    const options = [correctNum, ...wrongNums].sort(() => Math.random() - 0.5).map(v => `$${v}$`);
+
+                    q = {
+                        type: 'choice',
+                        prompt: `下列哪一個數字是 <b>${rt.name}</b>？`,
+                        options: options,
+                        correctIndex: options.indexOf(`$${correctNum}$`),
+                        solution: `${rt.name}的特徵是：${rt.hint}。$${correctNum} \\div ${rt.rule} = ${correctNum / rt.rule}$ 沒有餘數！`
+                    };
+
+                } else {
+                    const isGCDWord = Math.random() > 0.5;
+                    if (isGCDWord) {
+                        const side = randInt(3, 8);
+                        const countA = randInt(2, 5);
+                        const countB = randInt(2, 5);
+                        const lenA = side * countA;
+                        const lenB = side * countB;
+                        const g = gcd(lenA, lenB);
+
+                        q = {
+                            type: 'input',
+                            prompt: `【生活應用題】小華有長 $${lenA}$ 公分、寬 $${lenB}$ 公分的長方形紙張，想要剪成邊長相等且最大張的正方形，正方形的邊長最大是幾公分？`,
+                            correctAnswer: g.toString(),
+                            solution: `要求最大的正方形邊長，也就是求 $${lenA}$ 與 $${lenB}$ 的最大公因數，計算得 <b>$${g}$</b> 公分。`
+                        };
+                    } else {
+                        const t1 = randInt(2, 5) * 5;
+                        const t2 = randInt(2, 5) * 6;
+                        const l = lcm(t1, t2);
+
+                        q = {
+                            type: 'input',
+                            prompt: `【生活應用題】紅燈每 $${t1}$ 秒亮一次，綠燈每 $${t2}$ 秒亮一次。若兩燈現在同時亮起，最快幾秒後會再次同時亮起？`,
+                            correctAnswer: l.toString(),
+                            solution: `再次同時亮起的時間就是 $${t1}$ 與 $${t2}$ 的最小公倍數，計算得 <b>$${l}$</b> 秒。`
+                        };
+                    }
+                }
+            }
+
+            return q;
+        }
+
+        function startQuizStage(stageNum) {
+            gameState.currentStage = stageNum;
+            document.getElementById('quizStageSelectScreen').classList.add('hidden');
+            document.getElementById('activeQuizArea').classList.remove('hidden');
+            document.getElementById('currentStageBadge').innerText = `關卡 ${stageNum}`;
+            loadNextQuestion();
+        }
+
+        function exitQuizToStageSelect() {
+            document.getElementById('activeQuizArea').classList.add('hidden');
+            document.getElementById('quizStageSelectScreen').classList.remove('hidden');
+        }
+
+        function loadNextQuestion() {
+            gameState.currentQuestion = generateQuestion(gameState.currentStage);
+            gameState.selectedOptionIndex = null;
+
+            const qContainer = document.getElementById('quizQuestionContainer');
+            const aArea = document.getElementById('quizAnswerArea');
+            const feedbackBox = document.getElementById('quizFeedbackBox');
+            
+            feedbackBox.classList.add('hidden');
+            qContainer.innerHTML = gameState.currentQuestion.prompt;
+
+            if (gameState.currentQuestion.type === 'choice') {
+                let html = `<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">`;
+                gameState.currentQuestion.options.forEach((opt, idx) => {
+                    html += `
+                        <button onclick="selectChoiceOption(${idx})" id="opt-btn-${idx}" class="opt-btn p-4 rounded-xl border-2 border-slate-200 font-bold text-slate-700 hover:border-indigo-400 hover:bg-indigo-50/50 transition-all text-left flex items-center justify-between text-base">
+                            <span>${opt}</span>
+                            <i class="fa-regular fa-circle text-slate-300"></i>
+                        </button>
+                    `;
+                });
+                html += `</div>`;
+                aArea.innerHTML = html;
+            } else {
+                aArea.innerHTML = `
+                    <div class="space-y-2">
+                        <label class="block text-sm font-bold text-slate-600">請在下方輸入數字答案：</label>
+                        <input type="number" id="numAnswerInput" placeholder="請輸入數字答案..." class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl text-xl font-bold text-indigo-900 focus:outline-none focus:border-indigo-500">
+                    </div>
+                `;
+            }
+
+            document.getElementById('quizActionContainer').innerHTML = `
+                <button id="btnSubmitAnswer" onclick="submitCurrentAnswer()" class="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-extrabold rounded-2xl shadow-lg hover:shadow-indigo-300 hover:opacity-95 active:scale-98 transition-all text-lg">
+                    提交答案
+                </button>
+            `;
+
+            triggerMathJax(qContainer);
+            triggerMathJax(aArea);
+        }
+
+        function selectChoiceOption(idx) {
+            gameState.selectedOptionIndex = idx;
+            document.querySelectorAll('.opt-btn').forEach((btn, i) => {
+                if (i === idx) {
+                    btn.classList.add('border-indigo-600', 'bg-indigo-50', 'text-indigo-900');
+                    btn.classList.remove('border-slate-200');
+                    btn.querySelector('i').className = 'fa-solid fa-circle-dot text-indigo-600';
+                } else {
+                    btn.classList.remove('border-indigo-600', 'bg-indigo-50', 'text-indigo-900');
+                    btn.classList.add('border-slate-200');
+                    btn.querySelector('i').className = 'fa-regular fa-circle text-slate-300';
+                }
+            });
+        }
+
+        function submitCurrentAnswer() {
+            const q = gameState.currentQuestion;
+            let isCorrect = false;
+
+            if (q.type === 'choice') {
+                if (gameState.selectedOptionIndex === null) {
+                    alert('請先選擇一個選項喔！');
+                    return;
+                }
+                isCorrect = (gameState.selectedOptionIndex === q.correctIndex);
+            } else {
+                const inputVal = document.getElementById('numAnswerInput').value.trim();
+                if (!inputVal) {
+                    alert('請先輸入答案喔！');
+                    return;
+                }
+                isCorrect = (inputVal === q.correctAnswer);
+            }
+
+            const feedbackBox = document.getElementById('quizFeedbackBox');
+            feedbackBox.classList.remove('hidden');
+
+            if (isCorrect) {
+                playCorrectSound();
+                triggerPetalRain(2500);
+
+                gameState.score += 10;
+                gameState.combo += 1;
+                if (gameState.combo >= 3) {
+                    gameState.score += 15;
+                }
+                if (gameState.combo > gameState.maxCombo) {
+                    gameState.maxCombo = gameState.combo;
+                }
+                gameState.totalCorrect += 1;
+                if (gameState.currentStage === 2 || gameState.currentStage === 3) {
+                    gameState.gcdLcmCorrectCount += 1;
+                }
+
+                const praiseMsg = PRAISE_MESSAGES[Math.floor(Math.random() * PRAISE_MESSAGES.length)];
+                
+                feedbackBox.className = "p-6 rounded-2xl space-y-3 bg-emerald-50 border-2 border-emerald-200 text-emerald-900";
+                feedbackBox.innerHTML = `
+                    <div class="flex items-center gap-2 font-extrabold text-xl text-emerald-700">
+                        <i class="fa-solid fa-circle-check text-2xl"></i> ${praiseMsg}
+                    </div>
+                    <div class="text-base font-semibold">
+                        答對得 +10 分！ ${gameState.combo >= 3 ? `<span class="text-orange-600 font-extrabold">（觸發 ${gameState.combo} 連擊 Bonus +15分！）</span>` : ''}
+                    </div>
+                    <div class="text-base text-slate-700 pt-2 border-t border-emerald-200/60 leading-relaxed">
+                        <b>解析說明：</b><br>${q.solution}
+                    </div>
+                `;
+
+                addExp(25);
+
+            } else {
+                playWrongSound();
+                gameState.combo = 0;
+
+                const encourageMsg = ENCOURAGE_MESSAGES[Math.floor(Math.random() * ENCOURAGE_MESSAGES.length)];
+
+                feedbackBox.className = "p-6 rounded-2xl space-y-3 bg-rose-50 border-2 border-rose-200 text-rose-900";
+                feedbackBox.innerHTML = `
+                    <div class="flex items-center gap-2 font-extrabold text-xl text-rose-700">
+                        <i class="fa-solid fa-circle-xmark text-2xl"></i> ${encourageMsg}
+                    </div>
+                    <div class="text-base text-slate-700 pt-2 border-t border-rose-200/60 leading-relaxed">
+                        <b>完整解析：</b><br>${q.solution}
+                    </div>
+                `;
+            }
+
+            updateGamificationUI();
+            checkBadgeUnlocks();
+            triggerMathJax(feedbackBox);
+
+            document.getElementById('quizActionContainer').innerHTML = `
+                <button onclick="loadNextQuestion()" class="w-full py-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-extrabold rounded-2xl shadow-lg hover:shadow-emerald-200 hover:opacity-95 active:scale-98 transition-all text-lg flex items-center justify-center gap-2">
+                    下一題 <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            `;
+        }
+
+		/* ==========================================================================
+		   9. GAMIFICATION LOGIC, BADGES & LEVEL SYSTEM (資料驅動修正版)
+		   ========================================================================== */
+
+		// 1. 經驗值增加與升級機制
+		function addExp(amount) {
+			gameState.exp += amount;
+			
+			let leveledUp = false;
+			while (gameState.exp >= 100) {
+				if (gameState.level < LEVEL_TITLES.length) {
+					gameState.exp -= 100;
+					gameState.level += 1;
+					leveledUp = true;
+				} else {
+					gameState.exp = 100;
+					break;
+				}
+			}
+
+			if (leveledUp) {
+				showLevelUpModal();
+			}
+
+			checkBadgeUnlocks();
+			updateGamificationUI();
+		}
+
+		// 2. 顯示升級彈窗 (滿級特殊視覺)
+		function showLevelUpModal() {
+			if (typeof playLevelUpSound === 'function') playLevelUpSound();
+			
+			const modal = document.getElementById('levelUpModal');
+			const titleEl = document.getElementById('modalLevelTitle');
+			
+			if (gameState.level === LEVEL_TITLES.length) {
+				// LV10 頂峰尊榮彈窗
+				if (typeof triggerPetalRain === 'function') triggerPetalRain(5000); // 延長花瓣雨時間
+				if (titleEl) {
+					titleEl.innerHTML = `🏆 恭喜登頂！達成最高榮譽 <br><span class="text-amber-500 font-extrabold">${LEVEL_TITLES[gameState.level - 1]}</span>！`;
+				}
+			} else {
+				// 一般等級彈窗
+				if (typeof triggerPetalRain === 'function') triggerPetalRain(3500);
+				if (titleEl) {
+					titleEl.innerText = `恭喜晉升 ${LEVEL_TITLES[gameState.level - 1]}！`;
+				}
+			}
+
+			if (modal) modal.classList.remove('hidden');
+		}
+
+		// 3. 關閉升級彈窗
+		function closeLevelUpModal() {
+			const modal = document.getElementById('levelUpModal');
+			if (modal) modal.classList.add('hidden');
+		}
+
+		// 4. 勳章牆動態繪製 (根據解鎖狀態 100% 準確著色)
+		function renderBadges() {
+			const badgeConfigs = {
+				1: { bg: 'bg-amber-100', text: 'text-amber-600', border: 'border-amber-300' },
+				2: { bg: 'bg-orange-100', text: 'text-orange-600', border: 'border-orange-300' },
+				3: { bg: 'bg-indigo-100', text: 'text-indigo-600', border: 'border-indigo-300' },
+				4: { bg: 'bg-purple-100', text: 'text-purple-600', border: 'border-purple-300' },
+				5: { bg: 'bg-emerald-100', text: 'text-emerald-600', border: 'border-emerald-300' },
+				6: { bg: 'bg-rose-100', text: 'text-rose-600', border: 'border-rose-300' } // Badge 6 尊爵紅
+			};
+
+			[1, 2, 3, 4, 5, 6].forEach(id => {
+				const isUnlocked = gameState.unlockedBadges.has(id);
+				const card = document.getElementById(`badge-card-${id}`);
+				const iconBox = document.getElementById(`badge-icon-box-${id}`);
+				const lockIcon = document.getElementById(`badge-lock-${id}`);
+
+				if (card && iconBox && lockIcon) {
+					if (isUnlocked) {
+						// 解鎖：黃金邊框、彩色圖示背景、綠色勾勾
+						const config = badgeConfigs[id];
+						card.className = `p-5 rounded-2xl border-2 ${config.border} bg-white shadow-md ring-2 ring-amber-300/30 flex items-center gap-4 transition-all`;
+						iconBox.className = `w-14 h-14 rounded-2xl ${config.bg} ${config.text} flex items-center justify-center text-3xl shrink-0 shadow-sm`;
+						lockIcon.className = 'fa-solid fa-circle-check text-amber-500 text-lg';
+					} else {
+						// 未解鎖：簡約灰框與灰圖示
+						card.className = 'p-5 rounded-2xl border-2 border-slate-200 bg-slate-50 flex items-center gap-4 transition-all';
+						iconBox.className = 'w-14 h-14 rounded-2xl bg-slate-200 text-slate-400 flex items-center justify-center text-3xl shrink-0';
+						lockIcon.className = 'fa-solid fa-lock text-sm text-slate-400';
+					}
+				}
+			});
+		}
+
+		// 5. 解鎖勳章觸發點
+		function unlockBadge(badgeId) {
+			if (!gameState.unlockedBadges.has(badgeId)) {
+				gameState.unlockedBadges.add(badgeId);
+				if (typeof triggerPetalRain === 'function') triggerPetalRain(2000);
+				updateGamificationUI();
+			}
+		}
+
+		// 6. 檢查勳章解鎖條件
+		function checkBadgeUnlocks() {
+			if (gameState.totalCorrect >= 1) unlockBadge(1);
+			if (gameState.maxCombo >= 3) unlockBadge(2);
+			if (gameState.gcdLcmCorrectCount >= 5) unlockBadge(3);
+			if (gameState.level >= 5) unlockBadge(4); // 配合 10 等系統，改為 LV5 解鎖
+			if (gameState.maxCombo >= 8) unlockBadge(5);
+			if (gameState.level >= 10) unlockBadge(6);
+		}
+
+		// 7. 全局 UI 狀態更新
+		function updateGamificationUI() {
+			// 頂部 Header
+			const scoreEl = document.getElementById('playerScore');
+			const comboEl = document.getElementById('playerCombo');
+			const badgeIconEl = document.getElementById('playerBadgeIcon');
+			const levelTitleEl = document.getElementById('playerLevelTitle');
+			const expBarHeaderEl = document.getElementById('expBar');
+
+			if (scoreEl) scoreEl.innerText = gameState.score;
+			if (comboEl) comboEl.innerText = gameState.combo;
+			if (badgeIconEl) badgeIconEl.innerText = `LV${gameState.level}`;
+			if (levelTitleEl) levelTitleEl.innerText = LEVEL_TITLES[gameState.level - 1];
+			if (expBarHeaderEl) expBarHeaderEl.style.width = `${gameState.exp}%`;
+
+			// 戰績頁 Hero Card
+			const lvlBadge = document.getElementById('playerLevelBadge');
+			const titleName = document.getElementById('playerTitleName');
+			const expText = document.getElementById('playerExpText');
+			const expBarDashboard = document.getElementById('playerExpBar');
+
+			if (lvlBadge) lvlBadge.innerText = `LV${gameState.level}`;
+			if (titleName) titleName.innerText = LEVEL_TITLES[gameState.level - 1].replace(/LV\d+\s*/, '');
+			if (expText) {
+				if (gameState.level >= LEVEL_TITLES.length) {
+					expText.innerText = "MAX 已達最高等級";
+				} else {
+					expText.innerText = `${gameState.exp} / 100 EXP`;
+				}
+			}
+			if (expBarDashboard) expBarDashboard.style.width = `${gameState.exp}%`;
+
+			// 四大統計數據
+			const statTotal = document.getElementById('statTotalCorrect');
+			const statCombo = document.getElementById('statMaxCombo');
+			const statLvl = document.getElementById('statPlayerLevel');
+			const statBadges = document.getElementById('statBadgesCount');
+
+			if (statTotal) statTotal.innerText = gameState.totalCorrect;
+			if (statCombo) statCombo.innerText = gameState.maxCombo;
+			if (statLvl) statLvl.innerText = `LV${gameState.level}`;
+			if (statBadges) statBadges.innerText = `${gameState.unlockedBadges.size} / 6`;
+
+			// 強制更新勳章牆視覺
+			renderBadges();
+		}
+
+		/* 初始化頁面 */
+		window.addEventListener('DOMContentLoaded', () => {
+			if (typeof calculateDivisibility === 'function') calculateDivisibility();
+			if (typeof generateRainbowFactors === 'function') generateRainbowFactors();
+			updateGamificationUI();
+		});
+		
+		// 可供抽換的範例數字對 (適合國小高年級計算)
+		const GCD_PAIRS = [
+			[12, 18], [16, 24], [20, 30], [18, 27], [24, 36], [15, 25], [30, 45], [14, 21]
+		];
+
+		const LCM_PAIRS = [
+			[8, 12], [6, 8], [9, 12], [6, 10], [12, 15], [8, 10], [10, 15], [12, 16]
+		];
+
+		// 求最大公因數與短除法步驟
+		function getGcdDetails(a, b) {
+			let x = a, y = b;
+			let steps = [];
+			let commonProduct = 1;
+			
+			for (let d = 2; d <= Math.min(x, y); d++) {
+				while (x % d === 0 && y % d === 0) {
+					steps.push({ divisor: d, num1: x, num2: y });
+					commonProduct *= d;
+					x /= d;
+					y /= d;
+				}
+			}
+			
+			return {
+				originalA: a,
+				originalB: b,
+				steps: steps,
+				remA: x,
+				remB: y,
+				gcd: commonProduct,
+				factorsA: getFactors(a),
+				factorsB: getFactors(b)
+			};
+		}
+
+		// 取得數字的所有因數
+		function getFactors(n) {
+			let factors = [];
+			for (let i = 1; i <= n; i++) {
+				if (n % i === 0) factors.push(i);
+			}
+			return factors;
+		}
+
+		// 渲染 GCD 畫面
+		function changeGcdNumbers() {
+			const randomPair = GCD_PAIRS[Math.floor(Math.random() * GCD_PAIRS.length)];
+			const data = getGcdDetails(randomPair[0], randomPair[1]);
+			const commonFactors = data.factorsA.filter(f => data.factorsB.includes(f));
+
+			// 建立短除法 HTML
+			let shortDivRows = '';
+			data.steps.forEach(s => {
+				shortDivRows += `
+					<tr>
+						<td class="short-div-divisor l-highlight-left">$${s.divisor}$</td>
+						<td class="short-div-row-border">$${s.num1}$</td>
+						<td class="short-div-row-border">$${s.num2}$</td>
+					</tr>`;
+			});
+			shortDivRows += `
+				<tr>
+					<td></td>
+					<td class="text-slate-500">$${data.remA}$</td>
+					<td class="text-slate-500">$${data.remB}$</td>
+				</tr>`;
+
+			let expText = data.steps.map(s => s.divisor).join(' × ');
+
+			const html = `
+				<!-- 方法一：列舉法 -->
+				<div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3">
+					<span class="text-xl font-bold px-3 py-1 bg-blue-100 text-blue-700 rounded-lg">方法一：列出因數，比一比</span>
+					<div class="text-base md:text-lg text-slate-700 space-y-2.5">
+						<div>尋找 <b>$${data.originalA}$</b> 與 <b>$${data.originalB}$</b> 的最大公因數：</div>
+						<div class="bg-white p-3 rounded-xl border border-slate-100">$${data.originalA}$ 的因數：${data.factorsA.map(f => commonFactors.includes(f) ? `<strong class="text-red-600">${f}</strong>` : f).join(', ')}</div>
+						<div class="bg-white p-3 rounded-xl border border-slate-100">$${data.originalB}$ 的因數：${data.factorsB.map(f => commonFactors.includes(f) ? `<strong class="text-red-600">${f}</strong>` : f).join(', ')}</div>
+						<div>共同擁有的因數（公因數）：<strong class="text-red-600">${commonFactors.join(', ')}</strong></div>
+						<div class="text-indigo-700 font-bold pt-1 text-xl">最大的公因數是：<strong class="text-red-600">${data.gcd}</strong></div>
+					</div>
+				</div>
+
+				<!-- 方法二：短除法 -->
+				<div class="bg-indigo-50/60 p-5 rounded-2xl border border-indigo-200 space-y-3">
+					<span class="text-xl font-bold px-3 py-1 bg-indigo-600 text-white rounded-lg">方法二：短除法</span>
+					<p class="text-lg md:text-lg text-slate-600 leading-relaxed">
+						用兩個數共同的因數一直除，直到<b>沒有共同的因數</b>為止。<br>左邊除數的乘積，就是<strong class="text-indigo-700 font-bold">最大公因數</strong>！
+					</p>
+					<div class="bg-white p-4 rounded-xl border border-indigo-100 shadow-sm flex flex-col items-center">
+						<table class="short-div-table">${shortDivRows}</table>
+						<div class="mt-3 text-lg font-bold text-indigo-800 bg-indigo-100 px-4 py-2 rounded-lg text-center">
+							最大公因數 $= \\underbrace{${expText}}_{\\text{左側公因數相乘}} = ${data.gcd}$
+						</div>
+					</div>
+				</div>`;
+
+			document.getElementById('gcd-demo-area').innerHTML = html;
+			if (window.MathJax) MathJax.typesetPromise(); // 如果頁面有使用 MathJax 請保留此行渲染 LaTeX
+		}
+
+		// 渲染 LCM 畫面
+		function changeLcmNumbers() {
+			const randomPair = LCM_PAIRS[Math.floor(Math.random() * LCM_PAIRS.length)];
+			const data = getGcdDetails(randomPair[0], randomPair[1]);
+			
+			// 計算前幾個倍數
+			let multA = [], multB = [];
+			let lcm = (data.originalA * data.originalB) / data.gcd;
+			for (let i = 1; i <= 6; i++) multA.push(data.originalA * i);
+			for (let i = 1; i <= 6; i++) multB.push(data.originalB * i);
+
+			let shortDivRows = '';
+			data.steps.forEach(s => {
+				shortDivRows += `
+					<tr>
+						<td class="short-div-divisor l-highlight-left">$${s.divisor}$</td>
+						<td class="short-div-row-border">$${s.num1}$</td>
+						<td class="short-div-row-border">$${s.num2}$</td>
+					</tr>`;
+			});
+			shortDivRows += `
+				<tr>
+					<td class="l-highlight-left"></td>
+					<td class="l-highlight-bottom font-bold text-teal-800">$${data.remA}$</td>
+					<td class="l-highlight-bottom font-bold text-teal-800">$${data.remB}$</td>
+				</tr>`;
+
+			let leftText = data.steps.map(s => s.divisor).join(' × ');
+			let bottomText = `${data.remA} × ${data.remB}`;
+
+			const html = `
+				<!-- 方法一：列舉法 -->
+				<div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3">
+					<span class="text-xl font-bold px-3 py-1 bg-teal-100 text-teal-700 rounded-lg">方法一：列出倍數，比一比</span>
+					<div class="text-lg md:text-lg text-slate-700 space-y-2.5">
+						<div>尋找 <b>${data.originalA}</b> 與 <b>${data.originalB}</b> 的最小公倍數：</div>
+						<div class="bg-white p-3 rounded-xl border border-slate-100">$${data.originalA}$ 的倍數：${multA.map(m => m === lcm ? `<strong class="text-red-600">${m}</strong>` : m).join(', ')} ...</div>
+						<div class="bg-white p-3 rounded-xl border border-slate-100">$${data.originalB}$ 的倍數：${multB.map(m => m === lcm ? `<strong class="text-red-600">${m}</strong>` : m).join(', ')} ...</div>
+						<div class="text-teal-700 font-bold pt-1 text-xl">最小的公倍數是：<strong class="text-red-600">${lcm}</strong></div>
+					</div>
+				</div>
+
+				<!-- 方法二：短除法 -->
+				<div class="bg-teal-50/60 p-5 rounded-2xl border border-teal-200 space-y-3">
+					<span class="text-xl font-bold px-3 py-1 bg-teal-600 text-white rounded-lg">方法二：短除法</span>
+					<p class="text-lg md:text-lg text-slate-600 leading-relaxed">
+						先找兩個數共同的因數。能一起除就繼續。把<b>左邊和最下面的數全部乘起來</b>，就是<strong class="text-indigo-700 font-bold">最小公倍數</strong>！
+					</p>
+					<div class="bg-white p-4 rounded-xl border border-teal-100 shadow-sm flex flex-col items-center">
+						<table class="short-div-table">${shortDivRows}</table>
+						<div class="mt-3 text-lg font-bold text-teal-800 bg-teal-100 px-4 py-2 rounded-lg text-center">
+							最小公倍數 $= \\underbrace{${leftText}}_{\\text{左側}} \\times \\underbrace{${bottomText}}_{\\text{底部}} = ${lcm}$
+						</div>
+					</div>
+				</div>`;
+
+			document.getElementById('lcm-demo-area').innerHTML = html;
+			if (window.MathJax) MathJax.typesetPromise();
+		}
+
+		// 頁面載入時初始化畫面
+		document.addEventListener('DOMContentLoaded', () => {
+			changeGcdNumbers();
+			changeLcmNumbers();
+		});
+    </script>
+</body>
+</html>
