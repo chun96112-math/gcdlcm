@@ -657,8 +657,8 @@
 							</div>
 							<div>
 								<h3 class="font-extrabold text-slate-800 group-hover:text-indigo-600 transition-colors text-2xl">關卡 1：因倍數</h3>
-								<span class="text-sm font-bold text-amber-500 inline-flex items-center gap-1 mt-0.5">
-									<i class="fa-solid fa-star"></i> 最高紀錄：<span id="score-stage-1">未挑戰</span>
+								<span class="text-sm font-bold text-amber-600 inline-flex items-center gap-1 mt-0.5">
+									<i class="fa-solid fa-fire text-orange-500"></i> 最高連勝：<span id="combo-stage-1">0</span> 次
 								</span>
 							</div>
 						</div>
@@ -681,8 +681,8 @@
 							</div>
 							<div>
 								<h3 class="font-extrabold text-slate-800 group-hover:text-purple-600 transition-colors text-2xl">關卡 2：公因數與最大公因數</h3>
-								<span class="text-sm font-bold text-amber-500 inline-flex items-center gap-1 mt-0.5">
-									<i class="fa-solid fa-star"></i> 最高紀錄：<span id="score-stage-2">未挑戰</span>
+								<span class="text-sm font-bold text-amber-600 inline-flex items-center gap-1 mt-0.5">
+									<i class="fa-solid fa-fire text-orange-500"></i> 最高連勝：<span id="combo-stage-2">0</span> 次
 								</span>
 							</div>
 						</div>
@@ -705,8 +705,8 @@
 							</div>
 							<div>
 								<h3 class="font-extrabold text-slate-800 group-hover:text-teal-600 transition-colors text-2xl">關卡 3：公倍數與最小公倍數</h3>
-								<span class="text-sm font-bold text-amber-500 inline-flex items-center gap-1 mt-0.5">
-									<i class="fa-solid fa-star"></i> 最高紀錄：<span id="score-stage-3">未挑戰</span>
+								<span class="text-sm font-bold text-amber-600 inline-flex items-center gap-1 mt-0.5">
+									<i class="fa-solid fa-fire text-orange-500"></i> 最高連勝：<span id="combo-stage-3">0</span> 次
 								</span>
 							</div>
 						</div>
@@ -729,8 +729,8 @@
 							</div>
 							<div>
 								<h3 class="font-extrabold text-slate-800 group-hover:text-amber-500 transition-colors text-2xl">關卡 4：生活應用大挑戰</h3>
-								<span class="text-sm font-bold text-amber-500 inline-flex items-center gap-1 mt-0.5">
-									<i class="fa-solid fa-crown"></i> 最高紀錄：<span id="score-stage-4">未挑戰</span>
+								<span class="text-sm font-bold text-amber-600 inline-flex items-center gap-1 mt-0.5">
+									<i class="fa-solid fa-fire text-orange-500"></i> 最高連勝：<span id="combo-stage-4">0</span> 次
 								</span>
 							</div>
 						</div>
@@ -985,16 +985,22 @@
         /* ==========================================================================
            1. GAME STATE & LOCAL DATA
            ========================================================================== */
-        const gameState = {
+		const gameState = {
             score: 0,
             combo: 0,
-            maxCombo: 0,
+            stageMaxCombo: {
+                1: 0,
+                2: 0,
+                3: 0,
+                4: 0
+            },
             level: 1,
             exp: 0,
             totalCorrect: 0,
             gcdLcmCorrectCount: 0,
             unlockedBadges: new Set(),
             currentStage: 1,
+            lastPrompt: '', // 用來記錄上一題的題目文字，防止連續重複
             currentQuestion: null,
             selectedOptionIndex: null
         };
@@ -1834,270 +1840,297 @@
             `;
         }
 
-        function generateQuestion(stage) {
+		function generateQuestion(stage) {
             let q = {};
             const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
-            if (stage === 1) {
-                const type = randInt(1, 3);
-                if (type === 1) {
-                    const base = randInt(2, 9) * 4;
-                    const factors = getFactors(base);
-                    const correctChoice = factors[randInt(1, factors.length - 1)];
-                    let wrongChoices = [];
-                    while (wrongChoices.length < 3) {
-                        let w = randInt(2, base + 5);
-                        if (!factors.includes(w) && !wrongChoices.includes(w)) wrongChoices.push(w);
-                    }
-                    const options = [correctChoice, ...wrongChoices].sort(() => Math.random() - 0.5);
-                    
-                    q = {
-                        type: 'choice',
-                        prompt: `下列哪一個數字是 $${base}$ 的<b>因數</b>？`,
-                        options: options.map(o => `$${o}$`),
-                        correctIndex: options.indexOf(correctChoice),
-                        solution: `$${base} \\div ${correctChoice} = ${base / correctChoice} \\dots 0$，餘數為 0，所以 $${correctChoice}$ 是 $${base}$ 的因數！`
-                    };
-                } else if (type === 2) {
-                    const num = randInt(3, 12);
-                    const correctChoice = num * randInt(2, 6);
-                    let wrongChoices = [];
-                    while (wrongChoices.length < 3) {
-                        let w = randInt(10, 60);
-                        if (w % num !== 0 && !wrongChoices.includes(w)) wrongChoices.push(w);
-                    }
-                    const options = [correctChoice, ...wrongChoices].sort(() => Math.random() - 0.5);
+            let attempts = 0;
+            let isDuplicate = false;
 
-                    q = {
-                        type: 'choice',
-                        prompt: `下列哪一個數字是 $${num}$ 的<b>倍數</b>？`,
-                        options: options.map(o => `$${o}$`),
-                        correctIndex: options.indexOf(correctChoice),
-                        solution: `$${correctChoice} \\div ${num} = ${correctChoice / num}$，沒有餘數，因此 $${correctChoice}$ 是 $${num}$ 的倍數。`
-                    };
-                } else {
-                    const num = randInt(12, 30);
-                    const factors = getFactors(num);
-                    q = {
-                        type: 'choice',
-                        prompt: `數字 $${num}$ 一共有幾個因數？`,
-                        options: [factors.length, factors.length + 1, Math.max(1, factors.length - 1), factors.length + 2].sort(() => Math.random() - 0.5).map(o => `$${o}$ 個`),
-                        correctIndex: null,
-                        solution: `$${num}$ 的所有因數為：$${factors.join(', ')}$，總共有 $${factors.length}$ 個。`
-                    };
-                    const correctStr = `$${factors.length}$ 個`;
-                    q.correctIndex = q.options.indexOf(correctStr);
-                }
-            } else if (stage === 2) {
-                const num1 = randInt(2, 6) * 3;
-                const num2 = randInt(2, 6) * 4;
-                const g = gcd(num1, num2);
-                const shortDivHTML = generateShortDivisionHTML(num1, num2, false);
+            // ===== 防重複機制：若抽到與上一題相同就重抽 =====
+            do {
+                attempts++;
 
-                q = {
-                    type: 'input',
-                    prompt: `請計算 $${num1}$ 與 $${num2}$ 的<b>最大公因數</b>：`,
-                    correctAnswer: g.toString(),
-                    solution: `短除法計算過程：<br>${shortDivHTML}<br>最大公因數為左側公因數：<b>$${g}$</b>。`
-                };
-            } else if (stage === 3) {
-                const a = randInt(3, 8);
-                const b = randInt(4, 10);
-                const l = lcm(a, b);
-                const shortDivHTML = generateShortDivisionHTML(a, b, true);
-
-                q = {
-                    type: 'input',
-                    prompt: `請計算 $${a}$ 與 $${b}$ 的<b>最小公倍數</b>：`,
-                    correctAnswer: l.toString(),
-                    solution: `短除法 L 形大包圍計算過程：<br>${shortDivHTML}<br>最小公倍數為左側與底部數字全部相乘：<b>$${l}$</b>。`
-                };
-            } else {
-                const templateType = randInt(1, 7);
-
-                if (templateType === 1) {
-                    const vars = [
-                        { p1: '被除數、除數、商', p2: '0', symbol: '' },
-                        { p1: 'A、B、C', p2: '0', symbol: '『A ÷ B ＝ C … D』，當 A、B、C 都是整數，且 D 是' },
-                        { p1: '甲、乙、丙', p2: '0', symbol: '『甲 ÷ 乙 ＝ 丙 … 丁』，當甲、乙、丙都是整數，且丁是' }
-                    ];
-                    const v = vars[randInt(0, vars.length - 1)];
-                    const promptText = v.symbol ? 
-                        `在除法算式中，可以寫成${v.symbol} ${v.p2}時，叫作什麼？` :
-                        `在除法算式中，當被除數、除數、商都是整數，且餘數是 0 時，叫作什麼？`;
-                    
-                    const options = ['(A) 整數', '(B) 整除', '(C) 除名', '(D) 除盡'];
-                    q = {
-                        type: 'choice',
-                        prompt: `【觀念判斷】${promptText}`,
-                        options: options,
-                        correctIndex: 1,
-                        solution: `當整數相除沒有餘數（餘數為 0）時，這種情況稱為<b>「整除」</b>。`
-                    };
-
-                } else if (templateType === 2) {
-                    const tripleSets = [
-                        { a: 144, x: 12, y: 12, b: 132, z: 11 },
-                        { a: 209, x: 11, y: 19, b: 132, z: 12 },
-                        { a: 39, x: 3, y: 13, b: 26, z: 2 }
-                    ];
-                    const set = tripleSets[randInt(0, tripleSets.length - 1)];
-                    
-                    const correctOptions = [
-                        `$${set.x}$ 是 $${set.a}$ 的因數`,
-                        `$${set.x}$ 是 $${set.b}$ 的因數`,
-                        `$${set.x}$ 是 $${set.a}$ 和 $${set.b}$ 的公因數`
-                    ];
-                    const falseOption = `$${set.b}$ 是 $${set.a}$ 的因數`;
-
-                    const options = [...correctOptions, falseOption].sort(() => Math.random() - 0.5);
-                    q = {
-                        type: 'choice',
-                        prompt: `已知「$${set.a} = ${set.x} \\times ${set.y}$」、「$${set.b} = ${set.z} \\times ${set.x}$」，下面哪一個敘述是<b>錯誤</b>的？`,
-                        options: options,
-                        correctIndex: options.indexOf(falseOption),
-                        solution: `$${set.b}$ 不能整除 $${set.a}$（$${set.a} \\div ${set.b} = ${(set.a/set.b).toFixed(2)}\\dots$），所以 $${set.b}$ 不是 $${set.a}$ 的因數。`
-                    };
-
-                } else if (templateType === 3) {
-                    const paperSizes = [
-                        { w: 18, h: 24, impossible: 8, valid: [2, 3, 6] },
-                        { w: 24, h: 36, impossible: 8, valid: [2, 4, 12] },
-                        { w: 36, h: 54, impossible: 4, valid: [3, 9, 18] },
-                        { w: 30, h: 45, impossible: 8, valid: [3, 5, 15] }
-                    ];
-                    const paper = paperSizes[randInt(0, paperSizes.length - 1)];
-                    const options = [...paper.valid.map(v => `$${v}$ 公分`), `$${paper.impossible}$ 公分`].sort(() => Math.random() - 0.5);
-
-                    q = {
-                        type: 'choice',
-                        prompt: `在一張長 $${paper.w}$ 公分、寬 $${paper.h}$ 公分的白紙上畫滿相同大小的正方形，則正方形的邊長<b>不可能是</b>下面哪一個長度？`,
-                        options: options,
-                        correctIndex: options.indexOf(`$${paper.impossible}$ 公分`),
-                        solution: `正方形的邊長必須是長 $${paper.w}$ 與寬 $${paper.h}$ 的公因數。$${paper.impossible}$ 不能整除 $${paper.w}$ 或 $${paper.h}$，所以不可能是 $${paper.impossible}$ 公分。`
-                    };
-
-                } else if (templateType === 4) {
-                    const stories = [
-                        { name: '小螞蟻丁丁', unit: '粒米', daily: 3, weeks: 5, total: 105, factors: [3, 5, 7] },
-                        { name: '體育選手', unit: '公里', daily: 3, weeks: 5, total: 105, factors: [3, 5, 7] },
-                        { name: '長跑好手義傑', unit: '公里', daily: 5, weeks: 11, total: 385, factors: [5, 7, 11] }
-                    ];
-                    const s = stories[randInt(0, stories.length - 1)];
-                    const fStr = s.factors.join('、');
-
-                    const correctText = `$${s.total}$ 是 $${fStr}$ 共同的倍數`;
-                    const wrongText1 = `$${s.total}$ 不是 $${s.factors[0]}$ 的倍數`;
-                    const wrongText2 = `$${s.total}$ 不是 $${s.factors[1]}$ 的倍數`;
-                    const wrongText3 = `$${s.total}$ 不是 $${s.factors[2]}$ 的倍數`;
-
-                    const options = [correctText, wrongText1, wrongText2, wrongText3].sort(() => Math.random() - 0.5);
-
-                    q = {
-                        type: 'choice',
-                        prompt: `${s.name}每天進行 $${s.daily}$ ${s.unit}，經過 $${s.weeks}$ 個星期（共 $${s.weeks * 7}$ 天）後累積了 $${s.total}$ ${s.unit}。下面哪一個選項是正確的？`,
-                        options: options,
-                        correctIndex: options.indexOf(correctText),
-                        solution: `因為 $${s.total} = ${s.daily} \\times ${s.weeks} \\times 7$，所以 $${s.total}$ 可以被 $${s.factors[0]}$、$${s.factors[1]}$ 及 $7$（與 $${s.factors[2]}$）整除，是它們共同的倍數！`
-                    };
-
-                } else if (templateType === 5) {
-                    const baseDiv = randInt(6, 9);
-                    const mult = randInt(6, 12);
-                    const rem = randInt(1, baseDiv - 1);
-                    const original = baseDiv * mult + rem;
-
-                    const correctSub = rem;
-                    let wrongSubs = [];
-                    while (wrongSubs.length < 3) {
-                        let w = randInt(1, baseDiv + 5);
-                        if (w !== correctSub && !wrongSubs.includes(w) && (original - w) % baseDiv !== 0) {
-                            wrongSubs.push(w);
+                if (stage === 1) {
+                    const type = randInt(1, 3);
+                    if (type === 1) {
+                        // 【修改】base 範圍改為 12~60 (適合小高年級找因數)
+                        const base = randInt(3, 15) * 4;
+                        const factors = getFactors(base);
+                        const correctChoice = factors[randInt(1, factors.length - 1)];
+                        let wrongChoices = [];
+                        while (wrongChoices.length < 3) {
+                            let w = randInt(2, base + 5);
+                            if (!factors.includes(w) && !wrongChoices.includes(w)) wrongChoices.push(w);
                         }
-                    }
-
-                    const options = [correctSub, ...wrongSubs].sort(() => Math.random() - 0.5).map(v => `$${v}$`);
-
-                    q = {
-                        type: 'choice',
-                        prompt: `$${original}$ 減掉下列哪一個數後，會變成 $${baseDiv}$ 的倍數？`,
-                        options: options,
-                        correctIndex: options.indexOf(`$${correctSub}$`),
-                        solution: `$${original} \\div ${baseDiv} = ${mult} \\dots ${rem}$，餘數是 $${rem}$。所以扣掉 $${rem}$ 之後（$${original - rem} = ${baseDiv} \\times ${mult}$），就會變成 $${baseDiv}$ 的倍數！`
-                    };
-
-                } else if (templateType === 6) {
-                    const ruleTypes = [
-                        { rule: 3, name: '3 的倍數', check: n => n % 3 === 0, hint: '各位數字相加總和是 3 的倍數' },
-                        { rule: 5, name: '5 的倍數', check: n => n % 5 === 0, hint: '個位數字是 0 或 5' },
-                        { rule: 2, name: '2 的倍數', check: n => n % 2 === 0, hint: '個位數字是偶數（0, 2, 4, 6, 8）' }
-                    ];
-                    const rt = ruleTypes[randInt(0, ruleTypes.length - 1)];
-                    
-                    let correctNum = randInt(10, 99);
-                    while (!rt.check(correctNum)) correctNum++;
-
-                    let wrongNums = [];
-                    while (wrongNums.length < 3) {
-                        let w = randInt(11, 99);
-                        if (!rt.check(w) && !wrongNums.includes(w)) wrongNums.push(w);
-                    }
-
-                    const options = [correctNum, ...wrongNums].sort(() => Math.random() - 0.5).map(v => `$${v}$`);
-
-                    q = {
-                        type: 'choice',
-                        prompt: `下列哪一個數字是 <b>${rt.name}</b>？`,
-                        options: options,
-                        correctIndex: options.indexOf(`$${correctNum}$`),
-                        solution: `${rt.name}的特徵是：${rt.hint}。$${correctNum} \\div ${rt.rule} = ${correctNum / rt.rule}$ 沒有餘數！`
-                    };
-
-                } else {
-                    const isGCDWord = Math.random() > 0.5;
-                    if (isGCDWord) {
-                        const side = randInt(3, 8);
-                        const countA = randInt(2, 5);
-                        const countB = randInt(2, 5);
-                        const lenA = side * countA;
-                        const lenB = side * countB;
-                        const g = gcd(lenA, lenB);
+                        const options = [correctChoice, ...wrongChoices].sort(() => Math.random() - 0.5);
+                        
+                        q = {
+                            type: 'choice',
+                            prompt: `下列哪一個數字是 $${base}$ 的<b>因數</b>？`,
+                            options: options.map(o => `$${o}$`),
+                            correctIndex: options.indexOf(correctChoice),
+                            solution: `$${base} \\div ${correctChoice} = ${base / correctChoice} \\dots 0$，餘數為 0，所以 $${correctChoice}$ 是 $${base}$ 的因數！`
+                        };
+                    } else if (type === 2) {
+                        // 【修改】num 範圍改為 3~15 (找倍數，控制在百內)
+                        const num = randInt(3, 15);
+                        const correctChoice = num * randInt(2, 6);
+                        let wrongChoices = [];
+                        while (wrongChoices.length < 3) {
+                            let w = randInt(10, 80);
+                            if (w % num !== 0 && !wrongChoices.includes(w)) wrongChoices.push(w);
+                        }
+                        const options = [correctChoice, ...wrongChoices].sort(() => Math.random() - 0.5);
 
                         q = {
-                            type: 'input',
-                            prompt: `【生活應用題】小華有長 $${lenA}$ 公分、寬 $${lenB}$ 公分的長方形紙張，想要剪成邊長相等且最大張的正方形，正方形的邊長最大是幾公分？`,
-                            correctAnswer: g.toString(),
-                            solution: `要求最大的正方形邊長，也就是求 $${lenA}$ 與 $${lenB}$ 的最大公因數，計算得 <b>$${g}$</b> 公分。`
+                            type: 'choice',
+                            prompt: `下列哪一個數字是 $${num}$ 的<b>倍數</b>？`,
+                            options: options.map(o => `$${o}$`),
+                            correctIndex: options.indexOf(correctChoice),
+                            solution: `$${correctChoice} \\div ${num} = ${correctChoice / num}$，沒有餘數，因此 $${correctChoice}$ 是 $${num}$ 的倍數。`
                         };
                     } else {
-                        const t1 = randInt(2, 5) * 5;
-                        const t2 = randInt(2, 5) * 6;
-                        const l = lcm(t1, t2);
+                        // 【修改】num 範圍改為 12~50
+                        const num = randInt(12, 50);
+                        const factors = getFactors(num);
+                        q = {
+                            type: 'choice',
+                            prompt: `數字 $${num}$ 一共有幾個因數？`,
+                            options: [factors.length, factors.length + 1, Math.max(1, factors.length - 1), factors.length + 2].sort(() => Math.random() - 0.5).map(o => `$${o}$ 個`),
+                            correctIndex: null,
+                            solution: `$${num}$ 的所有因數為：$${factors.join(', ')}$，總共有 $${factors.length}$ 個。`
+                        };
+                        const correctStr = `$${factors.length}$ 個`;
+                        q.correctIndex = q.options.indexOf(correctStr);
+                    }
+                } else if (stage === 2) {
+                    // 【修改】num1 與 num2 範圍改為 12~64 (最大公因數適中，短除法好算)
+                    const num1 = randInt(2, 8) * 6;
+                    const num2 = randInt(2, 8) * 8;
+                    const g = gcd(num1, num2);
+                    const shortDivHTML = generateShortDivisionHTML(num1, num2, false);
+
+                    q = {
+                        type: 'input',
+                        prompt: `請計算 $${num1}$ 與 $${num2}$ 的<b>最大公因數</b>：`,
+                        correctAnswer: g.toString(),
+                        solution: `短除法計算過程：<br>${shortDivHTML}<br>最大公因數為左側公因數：<b>$${g}$</b>。`
+                    };
+                } else if (stage === 3) {
+                    // 【修改】a 與 b 範圍改為 3~15 (公倍數控制在 120 以內，避免學生心算爆掉)
+                    const a = randInt(3, 12);
+                    const b = randInt(4, 15);
+                    const l = lcm(a, b);
+                    const shortDivHTML = generateShortDivisionHTML(a, b, true);
+
+                    q = {
+                        type: 'input',
+                        prompt: `請計算 $${a}$ 與 $${b}$ 的<b>最小公倍數</b>：`,
+                        correctAnswer: l.toString(),
+                        solution: `短除法 L 形大包圍計算過程：<br>${shortDivHTML}<br>最小公倍數為左側與底部數字全部相乘：<b>$${l}$</b>。`
+                    };
+                } else {
+                    const templateType = randInt(1, 7);
+
+                    if (templateType === 1) {
+                        const vars = [
+                            { p1: '被除數、除數、商', p2: '0', symbol: '' },
+                            { p1: 'A、B、C', p2: '0', symbol: '『A ÷ B ＝ C … D』，當 A、B、C 都是整數，且 D 是' },
+                            { p1: '甲、乙、丙', p2: '0', symbol: '『甲 ÷ 乙 ＝ 丙 … 丁』，當甲、乙、丙都是整數，且丁是' }
+                        ];
+                        const v = vars[randInt(0, vars.length - 1)];
+                        const promptText = v.symbol ? 
+                            `在除法算式中，可以寫成${v.symbol} ${v.p2}時，叫作什麼？` :
+                            `在除法算式中，當被除數、除數、商都是整數，且餘數是 0 時，叫作什麼？`;
+                        
+                        const options = ['(A) 整數', '(B) 整除', '(C) 除名', '(D) 除盡'];
+                        q = {
+                            type: 'choice',
+                            prompt: `【觀念判斷】${promptText}`,
+                            options: options,
+                            correctIndex: 1,
+                            solution: `當整數相除沒有餘數（餘數為 0）時，這種情況稱為<b>「整除」</b>。`
+                        };
+
+                    } else if (templateType === 2) {
+                        const tripleSets = [
+                            { a: 144, x: 12, y: 12, b: 132, z: 11 },
+                            { a: 209, x: 11, y: 19, b: 132, z: 12 },
+                            { a: 39, x: 3, y: 13, b: 26, z: 2 }
+                        ];
+                        const set = tripleSets[randInt(0, tripleSets.length - 1)];
+                        
+                        const correctOptions = [
+                            `$${set.x}$ 是 $${set.a}$ 的因數`,
+                            `$${set.x}$ 是 $${set.b}$ 的因數`,
+                            `$${set.x}$ 是 $${set.a}$ 和 $${set.b}$ 的公因數`
+                        ];
+                        const falseOption = `$${set.b}$ 是 $${set.a}$ 的因數`;
+
+                        const options = [...correctOptions, falseOption].sort(() => Math.random() - 0.5);
+                        q = {
+                            type: 'choice',
+                            prompt: `已知「$${set.a} = ${set.x} \\times ${set.y}$」、「$${set.b} = ${set.z} \\times ${set.x}$」，下面哪一個敘述是<b>錯誤</b>的？`,
+                            options: options,
+                            correctIndex: options.indexOf(falseOption),
+                            solution: `$${set.b}$ 不能整除 $${set.a}$（$${set.a} \\div ${set.b} = ${(set.a/set.b).toFixed(2)}\\dots$），所以 $${set.b}$ 不是 $${set.a}$ 的因數。`
+                        };
+
+                    } else if (templateType === 3) {
+                        const paperSizes = [
+                            { w: 18, h: 24, impossible: 8, valid: [2, 3, 6] },
+                            { w: 24, h: 36, impossible: 8, valid: [2, 4, 12] },
+                            { w: 36, h: 54, impossible: 4, valid: [3, 9, 18] },
+                            { w: 30, h: 45, impossible: 8, valid: [3, 5, 15] }
+                        ];
+                        const paper = paperSizes[randInt(0, paperSizes.length - 1)];
+                        const options = [...paper.valid.map(v => `$${v}$ 公分`), `$${paper.impossible}$ 公分`].sort(() => Math.random() - 0.5);
 
                         q = {
-                            type: 'input',
-                            prompt: `【生活應用題】紅燈每 $${t1}$ 秒亮一次，綠燈每 $${t2}$ 秒亮一次。若兩燈現在同時亮起，最快幾秒後會再次同時亮起？`,
-                            correctAnswer: l.toString(),
-                            solution: `再次同時亮起的時間就是 $${t1}$ 與 $${t2}$ 的最小公倍數，計算得 <b>$${l}$</b> 秒。`
+                            type: 'choice',
+                            prompt: `在一張長 $${paper.w}$ 公分、寬 $${paper.h}$ 公分的白紙上畫滿相同大小的正方形，則正方形的邊長<b>不可能是</b>下面哪一個長度？`,
+                            options: options,
+                            correctIndex: options.indexOf(`$${paper.impossible}$ 公分`),
+                            solution: `正方形的邊長必須是長 $${paper.w}$ 與寬 $${paper.h}$ 的公因數。$${paper.impossible}$ 不能整除 $${paper.w}$ 或 $${paper.h}$，所以不可能是 $${paper.impossible}$ 公分。`
                         };
+
+                    } else if (templateType === 4) {
+                        const stories = [
+                            { name: '小螞蟻丁丁', unit: '粒米', daily: 3, weeks: 5, total: 105, factors: [3, 5, 7] },
+                            { name: '體育選手', unit: '公里', daily: 3, weeks: 5, total: 105, factors: [3, 5, 7] },
+                            { name: '長跑好手義傑', unit: '公里', daily: 5, weeks: 11, total: 385, factors: [5, 7, 11] }
+                        ];
+                        const s = stories[randInt(0, stories.length - 1)];
+                        const fStr = s.factors.join('、');
+
+                        const correctText = `$${s.total}$ 是 $${fStr}$ 共同的倍數`;
+                        const wrongText1 = `$${s.total}$ 不是 $${s.factors[0]}$ 的倍數`;
+                        const wrongText2 = `$${s.total}$ 不是 $${s.factors[1]}$ 的倍數`;
+                        const wrongText3 = `$${s.total}$ 不是 $${s.factors[2]}$ 的倍數`;
+
+                        const options = [correctText, wrongText1, wrongText2, wrongText3].sort(() => Math.random() - 0.5);
+
+                        q = {
+                            type: 'choice',
+                            prompt: `${s.name}每天進行 $${s.daily}$ ${s.unit}，經過 $${s.weeks}$ 個星期（共 $${s.weeks * 7}$ 天）後累積了 $${s.total}$ ${s.unit}。下面哪一個選項是正確的？`,
+                            options: options,
+                            correctIndex: options.indexOf(correctText),
+                            solution: `因為 $${s.total} = ${s.daily} \\times ${s.weeks} \\times 7$，所以 $${s.total}$ 可以被 $${s.factors[0]}$、$${s.factors[1]}$ 及 $7$（與 $${s.factors[2]}$）整除，是它們共同的倍數！`
+                        };
+
+                    } else if (templateType === 5) {
+                        const baseDiv = randInt(6, 9);
+                        const mult = randInt(6, 12);
+                        const rem = randInt(1, baseDiv - 1);
+                        const original = baseDiv * mult + rem;
+
+                        const correctSub = rem;
+                        let wrongSubs = [];
+                        while (wrongSubs.length < 3) {
+                            let w = randInt(1, baseDiv + 5);
+                            if (w !== correctSub && !wrongSubs.includes(w) && (original - w) % baseDiv !== 0) {
+                                wrongSubs.push(w);
+                            }
+                        }
+
+                        const options = [correctSub, ...wrongSubs].sort(() => Math.random() - 0.5).map(v => `$${v}$`);
+
+                        q = {
+                            type: 'choice',
+                            prompt: `$${original}$ 減掉下列哪一個數後，會變成 $${baseDiv}$ 的倍數？`,
+                            options: options,
+                            correctIndex: options.indexOf(`$${correctSub}$`),
+                            solution: `$${original} \\div ${baseDiv} = ${mult} \\dots ${rem}$，餘數是 $${rem}$。所以扣掉 $${rem}$ 之後（$${original - rem} = ${baseDiv} \\times ${mult}$），就會變成 $${baseDiv}$ 的倍數！`
+                        };
+
+                    } else if (templateType === 6) {
+                        const ruleTypes = [
+                            { rule: 3, name: '3 的倍數', check: n => n % 3 === 0, hint: '各位數字相加總和是 3 的倍數' },
+                            { rule: 5, name: '5 的倍數', check: n => n % 5 === 0, hint: '個位數字是 0 或 5' },
+                            { rule: 2, name: '2 的倍數', check: n => n % 2 === 0, hint: '個位數字是偶數（0, 2, 4, 6, 8）' }
+                        ];
+                        const rt = ruleTypes[randInt(0, ruleTypes.length - 1)];
+                        
+                        let correctNum = randInt(10, 99);
+                        while (!rt.check(correctNum)) correctNum++;
+
+                        let wrongNums = [];
+                        while (wrongNums.length < 3) {
+                            let w = randInt(11, 99);
+                            if (!rt.check(w) && !wrongNums.includes(w)) wrongNums.push(w);
+                        }
+
+                        const options = [correctNum, ...wrongNums].sort(() => Math.random() - 0.5).map(v => `$${v}$`);
+
+                        q = {
+                            type: 'choice',
+                            prompt: `下列哪一個數字是 <b>${rt.name}</b>？`,
+                            options: options,
+                            correctIndex: options.indexOf(`$${correctNum}$`),
+                            solution: `${rt.name}的特徵是：${rt.hint}。$${correctNum} \\div ${rt.rule} = ${correctNum / rt.rule}$ 沒有餘數！`
+                        };
+
+                    } else {
+                        const isGCDWord = Math.random() > 0.5;
+                        if (isGCDWord) {
+                            // 【修改】邊長與倍數範圍，長寬維持在 10~50
+                            const side = randInt(3, 6);
+                            const countA = randInt(2, 5);
+                            const countB = randInt(2, 5);
+                            const lenA = side * countA;
+                            const lenB = side * countB;
+                            const g = gcd(lenA, lenB);
+
+                            q = {
+                                type: 'input',
+                                prompt: `【生活應用題】小華有長 $${lenA}$ 公分、寬 $${lenB}$ 公分的長方形紙張，想要剪成邊長相等且最大張的正方形，正方形的邊長最大是幾公分？`,
+                                correctAnswer: g.toString(),
+                                solution: `要求最大的正方形邊長，也就是求 $${lenA}$ 與 $${lenB}$ 的最大公因數，計算得 <b>$${g}$</b> 公分。`
+                            };
+                        } else {
+                            // 【修改】紅綠燈秒數改為 10~30 秒，公倍數不超過 120
+                            const t1 = randInt(2, 4) * 5;
+                            const t2 = randInt(2, 4) * 6;
+                            const l = lcm(t1, t2);
+
+                            q = {
+                                type: 'input',
+                                prompt: `【生活應用題】紅燈每 $${t1}$ 秒亮一次，綠燈每 $${t2}$ 秒亮一次。若兩燈現在同時亮起，最快幾秒後會再次同時亮起？`,
+                                correctAnswer: l.toString(),
+                                solution: `再次同時亮起的時間就是 $${t1}$ 與 $${t2}$ 的最小公倍數，計算得 <b>$${l}$</b> 秒。`
+                            };
+                        }
                     }
                 }
-            }
+
+                isDuplicate = (q.prompt === gameState.lastPrompt);
+
+            } while (isDuplicate && attempts < 15);
+
+            // ===== 記錄本次產生的題目文字 =====
+            gameState.lastPrompt = q.prompt;
 
             return q;
         }
 
         function startQuizStage(stageNum) {
             gameState.currentStage = stageNum;
+            gameState.combo = 0; // 【關鍵修復】進入新關卡時，將當前連勝數歸零！
+            
             document.getElementById('quizStageSelectScreen').classList.add('hidden');
             document.getElementById('activeQuizArea').classList.remove('hidden');
             document.getElementById('currentStageBadge').innerText = `關卡 ${stageNum}`;
+            
+            updateGamificationUI(); // 立即更新頂部 UI 顯示為 0 連擊
             loadNextQuestion();
         }
 
         function exitQuizToStageSelect() {
+            gameState.combo = 0; // 離開關卡時將當前連勝數歸零
             document.getElementById('activeQuizArea').classList.add('hidden');
             document.getElementById('quizStageSelectScreen').classList.remove('hidden');
+            updateGamificationUI(); // 更新頂部連勝顯示為 0
         }
 
         function loadNextQuestion() {
@@ -2188,9 +2221,12 @@
                 if (gameState.combo >= 3) {
                     gameState.score += 15;
                 }
-                if (gameState.combo > gameState.maxCombo) {
-                    gameState.maxCombo = gameState.combo;
+
+                // 【修改這裡】只更新「當前關卡」的最高連勝
+                if (gameState.combo > gameState.stageMaxCombo[gameState.currentStage]) {
+                    gameState.stageMaxCombo[gameState.currentStage] = gameState.combo;
                 }
+
                 gameState.totalCorrect += 1;
                 if (gameState.currentStage === 2 || gameState.currentStage === 3) {
                     gameState.gcdLcmCorrectCount += 1;
@@ -2242,10 +2278,10 @@
         }
 
 		/* ==========================================================================
-		   9. GAMIFICATION LOGIC, BADGES & LEVEL SYSTEM (資料驅動修正版)
+		   9. GAMIFICATION LOGIC, BADGES & LEVEL SYSTEM (獨立關卡連勝版)
 		   ========================================================================== */
 
-		// 1. 經驗值增加與升級機制
+		// 經驗值增加與升級機制
 		function addExp(amount) {
 			gameState.exp += amount;
 			
@@ -2269,141 +2305,131 @@
 			updateGamificationUI();
 		}
 
-		// 2. 顯示升級彈窗 (滿級特殊視覺)
+		// 顯示升級彈窗
 		function showLevelUpModal() {
-			if (typeof playLevelUpSound === 'function') playLevelUpSound();
-			
-			const modal = document.getElementById('levelUpModal');
-			const titleEl = document.getElementById('modalLevelTitle');
-			
-			if (gameState.level === LEVEL_TITLES.length) {
-				// LV10 頂峰尊榮彈窗
-				if (typeof triggerPetalRain === 'function') triggerPetalRain(5000); // 延長花瓣雨時間
-				if (titleEl) {
-					titleEl.innerHTML = `🏆 恭喜登頂！達成最高榮譽 <br><span class="text-amber-500 font-extrabold">${LEVEL_TITLES[gameState.level - 1]}</span>！`;
-				}
-			} else {
-				// 一般等級彈窗
-				if (typeof triggerPetalRain === 'function') triggerPetalRain(3500);
-				if (titleEl) {
-					titleEl.innerText = `恭喜晉升 ${LEVEL_TITLES[gameState.level - 1]}！`;
-				}
+			playLevelUpSound();
+			triggerPetalRain(3500);
+
+			const currentTitle = LEVEL_TITLES[gameState.level - 1] || `LV${gameState.level} 冒險家`;
+			const modalTitle = document.getElementById('modalLevelTitle');
+			if (modalTitle) {
+				modalTitle.innerText = `恭喜晉升 ${currentTitle}！`;
 			}
 
-			if (modal) modal.classList.remove('hidden');
+			const modal = document.getElementById('levelUpModal');
+			if (modal) {
+				modal.classList.remove('hidden');
+			}
 		}
 
-		// 3. 關閉升級彈窗
 		function closeLevelUpModal() {
 			const modal = document.getElementById('levelUpModal');
-			if (modal) modal.classList.add('hidden');
-		}
-
-		// 4. 勳章牆動態繪製 (根據解鎖狀態 100% 準確著色)
-		function renderBadges() {
-			const badgeConfigs = {
-				1: { bg: 'bg-amber-100', text: 'text-amber-600', border: 'border-amber-300' },
-				2: { bg: 'bg-orange-100', text: 'text-orange-600', border: 'border-orange-300' },
-				3: { bg: 'bg-indigo-100', text: 'text-indigo-600', border: 'border-indigo-300' },
-				4: { bg: 'bg-purple-100', text: 'text-purple-600', border: 'border-purple-300' },
-				5: { bg: 'bg-emerald-100', text: 'text-emerald-600', border: 'border-emerald-300' },
-				6: { bg: 'bg-rose-100', text: 'text-rose-600', border: 'border-rose-300' } // Badge 6 尊爵紅
-			};
-
-			[1, 2, 3, 4, 5, 6].forEach(id => {
-				const isUnlocked = gameState.unlockedBadges.has(id);
-				const card = document.getElementById(`badge-card-${id}`);
-				const iconBox = document.getElementById(`badge-icon-box-${id}`);
-				const lockIcon = document.getElementById(`badge-lock-${id}`);
-
-				if (card && iconBox && lockIcon) {
-					if (isUnlocked) {
-						// 解鎖：黃金邊框、彩色圖示背景、綠色勾勾
-						const config = badgeConfigs[id];
-						card.className = `p-5 rounded-2xl border-2 ${config.border} bg-white shadow-md ring-2 ring-amber-300/30 flex items-center gap-4 transition-all`;
-						iconBox.className = `w-14 h-14 rounded-2xl ${config.bg} ${config.text} flex items-center justify-center text-3xl shrink-0 shadow-sm`;
-						lockIcon.className = 'fa-solid fa-circle-check text-amber-500 text-lg';
-					} else {
-						// 未解鎖：簡約灰框與灰圖示
-						card.className = 'p-5 rounded-2xl border-2 border-slate-200 bg-slate-50 flex items-center gap-4 transition-all';
-						iconBox.className = 'w-14 h-14 rounded-2xl bg-slate-200 text-slate-400 flex items-center justify-center text-3xl shrink-0';
-						lockIcon.className = 'fa-solid fa-lock text-sm text-slate-400';
-					}
-				}
-			});
-		}
-
-		// 5. 解鎖勳章觸發點
-		function unlockBadge(badgeId) {
-			if (!gameState.unlockedBadges.has(badgeId)) {
-				gameState.unlockedBadges.add(badgeId);
-				if (typeof triggerPetalRain === 'function') triggerPetalRain(2000);
-				updateGamificationUI();
+			if (modal) {
+				modal.classList.add('hidden');
 			}
 		}
 
-		// 6. 檢查勳章解鎖條件
+		// 成就勳章檢測機制
 		function checkBadgeUnlocks() {
-			if (gameState.totalCorrect >= 1) unlockBadge(1);
-			if (gameState.maxCombo >= 3) unlockBadge(2);
-			if (gameState.gcdLcmCorrectCount >= 5) unlockBadge(3);
-			if (gameState.level >= 5) unlockBadge(4); // 配合 10 等系統，改為 LV5 解鎖
-			if (gameState.maxCombo >= 8) unlockBadge(5);
-			if (gameState.level >= 10) unlockBadge(6);
+			// 算出所有關卡中的最高連勝紀錄
+			const globalMaxCombo = Math.max(...Object.values(gameState.stageMaxCombo));
+
+			// Badge 1: 因數新手（答對 1 題）
+			if (gameState.totalCorrect >= 1) gameState.unlockedBadges.add(1);
+			
+			// Badge 2: 連擊之星（達成 3 連擊以上）
+			if (globalMaxCombo >= 3) gameState.unlockedBadges.add(2);
+
+			// Badge 3: 短除法大師（關卡 2 或 3 答對 5 題）
+			if (gameState.gcdLcmCorrectCount >= 5) gameState.unlockedBadges.add(3);
+
+			// Badge 4: 進階冒險家（等級達到 LV5 以上）
+			if (gameState.level >= 5) gameState.unlockedBadges.add(4);
+
+			// Badge 5: 無失誤王者（達成 8 連擊霸業）
+			if (globalMaxCombo >= 8) gameState.unlockedBadges.add(5);
+
+			// Badge 6: 至尊掌門人（達成 LV10 頂峰榮譽）
+			if (gameState.level >= 10) gameState.unlockedBadges.add(6);
+
+			updateBadgesUI();
 		}
 
-		// 7. 全局 UI 狀態更新
-		function updateGamificationUI() {
-			// 頂部 Header
-			const scoreEl = document.getElementById('playerScore');
-			const comboEl = document.getElementById('playerCombo');
-			const badgeIconEl = document.getElementById('playerBadgeIcon');
-			const levelTitleEl = document.getElementById('playerLevelTitle');
-			const expBarHeaderEl = document.getElementById('expBar');
+		// 更新成就勳章 UI 顯示
+		function updateBadgesUI() {
+			for (let i = 1; i <= 6; i++) {
+				const card = document.getElementById(`badge-card-${i}`);
+				const iconBox = document.getElementById(`badge-icon-box-${i}`);
+				const lockIcon = document.getElementById(`badge-lock-${i}`);
 
-			if (scoreEl) scoreEl.innerText = gameState.score;
-			if (comboEl) comboEl.innerText = gameState.combo;
-			if (badgeIconEl) badgeIconEl.innerText = `LV${gameState.level}`;
-			if (levelTitleEl) levelTitleEl.innerText = LEVEL_TITLES[gameState.level - 1];
-			if (expBarHeaderEl) expBarHeaderEl.style.width = `${gameState.exp}%`;
+				if (!card || !iconBox || !lockIcon) continue;
 
-			// 戰績頁 Hero Card
-			const lvlBadge = document.getElementById('playerLevelBadge');
-			const titleName = document.getElementById('playerTitleName');
-			const expText = document.getElementById('playerExpText');
-			const expBarDashboard = document.getElementById('playerExpBar');
-
-			if (lvlBadge) lvlBadge.innerText = `LV${gameState.level}`;
-			if (titleName) titleName.innerText = LEVEL_TITLES[gameState.level - 1].replace(/LV\d+\s*/, '');
-			if (expText) {
-				if (gameState.level >= LEVEL_TITLES.length) {
-					expText.innerText = "MAX 已達最高等級";
+				if (gameState.unlockedBadges.has(i)) {
+					card.className = "p-5 rounded-2xl border-2 border-amber-300 bg-amber-50/60 flex items-center gap-4 transition-all shadow-sm";
+					iconBox.className = "w-14 h-14 rounded-2xl bg-amber-400 text-white flex items-center justify-center text-3xl shrink-0 shadow-md";
+					lockIcon.className = "fa-solid fa-circle-check text-emerald-500 text-lg";
 				} else {
-					expText.innerText = `${gameState.exp} / 100 EXP`;
+					card.className = "p-5 rounded-2xl border-2 border-slate-200 bg-slate-50 flex items-center gap-4 transition-all opacity-80";
+					iconBox.className = "w-14 h-14 rounded-2xl bg-slate-200 text-slate-400 flex items-center justify-center text-3xl shrink-0";
+					lockIcon.className = "fa-solid fa-lock text-sm text-slate-400";
 				}
 			}
-			if (expBarDashboard) expBarDashboard.style.width = `${gameState.exp}%`;
+		}
 
-			// 四大統計數據
-			const statTotal = document.getElementById('statTotalCorrect');
-			const statCombo = document.getElementById('statMaxCombo');
-			const statLvl = document.getElementById('statPlayerLevel');
+		// 更新頂部玩家資訊欄、戰績頁面與【獨立關卡最高連勝】
+		function updateGamificationUI() {
+			const currentTitle = LEVEL_TITLES[gameState.level - 1] || `LV${gameState.level} 數字冒險家`;
+
+			// 1. 頂部狀態列
+			const pBadgeIcon = document.getElementById('playerBadgeIcon');
+			const pLevelTitle = document.getElementById('playerLevelTitle');
+			const expBar = document.getElementById('expBar');
+			const pScore = document.getElementById('playerScore');
+			const pCombo = document.getElementById('playerCombo');
+
+			if (pBadgeIcon) pBadgeIcon.innerText = `LV${gameState.level}`;
+			if (pLevelTitle) pLevelTitle.innerText = currentTitle;
+			if (expBar) expBar.style.width = `${gameState.exp}%`;
+			if (pScore) pScore.innerText = gameState.score;
+			if (pCombo) pCombo.innerText = gameState.combo;
+
+			// 2. 更新 1~4 關各卡片上的「獨立最高連勝」
+			for (let stage = 1; stage <= 4; stage++) {
+				const comboEl = document.getElementById(`combo-stage-${stage}`);
+				if (comboEl) {
+					comboEl.innerText = gameState.stageMaxCombo[stage] || 0;
+				}
+			}
+
+			// 3. 戰績頁面 (Tab 4) 數據
+			const pLevelBadge = document.getElementById('playerLevelBadge');
+			const pTitleName = document.getElementById('playerTitleName');
+			const pExpText = document.getElementById('playerExpText');
+			const pExpBar = document.getElementById('playerExpBar');
+
+			if (pLevelBadge) pLevelBadge.innerText = `LV${gameState.level}`;
+			if (pTitleName) pTitleName.innerText = currentTitle;
+			if (pExpText) pExpText.innerText = `${gameState.exp} / 100 EXP`;
+			if (pExpBar) pExpBar.style.width = `${gameState.exp}%`;
+
+			// 戰績頁面顯示所有關卡中的「歷史最高連勝」
+			const globalMaxCombo = Math.max(...Object.values(gameState.stageMaxCombo));
+
+			const statCorrect = document.getElementById('statTotalCorrect');
+			const statMaxCombo = document.getElementById('statMaxCombo');
+			const statLevel = document.getElementById('statPlayerLevel');
 			const statBadges = document.getElementById('statBadgesCount');
 
-			if (statTotal) statTotal.innerText = gameState.totalCorrect;
-			if (statCombo) statCombo.innerText = gameState.maxCombo;
-			if (statLvl) statLvl.innerText = `LV${gameState.level}`;
+			if (statCorrect) statCorrect.innerText = gameState.totalCorrect;
+			if (statMaxCombo) statMaxCombo.innerText = globalMaxCombo;
+			if (statLevel) statLevel.innerText = `LV${gameState.level}`;
 			if (statBadges) statBadges.innerText = `${gameState.unlockedBadges.size} / 6`;
-
-			// 強制更新勳章牆視覺
-			renderBadges();
 		}
 
-		/* 初始化頁面 */
-		window.addEventListener('DOMContentLoaded', () => {
-			if (typeof calculateDivisibility === 'function') calculateDivisibility();
-			if (typeof generateRainbowFactors === 'function') generateRainbowFactors();
+		// 頁面初次載入時自動初始化 UI
+		document.addEventListener('DOMContentLoaded', () => {
 			updateGamificationUI();
+			checkBadgeUnlocks();
 		});
 		
 		// 可供抽換的範例數字對 (適合國小高年級計算)
