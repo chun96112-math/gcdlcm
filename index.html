@@ -1189,6 +1189,12 @@
 			}
         }
 
+        if (subTabId === 'c-sub-gcd') {
+            renderGcdDemo();
+        } else if (subTabId === 'c-sub-lcm') {
+            renderLcmDemo();
+        }
+
         window.scrollTo({
             top: 0,
             behavior: 'smooth'
@@ -1990,7 +1996,8 @@
                 `;
             }
 
-            document.getElementById('quizActionContainer').innerHTML = `
+            const actContainer = document.getElementById('quizActionContainer');
+            actContainer.innerHTML = `
                 <button id="btnSubmitAnswer" onclick="submitCurrentAnswer()" class="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-extrabold rounded-2xl shadow-lg hover:shadow-indigo-300 hover:opacity-95 active:scale-98 transition-all text-lg cursor-pointer">
                     提交答案
                 </button>
@@ -2002,116 +2009,116 @@
 
         function selectChoiceOption(idx) {
             gameState.selectedOptionIndex = idx;
-            document.querySelectorAll('.opt-btn').forEach((btn, i) => {
-                if (i === idx) {
-                    btn.classList.add('border-indigo-600', 'bg-indigo-50', 'text-indigo-900');
-                    btn.classList.remove('border-slate-200');
-                    btn.querySelector('i').className = 'fa-solid fa-circle-dot text-indigo-600';
+            document.querySelectorAll('.opt-btn').forEach((btn, bIdx) => {
+                const icon = btn.querySelector('i');
+                if (bIdx === idx) {
+                    btn.className = 'opt-btn p-4 rounded-xl border-2 border-indigo-600 bg-indigo-50 font-extrabold text-indigo-900 transition-all text-left flex items-center justify-between text-base cursor-pointer shadow-sm';
+                    if (icon) icon.className = 'fa-solid fa-circle-dot text-indigo-600';
                 } else {
-                    btn.classList.remove('border-indigo-600', 'bg-indigo-50', 'text-indigo-900');
-                    btn.classList.add('border-slate-200');
-                    btn.querySelector('i').className = 'fa-regular fa-circle text-slate-300';
+                    btn.className = 'opt-btn p-4 rounded-xl border-2 border-slate-200 font-bold text-slate-700 hover:border-indigo-400 hover:bg-indigo-50/50 transition-all text-left flex items-center justify-between text-base cursor-pointer';
+                    if (icon) icon.className = 'fa-regular fa-circle text-slate-300';
                 }
             });
         }
 
         function submitCurrentAnswer() {
             const q = gameState.currentQuestion;
+            if (!q) return;
+
             let isCorrect = false;
 
             if (q.type === 'choice') {
                 if (gameState.selectedOptionIndex === null) {
-                    alert('請先選擇一個選項喔！');
+                    alert('請先選擇一個答案！');
                     return;
                 }
                 isCorrect = (gameState.selectedOptionIndex === q.correctIndex);
             } else {
-                const inputVal = document.getElementById('numAnswerInput').value.trim();
-                if (!inputVal) {
-                    alert('請先輸入答案喔！');
+                const inputEl = document.getElementById('numAnswerInput');
+                const val = inputEl ? inputEl.value.trim() : '';
+                if (val === '') {
+                    alert('請先輸入答案！');
                     return;
                 }
-                isCorrect = (inputVal === q.correctAnswer);
+                isCorrect = (val === q.correctAnswer);
             }
 
             const feedbackBox = document.getElementById('quizFeedbackBox');
-            feedbackBox.classList.remove('hidden');
+            const actContainer = document.getElementById('quizActionContainer');
 
             if (isCorrect) {
                 playCorrectSound();
-                triggerPetalRain(2500);
+                triggerPetalRain(2000);
 
-                gameState.score += 10;
-                gameState.combo += 1;
-                if (gameState.combo >= 3) {
-                    gameState.score += 15;
-                }
+                gameState.combo++;
+                gameState.totalCorrect++;
+                const gainScore = 10 + (gameState.combo * 2);
+                gameState.score += gainScore;
 
-                if (gameState.combo > gameState.stageMaxCombo[gameState.currentStage]) {
-                    gameState.stageMaxCombo[gameState.currentStage] = gameState.combo;
-                }
-
-                gameState.totalCorrect += 1;
                 if (gameState.currentStage === 2 || gameState.currentStage === 3) {
-                    gameState.gcdLcmCorrectCount += 1;
+                    gameState.gcdLcmCorrectCount++;
                 }
 
-                const praiseMsg = PRAISE_MESSAGES[Math.floor(Math.random() * PRAISE_MESSAGES.length)];
-                
-                feedbackBox.className = "p-6 rounded-2xl space-y-3 bg-emerald-50 border-2 border-emerald-200 text-emerald-900";
+                const stage = gameState.currentStage;
+                if (gameState.combo > (gameState.stageMaxCombo[stage] || 0)) {
+                    gameState.stageMaxCombo[stage] = gameState.combo;
+                }
+
+                addExp(15);
+
+                const praise = PRAISE_MESSAGES[Math.floor(Math.random() * PRAISE_MESSAGES.length)];
+
+                feedbackBox.className = 'p-6 rounded-2xl space-y-3 border-2 border-emerald-300 bg-emerald-50 text-emerald-900 shadow-sm';
                 feedbackBox.innerHTML = `
-                    <div class="flex items-center gap-2 font-extrabold text-xl text-emerald-700">
-                        <i class="fa-solid fa-circle-check text-2xl"></i> ${praiseMsg}
+                    <div class="flex items-center gap-2 font-black text-xl md:text-2xl text-emerald-600">
+                        <i class="fa-solid fa-circle-check text-2xl"></i>
+                        <span>${praise} （+${gainScore} 星 / +15 EXP）</span>
                     </div>
-                    <div class="text-base font-semibold">
-                        答對得 +10 分！ ${gameState.combo >= 3 ? `<span class="text-orange-600 font-extrabold">（觸發 ${gameState.combo} 連擊 Bonus +15分！）</span>` : ''}
-                    </div>
-                    <div class="text-base text-slate-700 pt-2 border-t border-emerald-200/60 leading-relaxed">
+                    <div class="text-base md:text-lg font-medium text-slate-700 pt-1 leading-relaxed">
                         <b>解析說明：</b><br>${q.solution}
                     </div>
                 `;
-
-                addExp(25);
-
             } else {
                 playWrongSound();
                 gameState.combo = 0;
 
-                const encourageMsg = ENCOURAGE_MESSAGES[Math.floor(Math.random() * ENCOURAGE_MESSAGES.length)];
+                const encourage = ENCOURAGE_MESSAGES[Math.floor(Math.random() * ENCOURAGE_MESSAGES.length)];
 
-                feedbackBox.className = "p-6 rounded-2xl space-y-3 bg-rose-50 border-2 border-rose-200 text-rose-900";
+                feedbackBox.className = 'p-6 rounded-2xl space-y-3 border-2 border-rose-300 bg-rose-50 text-rose-900 shadow-sm';
                 feedbackBox.innerHTML = `
-                    <div class="flex items-center gap-2 font-extrabold text-xl text-rose-700">
-                        <i class="fa-solid fa-circle-xmark text-2xl"></i> ${encourageMsg}
+                    <div class="flex items-center gap-2 font-black text-xl md:text-2xl text-rose-600">
+                        <i class="fa-solid fa-circle-xmark text-2xl"></i>
+                        <span>${encourage}</span>
                     </div>
-                    <div class="text-base text-slate-700 pt-2 border-t border-rose-200/60 leading-relaxed">
-                        <b>正確解析：</b><br>${q.solution}
+                    <div class="text-base md:text-lg font-medium text-slate-700 pt-1 leading-relaxed">
+                        <b>正確解答與解析：</b><br>${q.solution}
                     </div>
                 `;
-                
-                checkBadges();
-                updateGamificationUI();
-                saveGameState();
             }
 
-            document.getElementById('quizActionContainer').innerHTML = `
-                <button onclick="loadNextQuestion()" class="w-full py-4 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-extrabold rounded-2xl shadow-lg hover:opacity-95 active:scale-98 transition-all text-lg cursor-pointer">
-                    下一題 <i class="fa-solid fa-arrow-right ml-1"></i>
+            feedbackBox.classList.remove('hidden');
+            triggerMathJax(feedbackBox);
+
+            actContainer.innerHTML = `
+                <button onclick="loadNextQuestion()" class="w-full py-4 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-extrabold rounded-2xl shadow-lg hover:opacity-95 active:scale-98 transition-all text-lg cursor-pointer flex items-center justify-center gap-2">
+                    <span>下一題挑戰</span>
+                    <i class="fa-solid fa-arrow-right"></i>
                 </button>
             `;
 
-            triggerMathJax(feedbackBox);
+            updateGamificationUI();
+            saveGameState();
         }
 
         /* ==========================================================================
-           10. PAGE INITIALIZATION
+           10. INITIALIZATION
            ========================================================================== */
-        document.addEventListener('DOMContentLoaded', () => {
+        window.addEventListener('DOMContentLoaded', () => {
             loadGameState();
-            calculateDivisibility();
-            renderGcdDemo(12, 18);
-            renderLcmDemo(4, 6);
             generateRainbow();
+            renderGcdDemo();
+            renderLcmDemo();
+            calculateDivisibility();
         });
     </script>
 </body>
