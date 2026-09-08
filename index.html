@@ -245,7 +245,7 @@
 
 					<div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-center">
 						<span class="text-emerald-700 font-extrabold text-lg">🎉 剛好分完！</span>
-						<span class="text-emerald-800 font-medium mt-1">餘數是 $0$，所以可以「整除」。</span>
+						<span class="text-emerald-800 font-medium mt-1">餘數是 <span class="text-blue-600 font-extrabold text-lg">0</span>，所以可以「整除」。</span>
 					</div>
 
 					<div class="pt-1">
@@ -326,8 +326,8 @@
         <section id="tab-concepts" class="tab-content hidden space-y-6">
             <div class="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-600 rounded-3xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden">
                 <div class="relative z-10">
-                    <span class="inline-block px-3.5 py-1 bg-white/20 rounded-full text-lg font-semibold backdrop-blur-md mb-2">觀念解密館</span>
-                    <h2 class="text-3xl md:text-4xl font-extrabold">🏹 因倍數特訓</h2>
+                    <span class="inline-block px-3.5 py-1 bg-white/20 rounded-full text-sm font-semibold backdrop-blur-md mb-2">觀念解密館</span>
+                    <h2 class="text-2xl md:text-4xl font-extrabold">🏹 因倍數特訓</h2>
                     <p class="text-teal-50 text-lg md:text-xl mt-2 leading-relaxed">
                         按照步驟修練，一步步掌握因數與倍數的核心技能！
                     </p>
@@ -337,15 +337,15 @@
 
             <div class="bg-white rounded-2xl p-2 md:p-3 shadow-sm border border-slate-200">
                 <div class="grid grid-cols-3 gap-2">
-                    <button onclick="switchConceptSubTab('c-sub-factors')" id="btn-c-sub-factors" class="c-sub-btn py-3 px-2 rounded-xl text-center font-bold text-base md:text-lg transition-all bg-indigo-600 text-white shadow-md">
+                    <button onclick="switchConceptSubTab('c-sub-factors')" id="btn-c-sub-factors" class="c-sub-btn py-3 px-2 rounded-xl text-center font-bold text-sm md:text-lg transition-all bg-indigo-600 text-white shadow-md">
                         <span class="block text-xs font-normal opacity-80">STEP 1</span>
                         <span>找因數、找倍數</span>
                     </button>
-                    <button onclick="switchConceptSubTab('c-sub-gcd')" id="btn-c-sub-gcd" class="c-sub-btn py-3 px-2 rounded-xl text-center font-bold text-base md:text-lg transition-all bg-slate-100 text-slate-600 hover:bg-slate-200">
+                    <button onclick="switchConceptSubTab('c-sub-gcd')" id="btn-c-sub-gcd" class="c-sub-btn py-3 px-2 rounded-xl text-center font-bold text-sm md:text-lg transition-all bg-slate-100 text-slate-600 hover:bg-slate-200">
                         <span class="block text-xs font-normal opacity-60">STEP 2</span>
                         <span>公因數 → 最大公因數</span>
                     </button>
-                    <button onclick="switchConceptSubTab('c-sub-lcm')" id="btn-c-sub-lcm" class="c-sub-btn py-3 px-2 rounded-xl text-center font-bold text-base md:text-lg transition-all bg-slate-100 text-slate-600 hover:bg-slate-200">
+                    <button onclick="switchConceptSubTab('c-sub-lcm')" id="btn-c-sub-lcm" class="c-sub-btn py-3 px-2 rounded-xl text-center font-bold text-sm md:text-lg transition-all bg-slate-100 text-slate-600 hover:bg-slate-200">
                         <span class="block text-xs font-normal opacity-60">STEP 3</span>
                         <span>公倍數 → 最小公倍數</span>
                     </button>
@@ -401,7 +401,7 @@
                                     <text x="290" y="105" text-anchor="middle" fill="white" font-size="12" font-weight="bold">18</text>
                                 </svg>
                             </div>
-                            <div class="grid grid-cols-3 gap-2 text-center text-sm md:text-base font-bold">
+                            <div class="grid grid-cols-3 gap-2 text-center text-xs md:text-base font-bold">
                                 <div class="bg-red-100 text-red-700 py-1.5 rounded-lg">$1 × 18 = 18$</div>
                                 <div class="bg-emerald-100 text-emerald-700 py-1.5 rounded-lg">$2 × 9 = 18$</div>
                                 <div class="bg-blue-100 text-blue-700 py-1.5 rounded-lg">$3 × 6 = 18$</div>
@@ -523,8 +523,8 @@
 		<div class="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 rounded-3xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden">
 			<div class="relative z-10">
 				<span class="inline-block px-3.5 py-1 bg-white/20 rounded-full text-sm font-semibold backdrop-blur-md mb-2">極限挑戰館</span>
-				<h2 class="text-3xl md:text-4xl font-extrabold">⚔️ 因倍數大冒險：關卡挑戰</h2>
-				<p class="text-amber-50 text-base md:text-lg mt-2 leading-relaxed opacity-95">
+				<h2 class="text-2xl md:text-4xl font-extrabold">⚔️ 因倍數大冒險：關卡挑戰</h2>
+				<p class="text-amber-50 text-base md:text-xl mt-2 leading-relaxed opacity-95">
 					選擇關卡開始挑戰！連續答對賺取高分與經驗值，觸發精彩連擊 Bonus 與落花慶賀！
 				</p>
 			</div>
@@ -660,8 +660,8 @@
 			<div class="bg-gradient-to-r from-yellow-500 via-amber-500 to-orange-500 rounded-3xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden">
 				<div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
 					<div>
-						<span class="inline-block px-4 py-1.5 bg-white/20 rounded-full text-base font-bold backdrop-blur-md mb-2">英雄殿堂</span>
-						<h2 class="text-3xl md:text-4xl font-black">🚀 玩家戰績與榮譽勳章</h2>
+						<span class="inline-block px-4 py-1.5 bg-white/20 rounded-full text-sm font-bold backdrop-blur-md mb-2">英雄殿堂</span>
+						<h2 class="text-2xl md:text-4xl font-black">🚀 玩家戰績與榮譽勳章</h2>
 						<p class="text-amber-50 text-base md:text-xl mt-2 leading-relaxed opacity-95 font-medium">
 							檢視你的冒險戰績、累積經驗值與積分，解鎖屬於你的專屬玩家榮譽勳章！
 						</p>
@@ -1586,31 +1586,42 @@
                         🤝 共同擁有的公因數為：<span class="text-xl font-black text-emerald-600">$${common.join(', ')}$</span>
                     </div>
                     <div class="text-lg font-extrabold text-indigo-950">
-                        🏆 最大公因數（GCD）就是：<span class="text-2xl font-black text-indigo-600 underline">$${maxGcd}$</span>
+                        🏆 最大公因數 就是：<span class="text-2xl font-black text-indigo-600 underline">$${maxGcd}$</span>
                     </div>
                 </div>
             `;
             triggerMathJax(area);
         }
+		
+		// 記錄上一次選取的索引（避免連續重複）
+			let lastGcdIndex = 0;
+			let lastLcmIndex = 0;
 
         function changeGcdNumbers() {
-            const pairs = [[12, 18], [16, 24], [20, 30], [15, 25], [18, 27], [24, 36]];
-            const p = pairs[Math.floor(Math.random() * pairs.length)];
-            renderGcdDemo(p[0], p[1]);
-        }
+			const pairs = [[12, 18], [16, 24], [20, 30], [15, 25], [18, 27], [24, 36], [45, 75], [35, 42], [28, 20], [17, 32], [54, 30], [51, 68], [63, 108], [40, 16], [104, 182]];
+			
+			let newIndex;
+			do {
+				newIndex = Math.floor(Math.random() * pairs.length);
+			} while (newIndex === lastGcdIndex); // 若抽到跟上次一樣的就重新抽
+			
+			lastGcdIndex = newIndex;
+			const p = pairs[newIndex];
+			renderGcdDemo(p[0], p[1]);
+		}
 
         function renderLcmDemo(num1 = 4, num2 = 6) {
             const area = document.getElementById('lcm-demo-area');
             if (!area) return;
 
-            const m1 = Array.from({ length: 8 }, (_, i) => num1 * (i + 1));
-            const m2 = Array.from({ length: 8 }, (_, i) => num2 * (i + 1));
+            const m1 = Array.from({ length: 10 }, (_, i) => num1 * (i + 1));
+            const m2 = Array.from({ length: 10 }, (_, i) => num2 * (i + 1));
             const common = m1.filter(x => m2.includes(x));
             const minLcm = Math.min(...common);
 
             area.innerHTML = `
                 <div class="bg-teal-50/60 p-5 rounded-2xl border border-teal-100 space-y-3">
-                    <div class="font-extrabold text-teal-900 text-lg">$${num1}$ 的前 8 個倍數：</div>
+                    <div class="font-extrabold text-teal-900 text-lg">$${num1}$ 的前 10 個倍數：</div>
                     <div class="flex flex-wrap gap-2">
                         ${m1.map(x => `
                             <span class="px-3 py-1 rounded-xl text-base font-bold ${common.includes(x) ? 'bg-teal-600 text-white shadow-sm' : 'bg-white text-slate-600 border border-slate-200'}">
@@ -1621,7 +1632,7 @@
                 </div>
 
                 <div class="bg-cyan-50/60 p-5 rounded-2xl border border-cyan-100 space-y-3">
-                    <div class="font-extrabold text-cyan-900 text-lg">$${num2}$ 的前 8 個倍數：</div>
+                    <div class="font-extrabold text-cyan-900 text-lg">$${num2}$ 的前 10 個倍數：</div>
                     <div class="flex flex-wrap gap-2">
                         ${m2.map(x => `
                             <span class="px-3 py-1 rounded-xl text-base font-bold ${common.includes(x) ? 'bg-cyan-600 text-white shadow-sm' : 'bg-white text-slate-600 border border-slate-200'}">
@@ -1636,7 +1647,7 @@
                         🤝 共同擁有的公倍數有：<span class="text-xl font-black text-amber-600">$${common.join(', ')} \\dots$</span>
                     </div>
                     <div class="text-lg font-extrabold text-indigo-950">
-                        🏆 最小公倍數（LCM）就是：<span class="text-2xl font-black text-indigo-600 underline">$${minLcm}$</span>
+                        🏆 最小公倍數 就是：<span class="text-2xl font-black text-indigo-600 underline">$${minLcm}$</span>
                     </div>
                 </div>
             `;
@@ -1644,10 +1655,17 @@
         }
 
         function changeLcmNumbers() {
-            const pairs = [[4, 6], [3, 5], [6, 8], [8, 12], [5, 10], [9, 12]];
-            const p = pairs[Math.floor(Math.random() * pairs.length)];
-            renderLcmDemo(p[0], p[1]);
-        }
+			const pairs = [[4, 6], [3, 5], [6, 8], [8, 12], [5, 10], [9, 12], [12, 15], [18, 24], [20, 16], [14, 21], [8, 4]];
+			
+			let newIndex;
+			do {
+				newIndex = Math.floor(Math.random() * pairs.length);
+			} while (newIndex === lastLcmIndex); // 若抽到跟上次一樣的就重新抽
+			
+			lastLcmIndex = newIndex;
+			const p = pairs[newIndex];
+			renderLcmDemo(p[0], p[1]);
+		}
 
         /* ==========================================================================
            9. MODULE 3: GAMIFIED QUIZ ENGINE
