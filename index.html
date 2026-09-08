@@ -162,11 +162,11 @@
 
 			<div class="flex items-center gap-2 md:gap-3 bg-slate-50 p-2.5 px-4 rounded-2xl border border-slate-200/80 shadow-inner w-full md:w-auto justify-between md:justify-end">
 				<div class="flex items-center gap-2.5">
-					<div id="playerBadgeIcon" class="w-10 h-10 rounded-full bg-amber-100 border-2 border-amber-400 text-amber-700 flex items-center justify-center text-lg font-black shadow-sm">
+					<div id="playerBadgeIcon" class="w-10 h-10 rounded-full bg-amber-100 border-2 border-amber-400 text-amber-700 flex items-center justify-center text-sm md:text-lg font-black shadow-sm">
 						LV1
 					</div>
 					<div class="flex flex-col gap-1">
-						<span id="playerLevelTitle" class="text-base font-bold text-indigo-900 leading-none">LV1 數字冒險家</span>
+						<span id="playerLevelTitle" class="text-sm md:text-base font-bold text-indigo-900 leading-none">LV1 數字冒險家</span>
 						<div class="w-28 bg-slate-200 h-3 rounded-full overflow-hidden border border-slate-300/60 p-0.5">
 							<div id="expBar" class="bg-gradient-to-r from-indigo-500 to-purple-500 h-full rounded-full transition-all duration-300" style="width: 0%"></div>
 						</div>
@@ -174,30 +174,30 @@
 				</div>
 
 				<div class="flex items-center gap-1.5 bg-white px-3.5 py-1.5 rounded-xl shadow-sm border border-slate-200">
-					<i class="fa-solid fa-star text-amber-400 text-xl"></i>
-					<span id="playerScore" class="font-black text-indigo-950 text-xl tracking-tight">0</span>
-					<span class="text-base font-bold text-slate-600">星</span>
+					<i class="fa-solid fa-star text-amber-400 text-base md:text-xl"></i>
+					<span id="playerScore" class="font-black text-indigo-950 text-base md:text-xl tracking-tight">0</span>
+					<span class="text-sm md:text-base font-bold text-slate-600">星</span>
 				</div>
 
 				<div class="flex items-center gap-1.5 bg-amber-50 px-3.5 py-1.5 rounded-xl shadow-sm border border-amber-300">
-					<i class="fa-solid fa-fire text-orange-500 text-xl animate-bounce"></i>
-					<span id="playerCombo" class="font-black text-orange-600 text-xl tracking-tight">0</span>
-					<span class="text-base font-bold text-orange-600">連擊</span>
+					<i class="fa-solid fa-fire text-orange-500 text-base md:text-xl animate-bounce"></i>
+					<span id="playerCombo" class="font-black text-orange-600 text-base md:text-xl tracking-tight">0</span>
+					<span class="text-sm md:text-base font-bold text-orange-600">連擊</span>
 				</div>
 			</div>
 		</div>
 
 		<nav class="max-w-6xl mx-auto px-4 mt-1 flex space-x-2 overflow-x-auto no-scrollbar pb-2">
-			<button onclick="switchTab('tab-prereq')" id="btn-tab-prereq" class="tab-btn px-4 py-2.5 rounded-xl text-lg md:text-xl font-bold flex items-center gap-2 transition-all shrink-0 bg-indigo-600 text-white shadow-md">
+			<button onclick="switchTab('tab-prereq')" id="btn-tab-prereq" class="tab-btn px-4 py-2.5 rounded-xl text-sm md:text-xl font-bold flex items-center gap-2 transition-all shrink-0 bg-indigo-600 text-white shadow-md">
 				<i class="fa-solid fa-book-open"></i> 1. 新手任務
 			</button>
-			<button onclick="switchTab('tab-concepts')" id="btn-tab-concepts" class="tab-btn px-4 py-2.5 rounded-xl text-lg md:text-xl font-bold flex items-center gap-2 transition-all shrink-0 bg-white text-slate-700 hover:bg-slate-100 border border-slate-200/60">
+			<button onclick="switchTab('tab-concepts')" id="btn-tab-concepts" class="tab-btn px-4 py-2.5 rounded-xl text-sm md:text-xl font-bold flex items-center gap-2 transition-all shrink-0 bg-white text-slate-700 hover:bg-slate-100 border border-slate-200/60">
 				<i class="fa-solid fa-lightbulb text-amber-500"></i> 2. 技能解鎖
 			</button>
-			<button onclick="switchTab('tab-quiz')" id="btn-tab-quiz" class="tab-btn px-4 py-2.5 rounded-xl text-lg md:text-xl font-bold flex items-center gap-2 transition-all shrink-0 bg-white text-slate-700 hover:bg-slate-100 border border-slate-200/60">
+			<button onclick="switchTab('tab-quiz')" id="btn-tab-quiz" class="tab-btn px-4 py-2.5 rounded-xl text-sm md:text-xl font-bold flex items-center gap-2 transition-all shrink-0 bg-white text-slate-700 hover:bg-slate-100 border border-slate-200/60">
 				<i class="fa-solid fa-gamepad text-indigo-500"></i> 3. 闖關挑戰
 			</button>
-			<button onclick="switchTab('tab-dashboard')" id="btn-tab-dashboard" class="tab-btn px-4 py-2.5 rounded-xl text-lg md:text-xl font-bold flex items-center gap-2 transition-all shrink-0 bg-white text-slate-700 hover:bg-slate-100 border border-slate-200/60">
+			<button onclick="switchTab('tab-dashboard')" id="btn-tab-dashboard" class="tab-btn px-4 py-2.5 rounded-xl text-sm md:text-xl font-bold flex items-center gap-2 transition-all shrink-0 bg-white text-slate-700 hover:bg-slate-100 border border-slate-200/60">
 				<i class="fa-solid fa-trophy text-yellow-500"></i> 4. 我的戰績
 			</button>
 		</nav>
@@ -209,9 +209,9 @@
 		<section id="tab-prereq" class="tab-content space-y-8">
 			<div class="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 rounded-3xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden">
 				<div class="relative z-10 space-y-2">
-					<span class="inline-block px-4 py-1.5 bg-white/20 rounded-full text-lg font-bold backdrop-blur-md">出發前檢查</span>
-					<h2 class="text-3xl md:text-4xl font-extrabold tracking-wide">🔓 解鎖「整除」技能</h2>
-					<p class="text-blue-50 text-lg md:text-xl font-medium mt-2 leading-relaxed">
+					<span class="inline-block px-4 py-1.5 bg-white/20 rounded-full text-sm font-bold backdrop-blur-md">出發前檢查</span>
+					<h2 class="text-2xl md:text-4xl font-extrabold tracking-wide">🔓 解鎖「整除」技能</h2>
+					<p class="text-blue-50 text-base md:text-xl font-medium mt-2 leading-relaxed">
 						平均分一分，剛好一個也不剩，這就是「整除」！準備好了嗎？來試著分分看！
 					</p>
 				</div>
@@ -327,7 +327,7 @@
             <div class="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-600 rounded-3xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden">
                 <div class="relative z-10">
                     <span class="inline-block px-3.5 py-1 bg-white/20 rounded-full text-lg font-semibold backdrop-blur-md mb-2">觀念解密館</span>
-                    <h2 class="text-3xl md:text-4xl font-extrabold">⚔️ 因倍數特訓</h2>
+                    <h2 class="text-3xl md:text-4xl font-extrabold">🏹 因倍數特訓</h2>
                     <p class="text-teal-50 text-lg md:text-xl mt-2 leading-relaxed">
                         按照步驟修練，一步步掌握因數與倍數的核心技能！
                     </p>
@@ -512,7 +512,7 @@
                 <div class="pt-2 text-center">
                     <button onclick="switchTab('tab-quiz')" class="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold text-lg md:text-xl rounded-2xl shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-all inline-flex items-center justify-center gap-3">
                         <span>特訓完成！開始闖關測驗</span>
-                        <i class="fa-solid fa-trophy"></i>
+                        <i class="fa-solid fa-arrow-right"></i>
                     </button>
                 </div>
             </div>
@@ -523,7 +523,7 @@
 		<div class="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 rounded-3xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden">
 			<div class="relative z-10">
 				<span class="inline-block px-3.5 py-1 bg-white/20 rounded-full text-sm font-semibold backdrop-blur-md mb-2">極限挑戰館</span>
-				<h2 class="text-3xl md:text-4xl font-extrabold">因倍數大冒險：關卡挑戰</h2>
+				<h2 class="text-3xl md:text-4xl font-extrabold">⚔️ 因倍數大冒險：關卡挑戰</h2>
 				<p class="text-amber-50 text-base md:text-lg mt-2 leading-relaxed opacity-95">
 					選擇關卡開始挑戰！連續答對賺取高分與經驗值，觸發精彩連擊 Bonus 與落花慶賀！
 				</p>
@@ -661,7 +661,7 @@
 				<div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
 					<div>
 						<span class="inline-block px-4 py-1.5 bg-white/20 rounded-full text-base font-bold backdrop-blur-md mb-2">英雄殿堂</span>
-						<h2 class="text-3xl md:text-4xl font-black">玩家戰績與榮譽勳章</h2>
+						<h2 class="text-3xl md:text-4xl font-black">🚀 玩家戰績與榮譽勳章</h2>
 						<p class="text-amber-50 text-base md:text-xl mt-2 leading-relaxed opacity-95 font-medium">
 							檢視你的冒險戰績、累積經驗值與積分，解鎖屬於你的專屬玩家榮譽勳章！
 						</p>
@@ -1148,7 +1148,7 @@
 		if (activeBtn) {
 			// 2. 設定選取按鈕：移除未選取的 Hover 效果，換上選取狀態的顏色（及對應的選取 Hover）
 			activeBtn.classList.remove('bg-white', 'text-slate-600', 'hover:bg-slate-100', 'hover:text-slate-900');
-			activeBtn.classList.add('bg-indigo-600', 'text-white', 'shadow-md');
+			activeBtn.classList.add('bg-indigo-600', 'text-white', 'shadow-md', 'hover:bg-indigo-600');
 			
 			// 如果希望選取後滑鼠移上去維持深藍色，可加 'hover:bg-indigo-600'；
 			// 如果希望選取後滑鼠移上去微變深，可加 'hover:bg-indigo-700'
@@ -1412,7 +1412,7 @@
 					<div class="space-y-3">
 						<div class="flex items-center gap-2 text-emerald-600 font-extrabold text-xl md:text-2xl">
 							<i class="fa-solid fa-circle-check text-2xl"></i>
-							完美平分！$${a}$可以被 $${b}$【整除】！
+							完美平分！$${a}$可以被$${b}$【整除】！
 						</div>
 						<div class="text-lg md:text-xl text-slate-700 bg-emerald-50/50 p-4 md:p-5 rounded-xl border border-emerald-200 space-y-2 leading-relaxed">
 							<div>
