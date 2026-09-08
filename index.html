@@ -1133,9 +1133,10 @@
 		const targetTabId = tabId.startsWith('tab-') ? tabId : `tab-${tabId}`;
 		document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
 		
+		// 1. 重置所有按鈕：還原為未選取狀態，並補回未選取的 Hover 效果
 		document.querySelectorAll('.tab-btn').forEach(btn => {
-			btn.classList.remove('bg-indigo-600', 'text-white', 'shadow-md');
-			btn.classList.add('bg-white', 'text-slate-600');
+			btn.classList.remove('bg-indigo-600', 'text-white', 'shadow-md', 'hover:bg-indigo-700');
+			btn.classList.add('bg-white', 'text-slate-600', 'hover:bg-slate-100', 'hover:text-slate-900');
 		});
 
 		const activeTab = document.getElementById(targetTabId);
@@ -1145,8 +1146,13 @@
 		
 		const activeBtn = document.getElementById(`btn-${targetTabId}`) || document.getElementById(`btn-${tabId.replace('tab-', '')}`);
 		if (activeBtn) {
-			activeBtn.classList.remove('bg-white', 'text-slate-600');
+			// 2. 設定選取按鈕：移除未選取的 Hover 效果，換上選取狀態的顏色（及對應的選取 Hover）
+			activeBtn.classList.remove('bg-white', 'text-slate-600', 'hover:bg-slate-100', 'hover:text-slate-900');
 			activeBtn.classList.add('bg-indigo-600', 'text-white', 'shadow-md');
+			
+			// 如果希望選取後滑鼠移上去維持深藍色，可加 'hover:bg-indigo-600'；
+			// 如果希望選取後滑鼠移上去微變深，可加 'hover:bg-indigo-700'
+			activeBtn.classList.add('hover:bg-indigo-600'); 
 		}
 		
 		if (targetTabId === 'tab-concepts') {
