@@ -1527,7 +1527,8 @@
 						${svgHTML}
 					</div>
 					<div class="text-xl font-semibold text-slate-500">成對乘法算式列表：</div>
-					<div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-lg font-mono text-slate-700">
+					<!-- 改為：預設（手機）單欄，平板雙欄，電腦三欄 -->
+					<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 text-lg font-mono text-slate-700">
 			`;
 
 			for (let i = 0; i < pairCount; i++) {
@@ -1535,7 +1536,7 @@
 				const p2 = factors[len - 1 - i];
 				const color = rainbowColors[i % rainbowColors.length];
 				html += `
-					<div class="bg-white p-2.5 rounded-xl border-l-4 shadow-sm" style="border-left-color: ${color}">
+					<div class="bg-white px-3 py-2 rounded-xl border-l-4 shadow-sm flex items-center" style="border-left-color: ${color}">
 						$${p1} \\times ${p2} = ${num}$
 					</div>
 				`;
