@@ -2008,7 +2008,7 @@
             if (window.MathJax) MathJax.typesetPromise();
         }
 
-        /* 技能解鎖即時練習題邏輯 */
+        /* 技能解鎖即時練習題邏輯（確保兩題不重複） */
         let gcdPracticeQuestions = [];
         let lcmPracticeQuestions = [];
 
@@ -2016,8 +2016,10 @@
             const container = document.getElementById('gcd-practice-container');
             if (!container) return;
 
-            const pair1 = GCD_PAIRS[Math.floor(Math.random() * GCD_PAIRS.length)];
-            const pair2 = GCD_PAIRS[Math.floor(Math.random() * GCD_PAIRS.length)];
+            // 隨機選取 2 個互不相同的題目對
+            let shuffledPairs = [...GCD_PAIRS].sort(() => Math.random() - 0.5);
+            const pair1 = shuffledPairs[0];
+            const pair2 = shuffledPairs[1];
 
             gcdPracticeQuestions = [
                 { id: 1, a: pair1[0], b: pair1[1], ans: gcd(pair1[0], pair1[1]).toString(), solved: false },
@@ -2074,8 +2076,10 @@
             const container = document.getElementById('lcm-practice-container');
             if (!container) return;
 
-            const pair1 = LCM_PAIRS[Math.floor(Math.random() * LCM_PAIRS.length)];
-            const pair2 = LCM_PAIRS[Math.floor(Math.random() * LCM_PAIRS.length)];
+            // 隨機選取 2 個互不相同的題目對
+            let shuffledPairs = [...LCM_PAIRS].sort(() => Math.random() - 0.5);
+            const pair1 = shuffledPairs[0];
+            const pair2 = shuffledPairs[1];
 
             lcmPracticeQuestions = [
                 { id: 1, a: pair1[0], b: pair1[1], ans: lcm(pair1[0], pair1[1]).toString(), solved: false },
