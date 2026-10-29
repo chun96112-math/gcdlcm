@@ -124,6 +124,14 @@
             background-color: #ECFDF5;
             border-radius: 0 0 8px 8px;
         }
+
+        @keyframes fadeInStep {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-step {
+            animation: fadeInStep 0.5s ease-out forwards;
+        }
     </style>
 </head>
 <body class="text-slate-800 pb-12 text-base">
@@ -194,26 +202,29 @@
 		<section id="tab-prereq" class="tab-content space-y-8">
 			<div class="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 rounded-3xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden">
 				<div class="relative z-10 space-y-2">
-					<span class="inline-block px-4 py-1.5 bg-white/20 rounded-full text-lg font-bold backdrop-blur-md">出發前檢查</span>
-					<h2 class="text-3xl md:text-4xl font-extrabold tracking-wide">🔓 新手任務：12個糖果的秘密</h2>
+					<span class="inline-block px-4 py-1.5 bg-white/20 rounded-full text-lg font-bold backdrop-blur-md">五年級基礎溫習</span>
+					<h2 class="text-3xl md:text-4xl font-extrabold tracking-wide">🔓 新手任務：因倍數基礎與倍數判別</h2>
 					<p class="text-blue-50 text-lg md:text-xl font-medium mt-2 leading-relaxed">
-						用「除法找整除」與「乘法與彩虹配對」兩種方法，輕鬆找出 12 的所有因數！
+						透過除法整除、乘法因數對，以及 2、3、5、10 的倍數判別，輕鬆建立紮實的數感！
 					</p>
 				</div>
 				<i class="fa-solid fa-calculator absolute -right-6 -bottom-6 text-9xl text-white/10 transform -rotate-12"></i>
 			</div>
 
-			<!-- 新手任務分頁導覽列 -->
-			<div class="bg-white rounded-2xl p-2 md:p-3 shadow-sm border border-slate-200 flex items-center justify-between gap-2">
-				<button onclick="switchPrereqSubPage(1)" id="btn-prereq-page-1" class="flex-1 py-3 px-4 rounded-xl text-center font-bold text-base md:text-lg transition-all bg-indigo-600 text-white shadow-md flex items-center justify-center gap-2 cursor-pointer">
-					<i class="fa-solid fa-divide"></i> <span>視角一：除法找整除（分分看）</span>
+			<!-- 新手任務 3 個頁籤導覽列 -->
+			<div class="bg-white rounded-2xl p-2 md:p-3 shadow-sm border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-2">
+				<button onclick="switchPrereqSubPage(1)" id="btn-prereq-page-1" class="flex-1 w-full py-3 px-4 rounded-xl text-center font-bold text-base md:text-lg transition-all bg-indigo-600 text-white shadow-md flex items-center justify-center gap-2 cursor-pointer">
+					<i class="fa-solid fa-divide"></i> <span>除法：剛好分完</span>
 				</button>
-				<button onclick="switchPrereqSubPage(2)" id="btn-prereq-page-2" class="flex-1 py-3 px-4 rounded-xl text-center font-bold text-base md:text-lg transition-all bg-slate-100 text-slate-700 hover:bg-slate-200 flex items-center justify-center gap-2 cursor-pointer">
-					<i class="fa-solid fa-rainbow"></i> <span>視角二：乘法與彩虹配對（找因數對）</span>
+				<button onclick="switchPrereqSubPage(2)" id="btn-prereq-page-2" class="flex-1 w-full py-3 px-4 rounded-xl text-center font-bold text-base md:text-lg transition-all bg-slate-100 text-slate-700 hover:bg-slate-200 flex items-center justify-center gap-2 cursor-pointer">
+					<i class="fa-solid fa-rainbow"></i> <span>乘法：兩數相乘</span>
+				</button>
+				<button onclick="switchPrereqSubPage(3)" id="btn-prereq-page-3" class="flex-1 w-full py-3 px-4 rounded-xl text-center font-bold text-base md:text-lg transition-all bg-slate-100 text-slate-700 hover:bg-slate-200 flex items-center justify-center gap-2 cursor-pointer">
+					<i class="fa-solid fa-magnifying-glass"></i> <span>進階：判別 2、3、5、10 的倍數</span>
 				</button>
 			</div>
 
-			<!-- SUBPAGE 1：除法找整除與積木分分看 -->
+			<!-- SUBPAGE 1：除法：剛好分完 -->
 			<div id="prereq-subpage-1" class="prereq-sub-content space-y-8">
 				<div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border-2 border-slate-100 space-y-6">
 					<div class="flex items-center gap-3">
@@ -221,7 +232,7 @@
 							<i class="fa-solid fa-cookie-bite"></i>
 						</div>
 						<div>
-							<div class="text-sm font-bold text-blue-600 mb-1">METHOD 1</div>
+							<div class="text-sm font-bold text-blue-600 mb-1">SECTION 1</div>
 							<h3 class="text-2xl font-extrabold text-slate-800">用除法算式，找出 12 個糖果可以平分的袋數</h3>
 						</div>
 					</div>
@@ -237,7 +248,6 @@
 
 					<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3" id="candyChoiceGrid"></div>
 
-					<!-- 送出按鈕與重置按鈕 -->
 					<div class="flex items-center gap-3 pt-1">
 						<button onclick="submitCandyCheck()" class="flex-1 py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-extrabold text-lg rounded-2xl shadow-md hover:shadow-lg hover:opacity-95 active:scale-98 transition-all cursor-pointer flex items-center justify-center gap-2">
 							<i class="fa-solid fa-paper-plane"></i>
@@ -249,7 +259,6 @@
 						</button>
 					</div>
 
-					<!-- 送出驗證後的結果顯示區 -->
 					<div id="candyResultSection" class="hidden bg-slate-50 p-5 rounded-2xl border border-slate-200/80 space-y-6 transition-all">
 						<div class="text-lg font-bold text-indigo-900 flex items-center gap-2">
 							<i class="fa-solid fa-cubes text-indigo-600"></i>
@@ -333,21 +342,20 @@
 
 				<div class="text-right">
 					<button onclick="switchPrereqSubPage(2)" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl shadow-md transition-all inline-flex items-center gap-2 cursor-pointer text-lg">
-						<span>下一步：換個視角，用乘法與彩虹配對找因數</span> <i class="fa-solid fa-arrow-right"></i>
+						<span>下一步：乘法：兩數相乘</span> <i class="fa-solid fa-arrow-right"></i>
 					</button>
 				</div>
 			</div>
 
-			<!-- SUBPAGE 2：乘法與彩虹因數配對 -->
+			<!-- SUBPAGE 2：乘法：兩數相乘 -->
 			<div id="prereq-subpage-2" class="prereq-sub-content hidden space-y-8">
-				
 				<div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border-2 border-purple-200 space-y-6">
 					<div class="flex items-center gap-3 border-b border-purple-100 pb-4">
 						<div class="w-14 h-14 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center font-black text-2xl shrink-0">
 							<i class="fa-solid fa-lightbulb"></i>
 						</div>
 						<div>
-							<div class="text-sm font-bold text-purple-600 mb-0.5">METHOD 2 (使用乘法)</div>
+							<div class="text-sm font-bold text-purple-600 mb-0.5">SECTION 2</div>
 							<h3 class="text-2xl md:text-3xl font-black text-slate-800">找找看，12 的因數有哪些？</h3>
 						</div>
 					</div>
@@ -362,63 +370,146 @@
 					</div>
 
 					<div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-4">
-						<div class="text-lg font-extrabold text-slate-700 border-b border-slate-200 pb-2 flex items-center justify-between">
-							<span>乘法尋找過程：</span>
-							<span class="text-sm font-bold text-slate-600 bg-white px-3 py-1 rounded-full border border-slate-200">依從小到大順序</span>
+						<div class="text-lg font-extrabold text-slate-700 border-b border-slate-200 pb-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+							<span>乘法尋找過程：點擊下方按鈕逐步探索</span>
+							<div class="flex flex-wrap items-center gap-2">
+								<span id="multStepIndicator" class="text-sm font-bold text-indigo-700 bg-white px-3 py-1 rounded-full border border-indigo-200">目前進度：請點擊下一步</span>
+								<button onclick="resetMultSteps()" class="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-lg transition-all cursor-pointer">重設</button>
+								<button onclick="nextMultStep()" id="btnNextMultStep" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-lg transition-all cursor-pointer flex items-center gap-1">
+									下一步驟 ▶
+								</button>
+							</div>
 						</div>
 
-						<div class="space-y-3 font-mono">
-							<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3.5 bg-white rounded-xl border border-slate-200 shadow-sm">
-								<div class="text-2xl font-black text-indigo-600">
-									$1 \times 12 = 12$
-								</div>
-								<div class="flex items-center gap-2 text-base md:text-lg font-bold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200">
+						<div class="space-y-3 font-mono" id="multStepsContainer">
+							<div id="mult-step-1" class="hidden flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3.5 bg-white rounded-xl border border-slate-200 shadow-sm animate-fade-in-step">
+								<div class="text-2xl font-black text-indigo-600">$1 \times 12 = 12$</div>
+								<div class="flex items-center gap-2 text-base md:text-lg font-bold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200 font-sans">
 									<i class="fa-solid fa-circle-check text-emerald-500"></i>
 									<span>得到兩個因數：<strong class="text-red-600 text-xl font-black">1</strong>、<strong class="text-red-600 text-xl font-black">12</strong></span>
 								</div>
 							</div>
 
-							<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3.5 bg-white rounded-xl border border-slate-200 shadow-sm">
-								<div class="text-2xl font-black text-indigo-600">
-									$2 \times 6 = 12$
-								</div>
-								<div class="flex items-center gap-2 text-base md:text-lg font-bold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200">
+							<div id="mult-step-2" class="hidden flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3.5 bg-white rounded-xl border border-slate-200 shadow-sm animate-fade-in-step">
+								<div class="text-2xl font-black text-indigo-600">$2 \times 6 = 12$</div>
+								<div class="flex items-center gap-2 text-base md:text-lg font-bold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200 font-sans">
 									<i class="fa-solid fa-circle-check text-emerald-500"></i>
 									<span>得到兩個因數：<strong class="text-red-600 text-xl font-black">2</strong>、<strong class="text-red-600 text-xl font-black">6</strong></span>
 								</div>
 							</div>
 
-							<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3.5 bg-white rounded-xl border border-slate-200 shadow-sm">
-								<div class="text-2xl font-black text-indigo-600">
-									$3 \times 4 = 12$
-								</div>
-								<div class="flex items-center gap-2 text-base md:text-lg font-bold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200">
+							<div id="mult-step-3" class="hidden flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3.5 bg-white rounded-xl border border-slate-200 shadow-sm animate-fade-in-step">
+								<div class="text-2xl font-black text-indigo-600">$3 \times 4 = 12$</div>
+								<div class="flex items-center gap-2 text-base md:text-lg font-bold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200 font-sans">
 									<i class="fa-solid fa-circle-check text-emerald-500"></i>
 									<span>得到兩個因數：<strong class="text-red-600 text-xl font-black">3</strong>、<strong class="text-red-600 text-xl font-black">4</strong></span>
 								</div>
 							</div>
-						</div>
 
-						<div class="p-4 bg-amber-50 rounded-xl border-2 border-dashed border-amber-300 text-amber-950 font-bold text-base md:text-lg space-y-1.5">
-							<div class="flex items-center gap-2 text-amber-800 font-extrabold text-lg">
-								<i class="fa-solid fa-lightbulb text-amber-500"></i>
-								<span>你發現了嗎？</span>
+							<div id="mult-step-4" class="hidden p-4 bg-amber-50 rounded-xl border-2 border-dashed border-amber-300 text-amber-950 font-bold text-base md:text-lg space-y-1.5 font-sans animate-fade-in-step">
+								<div class="flex items-center gap-2 text-amber-800 font-extrabold text-lg">
+									<i class="fa-solid fa-lightbulb text-amber-500"></i>
+									<span>你發現了嗎？</span>
+								</div>
+								<p class="leading-relaxed">
+									接下來換 4，算式變成 $4 \times 3 = 12$，這些算式和上面重複了！所以不用再找下去了。
+								</p>
 							</div>
-							<p class="leading-relaxed">
-								接下來換 $4$，算式變成 $4 \times 3 = 12$，這些算式和上面重複了！所以不用再找下去了。
-							</p>
-						</div>
-					</div>
 
-					<div class="p-5 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-2xl border border-purple-200 space-y-3 text-center">
-						<div class="text-xl md:text-2xl font-extrabold text-slate-800">
-							這樣我們就把 12 的因數由小到大排好了：
-						</div>
-						<div class="text-2xl md:text-3xl font-black text-indigo-900 tracking-wider">
-							所以 12 的因數有：<span class="text-red-600">1</span>, <span class="text-red-600">2</span>, <span class="text-red-600">3</span>, <span class="text-red-600">4</span>, <span class="text-red-600">6</span>, <span class="text-red-600">12</span>
+							<div id="mult-step-5" class="hidden p-5 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-2xl border border-purple-200 space-y-3 text-center font-sans animate-fade-in-step">
+								<div class="text-xl md:text-2xl font-extrabold text-slate-800">
+									這樣我們就把 12 的因數由小到大排好了：
+								</div>
+								<div class="text-2xl md:text-3xl font-black text-indigo-900 tracking-wider">
+									所以 12 的因數有：<span class="text-red-600">1</span>, <span class="text-red-600">2</span>, <span class="text-red-600">3</span>, <span class="text-red-600">4</span>, <span class="text-red-600">6</span>, <span class="text-red-600">12</span>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
+
+				<div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border-2 border-indigo-200 space-y-6">
+					<div class="flex items-center gap-3 border-b border-indigo-100 pb-4">
+						<div class="w-14 h-14 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-black text-2xl shrink-0">
+							<i class="fa-solid fa-puzzle-piece"></i>
+						</div>
+						<div>
+							<h3 class="text-2xl md:text-3xl font-extrabold text-slate-800">互動因數對小卡：點擊看看乘積</h3>
+							<p class="text-base text-slate-500 font-bold mt-0.5">點擊下方卡片，觀察因數如何成對相乘等於 12</p>
+						</div>
+					</div>
+
+					<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+						<div onclick="toggleFactorCard(this, '1 × 12 = 12')" class="p-5 rounded-2xl bg-indigo-50 border-2 border-indigo-300 text-center cursor-pointer transition-all hover:scale-102 shadow-sm">
+							<div class="text-2xl font-black text-indigo-900">1 與 12</div>
+							<div class="text-sm font-bold text-indigo-600 mt-1">點擊看算式</div>
+						</div>
+						<div onclick="toggleFactorCard(this, '2 × 6 = 12')" class="p-5 rounded-2xl bg-purple-50 border-2 border-purple-300 text-center cursor-pointer transition-all hover:scale-102 shadow-sm">
+							<div class="text-2xl font-black text-purple-900">2 與 6</div>
+							<div class="text-sm font-bold text-purple-600 mt-1">點擊看算式</div>
+						</div>
+						<div onclick="toggleFactorCard(this, '3 × 4 = 12')" class="p-5 rounded-2xl bg-pink-50 border-2 border-pink-300 text-center cursor-pointer transition-all hover:scale-102 shadow-sm">
+							<div class="text-2xl font-black text-pink-900">3 與 4</div>
+							<div class="text-sm font-bold text-pink-600 mt-1">點擊看算式</div>
+						</div>
+					</div>
+				</div>
+
+				<script>
+				function toggleFactorCard(cardEl, formulaText) {
+					const titleEl = cardEl.querySelector('div:first-child');
+					const subEl = cardEl.querySelector('div:last-child');
+					if (cardEl.dataset.flipped === "true") {
+						cardEl.dataset.flipped = "false";
+						if (cardEl.classList.contains('bg-indigo-50')) titleEl.innerText = "1 與 12";
+						else if (cardEl.classList.contains('bg-purple-50')) titleEl.innerText = "2 與 6";
+						else titleEl.innerText = "3 與 4";
+						subEl.innerText = "點擊看算式";
+					} else {
+						cardEl.dataset.flipped = "true";
+						titleEl.innerText = formulaText;
+						subEl.innerText = "✨ 成對因數乘積正確！";
+					}
+				}
+
+				let currentMultStep = 0;
+				function nextMultStep() {
+					if (currentMultStep < 5) {
+						currentMultStep++;
+						const el = document.getElementById(`mult-step-${currentMultStep}`);
+						if (el) el.classList.remove('hidden');
+						
+						const indicator = document.getElementById('multStepIndicator');
+						const btnNext = document.getElementById('btnNextMultStep');
+						
+						if (indicator) indicator.innerText = `目前進度：步驟 ${currentMultStep} / 5 顯示中`;
+						
+						if (currentMultStep === 5 && btnNext) {
+							btnNext.innerText = "已完成全部 ↺";
+							btnNext.className = "px-4 py-2 bg-slate-400 hover:bg-slate-500 text-white text-sm font-bold rounded-lg transition-all cursor-pointer";
+						}
+						
+						triggerMathJax(document.getElementById('multStepsContainer'));
+					} else {
+						resetMultSteps();
+					}
+				}
+
+				function resetMultSteps() {
+					currentMultStep = 0;
+					for (let i = 1; i <= 5; i++) {
+						const el = document.getElementById(`mult-step-${i}`);
+						if (el) el.classList.add('hidden');
+					}
+					const indicator = document.getElementById('multStepIndicator');
+					const btnNext = document.getElementById('btnNextMultStep');
+					if (indicator) indicator.innerText = `目前進度：請點擊下一步`;
+					if (btnNext) {
+						btnNext.innerText = "下一步驟 ▶";
+						btnNext.className = "px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-lg transition-all cursor-pointer flex items-center gap-1";
+					}
+				}
+				</script>
 
 				<div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border-2 border-slate-100 space-y-6">
 					<div class="flex items-center gap-3 border-b border-slate-100 pb-4">
@@ -427,7 +518,7 @@
 						</div>
 						<div>
 							<h3 class="text-2xl md:text-3xl font-extrabold text-slate-800">彩虹拱橋連連看：一頭一尾成對配對</h3>
-							<p class="text-base text-slate-500 font-bold mt-0.5">從 smallest 到 largest，兩兩相乘等於 12 就連成一條彩虹</p>
+							<p class="text-base text-slate-500 font-bold mt-0.5">由小到大，兩兩相乘等於 12 就連成一條彩虹</p>
 						</div>
 					</div>
 
@@ -475,7 +566,7 @@
 						</span>
 						<div>
 							<h3 class="text-2xl font-extrabold text-slate-800">彩虹因數探索實驗室</h3>
-							<p class="text-base md:text-lg text-slate-500">預設為 12，你也可以輸入其他數字親手驗證！</p>
+							<p class="text-base md:text-lg text-slate-500">輸入其他數字親手驗證！</p>
 						</div>
 					</div>
 
@@ -491,7 +582,725 @@
 
 				<div class="flex justify-between pt-2">
 					<button onclick="switchPrereqSubPage(1)" class="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-2xl transition-all inline-flex items-center gap-2 cursor-pointer text-lg">
-						<i class="fa-solid fa-arrow-left"></i> <span>上一頁：除法找整除</span>
+						<i class="fa-solid fa-arrow-left"></i> <span>上一頁 : 除法 : 剛好分完</span>
+					</button>
+					<button onclick="switchPrereqSubPage(3)" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl shadow-md transition-all inline-flex items-center gap-2 cursor-pointer text-lg">
+						<span>下一步：進階：判別 2、3、5、10 的倍數</span> <i class="fa-solid fa-arrow-right"></i>
+					</button>
+				</div>
+			</div>
+
+			<!-- SUBPAGE 3：進階：判別 2、3、5、10 的倍數 -->
+			<div id="prereq-subpage-3" class="prereq-sub-content hidden space-y-8">
+				<div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border-2 border-amber-200 space-y-6">
+					<div class="flex items-center gap-3 border-b border-amber-100 pb-4">
+						<div class="w-14 h-14 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center font-black text-2xl shrink-0">
+							<i class="fa-solid fa-magnifying-glass"></i>
+						</div>
+						<div>
+							<div class="text-sm font-bold text-amber-600 mb-0.5">SECTION 3 (五年級倍數判別特訓)</div>
+							<h3 class="text-2xl md:text-3xl font-black text-slate-800">如何快速判別 2、3、5、10 的倍數？</h3>
+						</div>
+					</div>
+
+					<!-- 2, 3, 5, 10 的倍數規則卡片 -->
+					<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+						<div class="bg-blue-50/80 p-5 rounded-2xl border-2 border-blue-200 space-y-2">
+							<div class="text-lg font-black text-blue-900 flex items-center gap-2">
+								<span class="px-2 py-0.5 bg-blue-600 text-white rounded text-xs font-bold">2</span> 2 的倍數
+							</div>
+							<p class="text-slate-700 text-sm leading-relaxed">
+								個位數字是 <strong>0、2、4、6、8</strong>。
+							</p>
+						</div>
+
+						<div class="bg-orange-50/80 p-5 rounded-2xl border-2 border-orange-200 space-y-2">
+							<div class="text-lg font-black text-orange-900 flex items-center gap-2">
+								<span class="px-2 py-0.5 bg-orange-600 text-white rounded text-xs font-bold">3</span> 3 的倍數
+							</div>
+							<p class="text-slate-700 text-sm leading-relaxed">
+								各個數位數字相加的和是 3 的倍數。
+							</p>
+						</div>
+
+						<div class="bg-teal-50/80 p-5 rounded-2xl border-2 border-teal-200 space-y-2">
+							<div class="text-lg font-black text-teal-900 flex items-center gap-2">
+								<span class="px-2 py-0.5 bg-teal-600 text-white rounded text-xs font-bold">5</span> 5 的倍數
+							</div>
+							<p class="text-slate-700 text-sm leading-relaxed">
+								個位數字是 <strong>0 或 5</strong>。
+							</p>
+						</div>
+
+						<div class="bg-slate-100 p-5 rounded-2xl border-2 border-slate-300 space-y-2">
+							<div class="text-lg font-black text-slate-900 flex items-center gap-2">
+								<span class="px-2 py-0.5 bg-slate-900 text-white rounded text-xs font-bold">10</span> 10 的倍數
+							</div>
+							<p class="text-slate-700 text-sm leading-relaxed">
+								個位數字是 <strong>0</strong>。
+							</p>
+						</div>
+					</div>
+
+					<!-- 互動倍數光點秀 -->
+					<div class="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-6 rounded-3xl border-2 border-indigo-200 shadow-sm space-y-4">
+						<div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-indigo-100 pb-3">
+							<div class="flex items-center gap-2 text-indigo-950 font-black text-xl">
+								<i class="fa-solid fa-wand-magic-sparkles text-indigo-600 text-2xl"></i>
+								<span>互動倍數光點秀：勾選多個條件，觀察公倍數的文字標籤交集！</span>
+							</div>
+							<div class="flex items-center gap-2">
+								<div class="flex bg-slate-200 p-1 rounded-xl">
+									<button onclick="setGridRange(50)" id="btn-range-50" class="px-3 py-1 bg-indigo-600 text-white font-bold rounded-lg text-sm shadow-sm cursor-pointer transition-all">1 ~ 50</button>
+									<button onclick="setGridRange(100)" id="btn-range-100" class="px-3 py-1 text-slate-700 font-bold rounded-lg text-sm shadow-sm cursor-pointer transition-all hover:bg-slate-300">1 ~ 100</button>
+								</div>
+								<button onclick="clearMultipleGrid()" class="px-3 py-1.5 bg-slate-200 text-slate-700 font-bold rounded-xl text-sm cursor-pointer hover:bg-slate-300 transition-all">
+									清除勾選
+								</button>
+							</div>
+						</div>
+
+						<div class="flex flex-wrap items-center gap-3">
+							<span class="text-sm font-bold text-slate-600">勾選倍數（可複選）：</span>
+							<label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border-2 border-blue-600 rounded-xl font-bold text-blue-800 shadow-sm select-none">
+								<input type="checkbox" value="2" onchange="updateMultipleGrid()" class="multi-chk w-4 h-4 text-blue-600 rounded focus:ring-blue-500"> 2 的倍數 (亮藍標籤)
+							</label>
+							<label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border-2 border-orange-600 rounded-xl font-bold text-orange-800 shadow-sm select-none">
+								<input type="checkbox" value="3" onchange="updateMultipleGrid()" class="multi-chk w-4 h-4 text-orange-600 rounded focus:ring-orange-500"> 3 的倍數 (橘紅標籤)
+							</label>
+							<label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border-2 border-teal-600 rounded-xl font-bold text-teal-800 shadow-sm select-none">
+								<input type="checkbox" value="5" onchange="updateMultipleGrid()" class="multi-chk w-4 h-4 text-teal-600 rounded focus:ring-teal-500"> 5 的倍數 (青綠標籤)
+							</label>
+							<label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border-2 border-slate-900 rounded-xl font-bold text-slate-900 shadow-sm select-none">
+								<input type="checkbox" value="10" onchange="updateMultipleGrid()" class="multi-chk w-4 h-4 text-slate-900 rounded focus:ring-slate-900"> 10 的倍數 (黑灰標籤)
+							</label>
+						</div>
+
+						<p class="text-sm text-slate-600 font-semibold">
+							👉 提示：可透過右上角切換 <strong class="text-indigo-700">1 ~ 50</strong> 或 <strong class="text-indigo-700">1 ~ 100</strong> 範圍。數字下方皆以 <strong class="text-purple-600">2×2 網格</strong> 排列彩色小膠囊標籤，乾淨清晰絕不超出格子！
+						</p>
+
+						<div id="interactiveNumberGrid" class="grid grid-cols-10 gap-2 max-w-xl mx-auto bg-white p-4 rounded-2xl border border-indigo-100 shadow-inner"></div>
+					</div>
+
+					<script>
+					let currentGridMax = 50;
+
+					function setGridRange(max) {
+						currentGridMax = max;
+						const btn50 = document.getElementById('btn-range-50');
+						const btn100 = document.getElementById('btn-range-100');
+						if (max === 50) {
+							if (btn50) btn50.className = "px-3 py-1 bg-indigo-600 text-white font-bold rounded-lg text-sm shadow-sm cursor-pointer transition-all";
+							if (btn100) btn100.className = "px-3 py-1 text-slate-700 font-bold rounded-lg text-sm shadow-sm cursor-pointer transition-all hover:bg-slate-300";
+						} else {
+							if (btn50) btn50.className = "px-3 py-1 text-slate-700 font-bold rounded-lg text-sm shadow-sm cursor-pointer transition-all hover:bg-slate-300";
+							if (btn100) btn100.className = "px-3 py-1 bg-indigo-600 text-white font-bold rounded-lg text-sm shadow-sm cursor-pointer transition-all";
+						}
+						initNumberGrid(max);
+					}
+
+					function clearMultipleGrid() {
+						document.querySelectorAll('.multi-chk').forEach(c => c.checked = false);
+						initNumberGrid(currentGridMax);
+					}
+
+					function initNumberGrid(maxNum) {
+						const grid = document.getElementById('interactiveNumberGrid');
+						if (!grid) return;
+						grid.className = `grid ${maxNum === 50 ? 'grid-cols-5 sm:grid-cols-10' : 'grid-cols-5 sm:grid-cols-10'} gap-2 max-w-3xl mx-auto bg-white p-4 rounded-2xl border border-indigo-100 shadow-inner`;
+						
+						let html = '';
+						for (let i = 1; i <= maxNum; i++) {
+							html += `
+								<div id="num-cell-${i}" class="p-2 rounded-xl bg-slate-50 border border-slate-200 text-center flex flex-col items-center justify-between transition-all min-h-[75px]">
+									<span class="font-black text-slate-800 text-base">${i}</span>
+									<div id="num-badges-${i}" class="grid grid-cols-2 gap-1 w-full mt-1"></div>
+								</div>
+							`;
+						}
+						grid.innerHTML = html;
+						updateMultipleGrid();
+					}
+
+					function updateMultipleGrid() {
+						const checkedVals = Array.from(document.querySelectorAll('.multi-chk'))
+							.filter(c => c.checked)
+							.map(c => parseInt(c.value));
+
+						for (let i = 1; i <= currentGridMax; i++) {
+							const cell = document.getElementById(`num-cell-${i}`);
+							const badgeContainer = document.getElementById(`num-badges-${i}`);
+							if (!cell || !badgeContainer) continue;
+
+							let badgesHtml = '';
+							let matchedCount = 0;
+
+							checkedVals.forEach(v => {
+								let isMatch = false;
+								if (v === 2 && i % 2 === 0) isMatch = true;
+								if (v === 3) {
+									let sum = 0, t = i;
+									while (t > 0) { sum += t % 10; t = Math.floor(t / 10); }
+									if (sum % 3 === 0) isMatch = true;
+								}
+								if (v === 5 && i % 5 === 0) isMatch = true;
+								if (v === 10 && i % 10 === 0) isMatch = true;
+
+								if (isMatch) {
+									matchedCount++;
+									let bgClass = "bg-blue-600 text-white";
+									if (v === 3) bgClass = "bg-orange-600 text-white";
+									else if (v === 5) bgClass = "bg-teal-600 text-white";
+									else if (v === 10) bgClass = "bg-slate-900 text-white";
+
+									badgesHtml += `<span class="text-[10.5px] font-extrabold ${bgClass} px-1 py-0.5 rounded shadow-sm text-center truncate">${v}</span>`;
+								} else {
+									badgesHtml += `<span class="text-[10px] text-slate-200 opacity-20 text-center">-</span>`;
+								}
+							});
+
+							badgeContainer.innerHTML = badgesHtml;
+
+							if (checkedVals.length > 0 && matchedCount === checkedVals.length) {
+								cell.className = "p-2 rounded-xl bg-amber-100 border-2 border-amber-400 text-center flex flex-col items-center justify-between transition-all min-h-[75px] shadow-sm animate-bounce-short";
+							} else if (matchedCount > 0) {
+								cell.className = "p-2 rounded-xl bg-indigo-50/70 border border-indigo-200 text-center flex flex-col items-center justify-between transition-all min-h-[75px]";
+							} else {
+								cell.className = "p-2 rounded-xl bg-slate-50 border border-slate-200 text-center flex flex-col items-center justify-between transition-all min-h-[75px]";
+							}
+						}
+					}
+					</script>
+
+					<!-- 🌟 課本完全對齊升級版：3 的倍數數位拆解互動劇場 -->
+					<div class="bg-gradient-to-r from-amber-50 to-orange-50 p-6 rounded-3xl border-2 border-amber-300 space-y-4 shadow-sm">
+						<div class="flex items-center justify-between flex-wrap gap-2">
+							<div class="flex items-center gap-3 text-amber-900 font-black text-xl">
+								<i class="fa-solid fa-person-chalkboard text-amber-500 text-2xl"></i>
+								<span>3 的倍數數位拆解互動劇場（課本圖解 4 步驟橫向模式）</span>
+							</div>
+							<div class="flex items-center gap-2">
+								<button onclick="randomizeAnimNum()" class="px-3.5 py-1.5 bg-amber-200 hover:bg-amber-300 text-amber-900 font-bold rounded-xl text-sm transition-all cursor-pointer">
+									🎲 隨機抽一個三位數
+								</button>
+								<div id="animStepIndicator" class="text-sm font-bold bg-white px-3 py-1 rounded-full border border-amber-300 text-amber-800">
+									狀態：請輸入數字或點擊隨機抽數字
+								</div>
+							</div>
+						</div>
+						<p class="text-slate-700 text-base leading-relaxed">
+							輸入一個三位數，點擊下方「下一步驟 ▶」按鈕，跟著橫向排列的 4 個步驟觀察：百位剩幾個、十位剩幾個、個位保留不分堆，最後一步再全部加起來！
+						</p>
+
+						<div class="flex flex-wrap gap-3 items-center bg-white p-4 rounded-2xl border border-amber-200 shadow-inner">
+							<label class="font-bold text-slate-700">輸入三位數：</label>
+							<input type="number" id="animNumInput" placeholder="請輸入100-999" min="100" max="999" oninput="handleAnimNumInputChange()" class="w-36 p-3 rounded-xl border-2 border-amber-300 font-bold text-xl text-center bg-amber-50/50">
+							<button onclick="startThreeDigitStepByStep()" class="px-5 py-3 bg-amber-500 hover:bg-amber-600 text-white font-extrabold rounded-xl shadow transition-all cursor-pointer flex items-center gap-2">
+								<i class="fa-solid fa-play"></i> 重設並從頭開始
+							</button>
+							<button onclick="nextThreeDigitStep()" id="btnNextAnimStep" class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-90 text-white font-extrabold rounded-xl shadow transition-all cursor-pointer flex items-center gap-2">
+								下一步驟 ▶
+							</button>
+						</div>
+
+						<!-- 橫向並排表演舞臺 -->
+						<div id="animationStage" class="bg-white p-6 rounded-2xl border-2 border-dashed border-amber-300 min-h-[260px] flex flex-col items-center justify-center text-center space-y-4">
+							<div class="text-slate-400 font-bold text-lg">👉 請在上方輸入三位數並點擊按鈕來開啟第一步解密！</div>
+						</div>
+					</div>
+
+					<script>
+					let currentAnimState = {
+						val: null,
+						hundreds: 0,
+						tens: 0,
+						units: 0,
+						step: 0 
+					};
+
+					function randomizeAnimNum() {
+						const sampleNums = [123, 234, 395, 456, 512, 639, 782, 810, 936];
+						const rand = sampleNums[Math.floor(Math.random() * sampleNums.length)];
+						const input = document.getElementById('animNumInput');
+						if (input) {
+							input.value = rand;
+							startThreeDigitStepByStep();
+						}
+					}
+
+					function handleAnimNumInputChange() {
+						const input = document.getElementById('animNumInput');
+						const btnNext = document.getElementById('btnNextAnimStep');
+						if (!input) return;
+						let val = parseInt(input.value);
+						if (isNaN(val)) {
+							currentAnimState.step = 0;
+							renderAnimStage();
+							return;
+						}
+						currentAnimState.val = val;
+						currentAnimState.hundreds = Math.floor(val / 100);
+						currentAnimState.tens = Math.floor((val % 100) / 10);
+						currentAnimState.units = val % 10;
+						currentAnimState.step = 0;
+
+						if (btnNext) {
+							btnNext.disabled = true;
+							btnNext.className = "px-6 py-3 bg-slate-300 text-slate-500 font-extrabold rounded-xl shadow-none cursor-not-allowed flex items-center gap-2 opacity-60";
+							btnNext.innerText = "下一步驟 ▶ (請先點擊重設)";
+						}
+
+						renderAnimStage();
+					}
+
+					function startThreeDigitStepByStep() {
+						const input = document.getElementById('animNumInput');
+						const btnNext = document.getElementById('btnNextAnimStep');
+						if (!input || !input.value) {
+							alert('請先輸入或隨機抽一個三位數喔！');
+							return;
+						}
+						let val = parseInt(input.value);
+						if (isNaN(val) || val < 100 || val > 999) {
+							alert('請輸入 100 到 999 之間的有效三位數喔！');
+							return;
+						}
+						currentAnimState.val = val;
+						currentAnimState.hundreds = Math.floor(val / 100);
+						currentAnimState.tens = Math.floor((val % 100) / 10);
+						currentAnimState.units = val % 10;
+						currentAnimState.step = 0;
+
+						if (btnNext) {
+							btnNext.disabled = false;
+							btnNext.className = "px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-90 text-white font-extrabold rounded-xl shadow transition-all cursor-pointer flex items-center gap-2";
+						}
+
+						nextThreeDigitStep();
+					}
+
+					function nextThreeDigitStep() {
+						const input = document.getElementById('animNumInput');
+						if (!input || !input.value) {
+							alert('請先輸入或隨機抽一個三位數喔！');
+							return;
+						}
+						currentAnimState.step++;
+						if (currentAnimState.step > 4) {
+							currentAnimState.step = 1; 
+						}
+						renderAnimStage();
+					}
+
+					function renderAnimStage() {
+						const stage = document.getElementById('animationStage');
+						const indicator = document.getElementById('animStepIndicator');
+						const btnNext = document.getElementById('btnNextAnimStep');
+						if (!stage || !indicator) return;
+
+						const { val, hundreds, tens, units, step } = currentAnimState;
+						
+						if (!val) {
+							stage.innerHTML = '<div class="text-slate-400 font-bold text-lg">👉 請在上方輸入三位數並點擊按鈕來開啟第一步解密！</div>';
+							indicator.innerText = "狀態：請輸入數字或點擊隨機抽數字";
+							return;
+						}
+
+						const totalSum = hundreds + tens + units;
+						const isDivisible = (totalSum % 3 === 0);
+
+						function makeBaseTenBlockSVG(type, countText) {
+							let innerGrid = "";
+							let containerStyle = "";
+
+							if (type === 'hundred') {
+								containerStyle = "w-[65px] h-[65px] bg-blue-50 border-2 border-blue-600";
+								innerGrid = `<div class="absolute inset-0 grid grid-cols-10 grid-rows-10">${Array.from({length: 100}).map(() => `<div class="border-[0.5px] border-blue-300"></div>`).join('')}</div>`;
+							} else if (type === 'ten') {
+								containerStyle = "w-[16px] h-[65px] bg-purple-50 border-2 border-purple-600";
+								innerGrid = `<div class="absolute inset-0 grid grid-rows-10">${Array.from({length: 10}).map(() => `<div class="border-[0.5px] border-purple-300"></div>`).join('')}</div>`;
+							} else {
+								containerStyle = "w-[16px] h-[16px] bg-emerald-50 border-2 border-emerald-600";
+								innerGrid = `<div class="absolute inset-0 flex items-center justify-center font-black text-emerald-900 text-[10px]">1</div>`;
+							}
+
+							return `
+								<div class="flex items-center justify-between gap-2 p-2.5 bg-white rounded-xl border border-slate-200 shadow-sm w-full">
+									<div class="flex items-center gap-2">
+										<div class="relative ${containerStyle} rounded-md overflow-hidden shadow flex items-center justify-center shrink-0">
+											${innerGrid}
+										</div>
+										<span class="text-[11px] font-extrabold text-slate-700">${countText}</span>
+									</div>
+									<div class="flex items-center gap-1.5 shrink-0 pl-1 border-l border-slate-200">
+										<span class="text-[10px] font-bold text-amber-700">剩1個</span>
+										<div class="w-[16px] h-[16px] bg-amber-500 border border-amber-600 rounded shadow animate-bounce flex items-center justify-center text-[9px] text-white font-black">1</div>
+									</div>
+								</div>
+							`;
+						}
+
+						function makeUnitBlockSVG() {
+							return `
+								<div class="flex items-center justify-center p-1.5 bg-white rounded-xl border border-emerald-200 shadow-sm shrink-0">
+									<div class="w-[20px] h-[20px] bg-emerald-500 border-2 border-emerald-700 rounded-md shadow flex items-center justify-center text-[11px] text-white font-black">1</div>
+								</div>
+							`;
+						}
+
+						let html = '<div class="w-full space-y-6 text-left">';
+						html += `<div class="grid grid-cols-1 md:grid-cols-4 gap-4">`;
+
+						let hundredBlocksHTML = '';
+						for (let i = 0; i < hundreds; i++) hundredBlocksHTML += makeBaseTenBlockSVG('hundred', '99塊');
+
+						html += `
+							<div class="p-4 bg-blue-50/95 border-2 border-blue-300 rounded-2xl space-y-3 shadow-sm flex flex-col justify-between ${step >= 1 ? 'opacity-100 scale-100' : 'opacity-40'} transition-all">
+								<div>
+									<div class="flex items-center justify-between text-blue-900 font-black text-base border-b border-blue-200 pb-2 mb-2">
+										<span class="flex items-center gap-1.5"><span class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs">1</span> 百位分解</span>
+										<span class="text-xs bg-blue-100 px-2 py-0.5 rounded text-blue-800">$${hundreds * 100}$</span>
+									</div>
+									${step >= 1 ? `
+										<div class="space-y-2 animate-fade-in-step">
+											<div class="text-xs font-bold text-slate-600">課本圖解（$${hundreds}$ 個百）：</div>
+											<div class="flex flex-col gap-2 max-h-48 overflow-y-auto p-1">${hundredBlocksHTML}</div>
+										</div>
+									` : `<div class="text-xs text-slate-400 text-center py-6">等待解密下一步...</div>`}
+								</div>
+								${step >= 1 ? `
+									<div class="p-3 bg-blue-100/90 rounded-xl border border-blue-300 text-slate-800 text-xs font-bold space-y-1">
+										<div>每 1 個百，剩下 1 個 <span class="inline-block w-3 h-3 bg-amber-500 rounded-sm align-middle"></span></div>
+										<div class="text-rose-600 font-black text-sm">👉 剩 $1 \\times ${hundreds} = \\mathbf{${hundreds}}$ 個</div>
+									</div>
+								` : ''}
+							</div>
+						`;
+
+						let tenBlocksHTML = '';
+						for (let i = 0; i < tens; i++) tenBlocksHTML += makeBaseTenBlockSVG('ten', '9塊');
+
+						html += `
+							<div class="p-4 bg-purple-50/95 border-2 border-purple-300 rounded-2xl space-y-3 shadow-sm flex flex-col justify-between ${step >= 2 ? 'opacity-100 scale-100' : 'opacity-40'} transition-all">
+								<div>
+									<div class="flex items-center justify-between text-purple-900 font-black text-base border-b border-purple-200 pb-2 mb-2">
+										<span class="flex items-center gap-1.5"><span class="w-6 h-6 rounded-full bg-purple-600 text-white flex items-center justify-center text-xs">2</span> 十位分解</span>
+										<span class="text-xs bg-purple-100 px-2 py-0.5 rounded text-purple-800">$${tens * 10}$</span>
+									</div>
+									${step >= 2 ? `
+										<div class="space-y-2 animate-fade-in-step">
+											<div class="text-xs font-bold text-slate-600">課本圖解（$${tens}$ 個十）：</div>
+											<div class="flex flex-col gap-2 max-h-48 overflow-y-auto p-1">${tenBlocksHTML}</div>
+										</div>
+									` : `<div class="text-xs text-slate-400 text-center py-6">等待解密下一步...</div>`}
+								</div>
+								${step >= 2 ? `
+									<div class="p-3 bg-purple-100/90 rounded-xl border border-purple-300 text-slate-800 text-xs font-bold space-y-1">
+										<div>每 1 個十，剩下 1 個 <span class="inline-block w-3 h-3 bg-amber-500 rounded-sm align-middle"></span></div>
+										<div class="text-rose-600 font-black text-sm">👉 剩 $1 \\times ${tens} = \\mathbf{${tens}}$ 個</div>
+									</div>
+								` : ''}
+							</div>
+						`;
+
+						let unitBlocksHTML = '';
+						for (let i = 0; i < units; i++) unitBlocksHTML += makeUnitBlockSVG();
+
+						html += `
+							<div class="p-4 bg-emerald-50/95 border-2 border-emerald-300 rounded-2xl space-y-3 shadow-sm flex flex-col justify-between ${step >= 3 ? 'opacity-100 scale-100' : 'opacity-40'} transition-all">
+								<div>
+									<div class="flex items-center justify-between text-emerald-900 font-black text-base border-b border-emerald-200 pb-2 mb-2">
+										<span class="flex items-center gap-1.5"><span class="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs">3</span> 個位保留</span>
+										<span class="text-xs bg-emerald-100 px-2 py-0.5 rounded text-emerald-800">原有 $${units}$</span>
+									</div>
+									${step >= 3 ? `
+										<div class="space-y-2 animate-fade-in-step">
+											<div class="text-xs font-bold text-slate-600">個位數不管有幾個都不分堆：</div>
+											<div class="flex flex-wrap gap-1.5 justify-center max-h-48 overflow-y-auto p-1">${unitBlocksHTML}</div>
+										</div>
+									` : `<div class="text-xs text-slate-400 text-center py-6">等待解密下一步...</div>`}
+								</div>
+								${step >= 3 ? `
+									<div class="p-3 bg-emerald-100/90 rounded-xl border border-emerald-300 text-slate-800 text-xs font-bold space-y-1">
+										<div>個位數不分堆</div>
+										<div class="text-emerald-700 font-black text-sm">👉 保留 $\\mathbf{${units}}$ 個</div>
+									</div>
+								` : ''}
+							</div>
+						`;
+
+						html += `
+							<div class="p-4 bg-amber-50/95 border-2 border-amber-300 rounded-2xl space-y-3 shadow-sm flex flex-col justify-between ${step >= 4 ? 'opacity-100 scale-100' : 'opacity-40'} transition-all">
+								<div>
+									<div class="flex items-center justify-between text-amber-900 font-black text-base border-b border-amber-200 pb-2 mb-2">
+										<span class="flex items-center gap-1.5"><span class="w-6 h-6 rounded-full bg-amber-600 text-white flex items-center justify-center text-xs">4</span> 總和加總</span>
+										<span class="text-xs bg-amber-100 px-2 py-0.5 rounded text-amber-800">判定倍數</span>
+									</div>
+									${step >= 4 ? `
+										<div class="space-y-2.5 animate-fade-in-step text-xs font-bold text-slate-700">
+											<div class="bg-white p-2.5 rounded-xl border border-amber-200 space-y-1 shadow-inner">
+												<div>百位剩下：<strong class="text-blue-700">${hundreds}</strong> 個</div>
+												<div>十位剩下：<strong class="text-purple-700">${tens}</strong> 個</div>
+												<div>個位原有：<strong class="text-emerald-700">${units}</strong> 個</div>
+											</div>
+										</div>
+									` : `<div class="text-xs text-slate-400 text-center py-6">等待解密下一步...</div>`}
+								</div>
+								${step >= 4 ? `
+									<div class="p-3 bg-amber-100 rounded-xl border border-amber-300 text-center space-y-1">
+										<div class="font-black text-amber-950 text-xs">總和：$${hundreds} + ${tens} + ${units} = ${totalSum}$</div>
+										<div class="text-xs font-extrabold ${isDivisible ? 'text-emerald-700' : 'text-rose-700'}">
+											${isDivisible ? `✅ ${val} 是 3 的倍數！` : `❌ ${val} 不是 3 的倍數。`}
+										</div>
+									</div>
+								` : ''}
+							</div>
+						`;
+
+						html += `</div>`;
+						stage.innerHTML = html;
+
+						if (step === 0) {
+							indicator.innerText = "狀態：已修改數字，請點擊上方「重設並從頭開始」";
+							if (btnNext) {
+								btnNext.disabled = true;
+								btnNext.className = "px-6 py-3 bg-slate-300 text-slate-500 font-extrabold rounded-xl shadow-none cursor-not-allowed flex items-center gap-2 opacity-60";
+								btnNext.innerText = "下一步驟 ▶ (請先點擊重設)";
+							}
+						} else if (step === 1) {
+							indicator.innerText = "目前進度：步驟 1 顯示中（百位分解）";
+							if (btnNext) {
+								btnNext.disabled = false;
+								btnNext.className = "px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-90 text-white font-extrabold rounded-xl shadow transition-all cursor-pointer flex items-center gap-2";
+								btnNext.innerText = "下一步：看十位分解 ▶";
+							}
+						} else if (step === 2) {
+							indicator.innerText = "目前進度：步驟 1 與 2 顯示中（百位 + 十位）";
+							if (btnNext) {
+								btnNext.disabled = false;
+								btnNext.className = "px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-90 text-white font-extrabold rounded-xl shadow transition-all cursor-pointer flex items-center gap-2";
+								btnNext.innerText = "下一步：看個位保留 ▶";
+							}
+						} else if (step === 3) {
+							indicator.innerText = "目前進度：步驟 1、2、3 顯示中（百位 + 十位 + 個位）";
+							if (btnNext) {
+								btnNext.disabled = false;
+								btnNext.className = "px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-90 text-white font-extrabold rounded-xl shadow transition-all cursor-pointer flex items-center gap-2";
+								btnNext.innerText = "下一步：看總和與總結算 ▶";
+							}
+						} else if (step === 4) {
+							indicator.innerText = "目前進度：4 個步驟橫向完整呈現完畢（一目了然）";
+							if (btnNext) {
+								btnNext.disabled = false;
+								btnNext.className = "px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-90 text-white font-extrabold rounded-xl shadow transition-all cursor-pointer flex items-center gap-2";
+								btnNext.innerText = "重新從頭開始 ↺";
+							}
+						}
+
+						triggerMathJax(stage);
+					}
+					</script>
+
+					<!-- 🌟 挑戰盲盒倍數檢驗器 -->
+					<div class="bg-slate-50 p-6 rounded-2xl border-2 border-indigo-200 space-y-5 shadow-sm">
+						<div class="flex items-center justify-between flex-wrap gap-2">
+							<div class="flex items-center gap-2.5">
+								<i class="fa-solid fa-gift text-indigo-600 text-2xl animate-bounce"></i>
+								<h4 class="text-2xl font-black text-slate-800">🎁 挑戰盲盒倍數檢驗器（小遊戲模式）</h4>
+							</div>
+							<button onclick="randomizeBlindBox()" class="px-3.5 py-1.5 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 font-bold rounded-xl text-sm transition-all cursor-pointer">
+								🎲 隨機抽一個盲盒數字
+							</button>
+						</div>
+						<p class="text-base text-slate-600 font-medium leading-relaxed">
+							輸入或隨機抽一個數字盲盒，先在下方勾選你猜它是<strong>幾的倍數</strong>（若認為都不是可不勾選），再按下<b>「打開盲盒驗證」</b>來揭曉答案！
+						</p>
+
+						<div class="flex flex-col sm:flex-row gap-3 items-center">
+							<div class="flex items-center gap-2 w-full sm:w-auto">
+								<label class="font-bold text-slate-700 shrink-0">盲盒數字：</label>
+								<input type="number" id="blindBoxInput" placeholder="請輸入數字" min="1" max="999" class="px-4 py-3 rounded-xl border-2 border-indigo-300 font-black text-2xl bg-white w-36 text-center shadow-inner text-indigo-950">
+							</div>
+							<div class="flex flex-wrap items-center gap-3 bg-white p-3 rounded-xl border border-indigo-200 w-full sm:w-auto flex-1">
+								<span class="text-sm font-bold text-slate-500">猜測它是：</span>
+								<label class="cursor-pointer inline-flex items-center gap-1 font-bold text-blue-800 text-sm"><input type="checkbox" value="2" class="blind-chk w-4 h-4 text-blue-600 rounded"> 2的倍數</label>
+								<label class="cursor-pointer inline-flex items-center gap-1 font-bold text-orange-800 text-sm"><input type="checkbox" value="3" class="blind-chk w-4 h-4 text-orange-600 rounded"> 3的倍數</label>
+								<label class="cursor-pointer inline-flex items-center gap-1 font-bold text-teal-800 text-sm"><input type="checkbox" value="5" class="blind-chk w-4 h-4 text-teal-600 rounded"> 5的倍數</label>
+								<label class="cursor-pointer inline-flex items-center gap-1 font-bold text-slate-900 text-sm"><input type="checkbox" value="10" class="blind-chk w-4 h-4 text-slate-900 rounded"> 10的倍數</label>
+							</div>
+						</div>
+
+						<button onclick="openBlindBox()" class="w-full py-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:opacity-95 active:scale-98 text-white text-lg font-black rounded-2xl shadow-md transition-all cursor-pointer flex items-center justify-center gap-2">
+							<i class="fa-solid fa-box-open"></i> 打開盲盒驗證！
+						</button>
+
+						<div id="blindBoxResultBox" class="p-6 rounded-3xl bg-white border-2 border-indigo-200 space-y-4 shadow-sm hidden">
+						</div>
+					</div>
+
+					<script>
+					function randomizeBlindBox() {
+						const sampleNums = [97, 120, 135, 142, 210, 225, 300, 312, 450, 504];
+						const rand = sampleNums[Math.floor(Math.random() * sampleNums.length)];
+						const input = document.getElementById('blindBoxInput');
+						if (input) input.value = rand;
+						document.querySelectorAll('.blind-chk').forEach(c => c.checked = false);
+						const resBox = document.getElementById('blindBoxResultBox');
+						if (resBox) resBox.classList.add('hidden');
+					}
+
+					function openBlindBox() {
+						const inputEl = document.getElementById('blindBoxInput');
+						const resultBox = document.getElementById('blindBoxResultBox');
+						if (!inputEl || !resultBox) return;
+
+						if (!inputEl.value.trim()) {
+							alert('請先輸入或隨機抽一個盲盒數字喔！');
+							return;
+						}
+
+						let n = parseInt(inputEl.value);
+						if (isNaN(n) || n < 1) {
+							alert('請輸入有效的正整數喔！');
+							return;
+						}
+
+						const userGuesses = Array.from(document.querySelectorAll('.blind-chk'))
+							.filter(c => c.checked)
+							.map(c => parseInt(c.value));
+
+						resultBox.classList.remove('hidden');
+
+						const actualFactors = [];
+						if (n % 2 === 0) actualFactors.push(2);
+						let sumDigits = 0, temp = n;
+						while (temp > 0) { sumDigits += temp % 10; temp = Math.floor(temp / 10); }
+						if (sumDigits % 3 === 0) actualFactors.push(3);
+						if (n % 5 === 0) actualFactors.push(5);
+						if (n % 10 === 0) actualFactors.push(10);
+
+						let livelyMsg = "";
+
+						if (userGuesses.length === 0) {
+							if (actualFactors.length === 0) {
+								playCorrectSound();
+								triggerPetalRain(2000);
+								livelyMsg = `
+									<div class="p-4 bg-emerald-50 border-2 border-emerald-300 rounded-2xl text-emerald-950 flex items-start gap-3 shadow-sm">
+										<i class="fa-solid fa-face-laugh-beam text-3xl text-emerald-600 shrink-0 mt-0.5"></i>
+										<div class="space-y-1">
+											<div class="font-black text-xl text-emerald-800">太神啦！完全命中！它都不是 2、3、5、10 的倍數！✨</div>
+											<p class="text-base font-semibold leading-relaxed">
+												哇～你的數感太厲害了！數字 <strong class="text-indigo-700 font-black">${n}</strong> 確實不屬於這幾個常見的倍數，完美通關！🎉
+											</p>
+										</div>
+									</div>
+								`;
+							} else {
+								playWrongSound();
+								livelyMsg = `
+									<div class="p-4 bg-amber-50 border-2 border-amber-300 rounded-2xl text-amber-950 flex items-start gap-3 shadow-sm">
+										<i class="fa-solid fa-lightbulb text-3xl text-amber-600 shrink-0 mt-0.5"></i>
+										<div class="space-y-1">
+											<div class="font-black text-xl text-amber-900">溫馨提示：你沒有勾選任何選項喔！</div>
+											<p class="text-base font-bold leading-relaxed text-amber-800">
+												其實數字 <strong class="text-indigo-700 font-black">${n}</strong> 藏著某些倍數的小秘密喔！參考下方的真實解剖報告，再挑戰一次看看吧！💪
+											</p>
+										</div>
+									</div>
+								`;
+							}
+						} else {
+							const hasWrongSelection = userGuesses.some(g => !actualFactors.includes(g));
+							const isAllCorrect = !hasWrongSelection && userGuesses.length === actualFactors.length && userGuesses.every(f => actualFactors.includes(f));
+
+							if (hasWrongSelection) {
+								playWrongSound();
+								livelyMsg = `
+									<div class="p-4 bg-rose-50 border-2 border-rose-300 rounded-2xl text-rose-950 flex items-start gap-3 shadow-sm">
+										<i class="fa-solid fa-face-rolling-eyes text-3xl text-rose-600 shrink-0 mt-0.5"></i>
+										<div class="space-y-1">
+											<div class="font-black text-xl text-rose-800">哎呀！選到不是倍數的選項囉！</div>
+											<p class="text-base font-semibold leading-relaxed">
+												別氣餒冒險家！有幾個選項不符合條件，對照下方的真實解剖報告，重新檢驗一次絕對沒問題！💪
+											</p>
+										</div>
+									</div>
+								`;
+							} else if (isAllCorrect) {
+								playCorrectSound();
+								triggerPetalRain(2500);
+								livelyMsg = `
+									<div class="p-4 bg-emerald-50 border-2 border-emerald-300 rounded-2xl text-emerald-950 flex items-start gap-3 shadow-sm">
+										<i class="fa-solid fa-face-laugh-beam text-3xl text-emerald-600 shrink-0 mt-0.5"></i>
+										<div class="space-y-1">
+											<div class="font-black text-xl text-emerald-800">太神啦！你完全完美命中盲盒的所有祕密！✨</div>
+											<p class="text-base font-semibold leading-relaxed">
+												哇～你的數感簡直跟偵探一樣敏銳！每一個倍數條件都被你精準破解，完美通關！🎉
+											</p>
+										</div>
+									</div>
+								`;
+							} else {
+								playCorrectSound();
+								livelyMsg = `
+									<div class="p-4 bg-amber-50 border-2 border-amber-300 rounded-2xl text-amber-950 flex items-start gap-3 shadow-sm">
+										<i class="fa-solid fa-face-smile text-3xl text-amber-600 shrink-0 mt-0.5"></i>
+										<div class="space-y-1">
+											<div class="font-black text-xl text-amber-800">做得好！你找對了部分倍數，不過還有漏勾的喔！</div>
+											<p class="text-base font-semibold leading-relaxed">
+												方向很正確！雖然沒有勾錯，但盲盒裡還藏了其他也是它的倍數的選項，再檢查一下下方的解剖報告吧！🔍
+											</p>
+										</div>
+									</div>
+								`;
+							}
+						}
+
+						const isDiv2 = actualFactors.includes(2);
+						const isDiv3 = actualFactors.includes(3);
+						const isDiv5 = actualFactors.includes(5);
+						const isDiv10 = actualFactors.includes(10);
+
+						resultBox.innerHTML = `
+							<div class="text-xl font-black text-indigo-950 border-b border-indigo-100 pb-3 flex items-center justify-between">
+								<span class="flex items-center gap-2">
+									<i class="fa-solid fa-box-open text-indigo-600"></i>
+									<span>數字 $${n}$ 的盲盒真實解剖報告：</span>
+								</span>
+								<span class="text-sm bg-purple-100 text-purple-800 px-3.5 py-1.5 rounded-xl font-black border border-purple-200">盲盒已開啟 🎁</span>
+							</div>
+
+							${livelyMsg}
+
+							<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-lg font-bold pt-2">
+								<div class="p-4 rounded-2xl border-2 flex items-center justify-between ${isDiv2 ? 'bg-emerald-50 border-emerald-300 text-emerald-950' : 'bg-slate-50 border-slate-200 text-slate-600'}">
+									<span>2 的倍數（個位是偶數）</span>
+									<span class="px-3 py-1 rounded-xl text-sm font-black ${isDiv2 ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-700'}">${isDiv2 ? '是' : '否'}</span>
+								</div>
+								<div class="p-4 rounded-2xl border-2 flex items-center justify-between ${isDiv3 ? 'bg-emerald-50 border-emerald-300 text-emerald-950' : 'bg-slate-50 border-slate-200 text-slate-600'}">
+									<span>3 的倍數（數位總和 $${sumDigits}$）</span>
+									<span class="px-3 py-1 rounded-xl text-sm font-black ${isDiv3 ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-700'}">${isDiv3 ? '是' : '否'}</span>
+								</div>
+								<div class="p-4 rounded-2xl border-2 flex items-center justify-between ${isDiv5 ? 'bg-emerald-50 border-emerald-300 text-emerald-950' : 'bg-slate-50 border-slate-200 text-slate-600'}">
+									<span>5 的倍數（個位是 0 或 5）</span>
+									<span class="px-3 py-1 rounded-xl text-sm font-black ${isDiv5 ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-700'}">${isDiv5 ? '是' : '否'}</span>
+								</div>
+								<div class="p-4 rounded-2xl border-2 flex items-center justify-between ${isDiv10 ? 'bg-emerald-50 border-emerald-300 text-emerald-950' : 'bg-slate-50 border-slate-200 text-slate-600'}">
+									<span>10 的倍數（個位是 0）</span>
+									<span class="px-3 py-1 rounded-xl text-sm font-black ${isDiv10 ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-700'}">${isDiv10 ? '是' : '否'}</span>
+								</div>
+							</div>
+						`;
+						triggerMathJax(resultBox);
+					}
+					</script>
+				</div>
+
+				<div class="flex justify-between pt-2">
+					<button onclick="switchPrereqSubPage(2)" class="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-2xl transition-all inline-flex items-center gap-2 cursor-pointer text-lg">
+						<i class="fa-solid fa-arrow-left"></i> <span>上一頁 : 乘法：兩數相乘</span>
 					</button>
 					<button onclick="switchTab('tab-concepts')" class="px-8 py-3.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold text-lg rounded-2xl shadow-md hover:scale-105 active:scale-95 transition-all inline-flex items-center gap-3 cursor-pointer">
 						<span>學會了！前往技能解鎖（最大公因數/最小公倍數）</span> <i class="fa-solid fa-arrow-right"></i>
@@ -734,6 +1543,23 @@
 
 					<div id="quizAnswerArea" class="space-y-4"></div>
 
+					<!-- 💡 提示與救援按鈕區塊 -->
+					<div class="pt-2">
+						<button id="btnQuizRescue" onclick="toggleQuizRescueHint()" class="w-full px-4 py-3 bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-300 font-bold rounded-xl text-base transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm">
+							<i class="fa-solid fa-lightbulb text-amber-500 text-xl"></i>
+							<span id="btnQuizRescueText">💡 需要提示救援嗎？（點擊展開短除法步驟圖解）</span>
+						</button>
+
+						<!-- 展開救援短除法步驟卡片 -->
+						<div id="quizRescueCard" class="hidden mt-3 p-5 bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-300 rounded-2xl space-y-3 transition-all shadow-sm">
+							<div class="text-base font-extrabold text-amber-900 flex items-center gap-2 border-b border-amber-200 pb-2">
+								<i class="fa-solid fa-life-ring text-orange-500 text-xl"></i>
+								<span>救援指導：短除法步驟拆解圖解</span>
+							</div>
+							<div id="quizRescueContent" class="text-base text-slate-800 space-y-2"></div>
+						</div>
+					</div>
+
 					<div id="quizActionContainer" class="pt-2">
 						<button id="btnSubmitAnswer" onclick="submitCurrentAnswer()" class="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-extrabold rounded-2xl shadow-lg hover:shadow-indigo-300 hover:opacity-95 active:scale-98 transition-all text-lg cursor-pointer">
 							提交答案
@@ -948,7 +1774,8 @@
             activeTab: 'tab-prereq',
             lastPrompt: '',
             currentQuestion: null,
-            selectedOptionIndex: null
+            selectedOptionIndex: null,
+            currentWrongCount: 0
         };
 
         let gameState = { ...defaultGameState, unlockedBadges: new Set() };
@@ -1023,6 +1850,7 @@
         async function triggerMathJax(targetElement = null) {
             if (window.MathJax && window.MathJax.typesetPromise) {
                 try {
+                    await new Promise(resolve => setTimeout(resolve, 30));
                     await window.MathJax.typesetPromise(targetElement ? [targetElement] : undefined);
                 } catch (err) {
                     console.error("MathJax typesetting error:", err);
@@ -1238,10 +2066,10 @@
 		function switchPrereqSubPage(pageNumber) {
 			document.querySelectorAll('.prereq-sub-content').forEach(el => el.classList.add('hidden'));
 			
-			for (let i = 1; i <= 2; i++) {
+			for (let i = 1; i <= 3; i++) {
 				const btn = document.getElementById(`btn-prereq-page-${i}`);
 				if (btn) {
-					btn.className = 'flex-1 py-3 px-4 rounded-xl text-center font-bold text-base md:text-lg transition-all bg-slate-100 text-slate-700 hover:bg-slate-200 flex items-center justify-center gap-2 cursor-pointer';
+					btn.className = 'flex-1 w-full py-3 px-4 rounded-xl text-center font-bold text-base md:text-lg transition-all bg-slate-100 text-slate-700 hover:bg-slate-200 flex items-center justify-center gap-2 cursor-pointer';
 				}
 			}
 
@@ -1250,13 +2078,16 @@
 
 			if (targetPage) targetPage.classList.remove('hidden');
 			if (targetBtn) {
-				targetBtn.className = 'flex-1 py-3 px-4 rounded-xl text-center font-bold text-base md:text-lg transition-all bg-indigo-600 text-white shadow-md flex items-center justify-center gap-2 cursor-pointer';
+				targetBtn.className = 'flex-1 w-full py-3 px-4 rounded-xl text-center font-bold text-base md:text-lg transition-all bg-indigo-600 text-white shadow-md flex items-center justify-center gap-2 cursor-pointer';
 			}
 
 			if (pageNumber === 1) {
 				runBlockLabDivision();
 			} else if (pageNumber === 2) {
 				generateRainbow();
+				resetMultSteps();
+			} else if (pageNumber === 3) {
+				initNumberGrid(currentGridMax);
 			}
 
 			window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1645,7 +2476,6 @@
             if (conclusionText) conclusionText.classList.add('hidden');
         }
 
-        /* 🧩 互動積木分分看：實驗室控制邏輯 */
         function setBlockLabValues(total, groupSize) {
             const inputTotal = document.getElementById('labTotalBlocks');
             const inputGroupSize = document.getElementById('labGroupSize');
@@ -2008,7 +2838,6 @@
             if (window.MathJax) MathJax.typesetPromise();
         }
 
-        /* 技能解鎖即時練習題邏輯（確保兩題不重複） */
         let gcdPracticeQuestions = [];
         let lcmPracticeQuestions = [];
 
@@ -2016,7 +2845,6 @@
             const container = document.getElementById('gcd-practice-container');
             if (!container) return;
 
-            // 隨機選取 2 個互不相同的題目對
             let shuffledPairs = [...GCD_PAIRS].sort(() => Math.random() - 0.5);
             const pair1 = shuffledPairs[0];
             const pair2 = shuffledPairs[1];
@@ -2076,7 +2904,6 @@
             const container = document.getElementById('lcm-practice-container');
             if (!container) return;
 
-            // 隨機選取 2 個互不相同的題目對
             let shuffledPairs = [...LCM_PAIRS].sort(() => Math.random() - 0.5);
             const pair1 = shuffledPairs[0];
             const pair2 = shuffledPairs[1];
@@ -2128,7 +2955,7 @@
             } else {
                 playWrongSound();
                 feedbackEl.className = "p-4 rounded-xl text-base font-bold bg-rose-50 border-2 border-rose-300 text-rose-900";
-                feedbackEl.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600"></i> 哎呀，再想想看！提示：試著用短除法把 ${q.a} 與 ${q.b} 一起除到互質，然後把左側與底部的數字全部相乘看看！💪`;
+                feedbackEl.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600"></i> 哎呀，再想想看！提示：可以使用短除法，將左邊與底部的數字全部乘起來喔！💪`;
             }
         }
 
@@ -2160,7 +2987,8 @@
                             prompt: `下列哪一個數字是 $${base}$ 的<b>因數</b>？`,
                             options: options.map(o => `$${o}$`),
                             correctIndex: options.indexOf(correctChoice),
-                            solution: `$${base} \\div ${correctChoice} = ${base / correctChoice} \\dots 0$，餘數為 0，所以 $${correctChoice}$ 是 $${base}$ 的因數！`
+                            solution: `$${base} \\div ${correctChoice} = ${base / correctChoice} \\dots 0$，餘數為 0，所以 $${correctChoice}$ 是 $${base}$ 的因數！`,
+                            rescueHtml: `要找 $${base}$ 的因數，可以試著用除法檢驗：<br>將選項數字帶入 $${base} \\div (\\text{選項})$，只要<b>餘數為 0</b> 就是因數喔！`
                         };
                     } else if (type === 2) {
                         const num = randInt(3, 15);
@@ -2177,7 +3005,8 @@
                             prompt: `下列哪一個數字是 $${num}$ 的<b>倍數</b>？`,
                             options: options.map(o => `$${o}$`),
                             correctIndex: options.indexOf(correctChoice),
-                            solution: `$${correctChoice} \\div ${num} = ${correctChoice / num}$，沒有餘數，因此 $${correctChoice}$ 是 $${num}$ 的倍數。`
+                            solution: `$${correctChoice} \\div ${num} = ${correctChoice / num}$，沒有餘數，因此 $${correctChoice}$ 是 $${num}$ 的倍數。`,
+                            rescueHtml: `找 $${num}$ 的倍數，代表該數必須能被 $${num}$ <b>整除</b>（即 $(\\text{選項}) \\div ${num}$ 的餘數為 0）。`
                         };
                     } else {
                         const num = randInt(12, 50);
@@ -2187,7 +3016,8 @@
                             prompt: `數字 $${num}$ 一共有幾個因數？`,
                             options: [factors.length, factors.length + 1, Math.max(1, factors.length - 1), factors.length + 2].sort(() => Math.random() - 0.5).map(o => `$${o}$ 個`),
                             correctIndex: null,
-                            solution: `$${num}$ 的所有因數為：$${factors.join(', ')}$，總共有 $${factors.length}$ 個。`
+                            solution: `$${num}$ 的所有因數為：$${factors.join(', ')}$，總共有 $${factors.length}$ 個。`,
+                            rescueHtml: `用<b>彩虹配對法</b>兩兩相乘尋找：<br>從小到大檢查 $1, 2, 3 \\dots$ 哪兩個整數相乘會等於 $${num}$！`
                         };
                         const correctStr = `$${factors.length}$ 個`;
                         q.correctIndex = q.options.indexOf(correctStr);
@@ -2202,7 +3032,8 @@
                         type: 'input',
                         prompt: `請計算 $${num1}$ 與 $${num2}$ 的<b>最大公因數</b>：`,
                         correctAnswer: g.toString(),
-                        solution: `短除法計算過程：<br>${shortDivHTML}<br>最大公因數為左側公因數：<b>$${g}$</b>。`
+                        solution: `短除法計算過程：<br>${shortDivHTML}<br>最大公因數為左側公因數：<b>$${g}$</b>。`,
+                        rescueHtml: `<b>【短除法救援圖解】</b><br>${shortDivHTML}<br>👉 提示：將<b>左側的公因數相乘</b>，即可得到最大公因數！`
                     };
                 } else if (stage === 3) {
                     const a = randInt(3, 12);
@@ -2214,7 +3045,8 @@
                         type: 'input',
                         prompt: `請計算 $${a}$ 與 $${b}$ 的<b>最小公倍數</b>：`,
                         correctAnswer: l.toString(),
-                        solution: `短除法 L 形大包圍計算過程：<br>${shortDivHTML}<br>最小公倍數為左側與底部數字全部相乘：<b>$${l}$</b>。`
+                        solution: `短除法 L 形大包圍計算過程：<br>${shortDivHTML}<br>最小公倍數為左側與底部數字全部相乘：<b>$${l}$</b>。`,
+                        rescueHtml: `<b>【短除法救援圖解】</b><br>${shortDivHTML}<br>👉 提示：進行 L 型大包圍，把<b>左側與底部的數字全部相乘</b>，即可得到最小公倍數！`
                     };
                 } else {
                     const templateType = randInt(1, 4);
@@ -2226,7 +3058,8 @@
                             prompt: `【觀念判斷】在除法算式中，當被除數、除數、商都是整數，且餘數是 0 時，叫作什麼？`,
                             options: options,
                             correctIndex: 1,
-                            solution: `當整數相除沒有餘數（餘數為 0）時，這種情況稱為<b>「整除」</b>。`
+                            solution: `當整數相除沒有餘數（餘數為 0）時，這種情況稱為<b>「整除」</b>。`,
+                            rescueHtml: `提示：注意關鍵字「餘數是 0」，也就是剛好分完、沒有剩餘的情況！`
                         };
                     } else if (templateType === 2) {
                         const tripleSets = [
@@ -2249,7 +3082,8 @@
                             prompt: `已知「$${set.a} = ${set.x} \\times ${set.y}$」、「$${set.b} = ${set.z} \\times ${set.x}$」，下面哪一個敘述是<b>錯誤</b>的？`,
                             options: options,
                             correctIndex: options.indexOf(falseOption),
-                            solution: `$${set.b}$ 不能整除 $${set.a}$，所以 $${set.b}$ 不是 $${set.a}$ 的因數。`
+                            solution: `$${set.b}$ 不能整除 $${set.a}$，所以 $${set.b}$ 不是 $${set.a}$ 的因數。`,
+                            rescueHtml: `提示：若 $A = B \\times C$，則 $B$ 與 $C$ 都是 $A$ 的因數。檢查看看哪一個較大的數無法整除較小的數！`
                         };
                     } else if (templateType === 3) {
                         const paperSizes = [
@@ -2258,24 +3092,26 @@
                         ];
                         const paper = paperSizes[randInt(0, paperSizes.length - 1)];
                         const options = [...paper.valid.map(v => `$${v}$ 公分`), `$${paper.impossible}$ 公分`].sort(() => Math.random() - 0.5);
-
                         q = {
                             type: 'choice',
                             prompt: `在一張長 $${paper.w}$ 公分、寬 $${paper.h}$ 公分的白紙上畫滿相同大小的正方形，則正方形的邊長<b>不可能是</b>下面哪一個長度？`,
                             options: options,
                             correctIndex: options.indexOf(`$${paper.impossible}$ 公分`),
-                            solution: `正方形的邊長必須是長與寬的公因數，$${paper.impossible}$ 不能整除長或寬，所以不可能。`
+                            solution: `正方形的邊長必須是長與寬的公因數，$${paper.impossible}$ 不能整除長或寬，所以不可能。`,
+                            rescueHtml: `提示：要剛好鋪滿不剩餘，正方形的邊長必須同時是長 $${paper.w}$ 與寬 $${paper.h}$ 的<b>公因數</b>！`
                         };
                     } else {
                         const item1 = randInt(2, 5) * 12;
                         const item2 = randInt(2, 5) * 15;
                         const g = gcd(item1, item2);
+                        const shortDivHTML = generateShortDivisionHTML(item1, item2, false);
 
                         q = {
                             type: 'input',
                             prompt: `有蘋果 $${item1}$ 個、橘子 $${item2}$ 個，要平分給小朋友，每人分到的蘋果要一樣多，橘子也要一樣多，最多可以分給幾位小朋友？`,
                             correctAnswer: g.toString(),
-                            solution: `求 $${item1}$ 與 $${item2}$ 的<b>最大公因數</b>。經過計算：$( ${item1}, ${item2} ) = ${g}$，最多可分給 <b>$${g}$</b> 人。`
+                            solution: `求 $${item1}$ 與 $${item2}$ 的<b>最大公因數</b>。經過計算：$( ${item1}, ${item2} ) = ${g}$，最多可分給 <b>$${g}$</b> 人。`,
+                            rescueHtml: `<b>【素養解題短除法救援】</b><br>關鍵字「平分」、「最多」，代表我們要計算 $${item1}$ 與 $${item2}$ 的<b>最大公因數</b>：<br>${shortDivHTML}`
                         };
                     }
                 }
@@ -2312,11 +3148,40 @@
             updateGamificationUI();
         }
 
+        function toggleQuizRescueHint(forceShow = false) {
+            const card = document.getElementById('quizRescueCard');
+            const btnText = document.getElementById('btnQuizRescueText');
+            if (!card || !gameState.currentQuestion) return;
+
+            if (forceShow || card.classList.contains('hidden')) {
+                card.classList.remove('hidden');
+                if (btnText) btnText.innerHTML = `💡 收合提示救援圖解`;
+                triggerMathJax(card);
+            } else {
+                card.classList.add('hidden');
+                if (btnText) btnText.innerHTML = `💡 需要提示救援嗎？（點擊展開短除法步驟圖解）`;
+            }
+        }
+
         function renderNextQuestion() {
+            gameState.currentWrongCount = 0;
+
             const feedbackBox = document.getElementById('quizFeedbackBox');
             if (feedbackBox) {
                 feedbackBox.classList.add('hidden');
                 feedbackBox.innerHTML = '';
+            }
+
+            const rescueCard = document.getElementById('quizRescueCard');
+            const btnRescue = document.getElementById('btnQuizRescue');
+            const btnRescueText = document.getElementById('btnQuizRescueText');
+            
+            if (rescueCard) rescueCard.classList.add('hidden');
+            if (btnRescue) {
+                btnRescue.className = "w-full px-4 py-3 bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-300 font-bold rounded-xl text-base transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm";
+            }
+            if (btnRescueText) {
+                btnRescueText.innerHTML = `💡 需要提示救援嗎？（點擊展開短除法步驟圖解）`;
             }
 
             const actionContainer = document.getElementById('quizActionContainer');
@@ -2333,8 +3198,10 @@
 
             const questionContainer = document.getElementById('quizQuestionContainer');
             const answerArea = document.getElementById('quizAnswerArea');
+            const rescueContent = document.getElementById('quizRescueContent');
 
             if (questionContainer) questionContainer.innerHTML = gameState.currentQuestion.prompt;
+            if (rescueContent) rescueContent.innerHTML = gameState.currentQuestion.rescueHtml || '暫無額外圖解說明。';
             if (answerArea) answerArea.innerHTML = '';
 
             if (gameState.currentQuestion.type === 'choice') {
@@ -2366,6 +3233,7 @@
 
             triggerMathJax(questionContainer);
             triggerMathJax(answerArea);
+            triggerMathJax(rescueContent);
         }
 
         function selectOption(idx) {
@@ -2450,19 +3318,29 @@
                     `;
                 }
 
+                if (actionContainer) {
+                    actionContainer.innerHTML = `
+                        <button onclick="renderNextQuestion()" class="w-full py-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-extrabold rounded-2xl shadow-lg hover:shadow-emerald-200 hover:opacity-95 active:scale-98 transition-all text-lg flex items-center justify-center gap-2 cursor-pointer">
+                            下一題 <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    `;
+                }
+
                 addExp(25);
 
             } else {
                 playWrongSound();
                 gameState.combo = 0;
+                gameState.currentWrongCount += 1;
 
                 const encourageMsg = ENCOURAGE_MESSAGES[Math.floor(Math.random() * ENCOURAGE_MESSAGES.length)];
 
-                let correctDisplay = '';
-                if (gameState.currentQuestion.type === 'choice') {
-                    correctDisplay = gameState.currentQuestion.options[gameState.currentQuestion.correctIndex];
-                } else {
-                    correctDisplay = gameState.currentQuestion.correctAnswer;
+                if (gameState.currentWrongCount >= 2) {
+                    const btnRescue = document.getElementById('btnQuizRescue');
+                    if (btnRescue) {
+                        btnRescue.className = "w-full px-4 py-3 bg-gradient-to-r from-rose-500 to-orange-500 text-white font-extrabold rounded-xl text-base transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md animate-bounce";
+                    }
+                    toggleQuizRescueHint(true);
                 }
 
                 if (feedbackBox) {
@@ -2472,18 +3350,10 @@
                             <i class="fa-solid fa-circle-xmark text-2xl"></i> ${encourageMsg}
                         </div>
                         <div class="text-base text-slate-700 pt-2 border-t border-rose-200/60 leading-relaxed">
-                            <div><b>解題提示：</b> 試著再次回想上方觀念說明中的列舉法或短除法步驟，重新思考看看喔！💪</div>
+                            <div>${gameState.currentWrongCount >= 2 ? '<b>🚨 救援機制啟動：</b>已為你自動展開下方<span>📏〈短除法步驟圖解〉</span>，參考圖解後再試一次！' : '<b>解題提示：</b>再試一次！如果卡住了, 可以點選下方〈💡 需要提示救援嗎？〉按鈕查看短除法圖解喔！💪'}</div>
                         </div>
                     `;
                 }
-            }
-
-            if (actionContainer) {
-                actionContainer.innerHTML = `
-                    <button onclick="renderNextQuestion()" class="w-full py-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-extrabold rounded-2xl shadow-lg hover:shadow-emerald-200 hover:opacity-95 active:scale-98 transition-all text-lg flex items-center justify-center gap-2 cursor-pointer">
-                        下一題 <i class="fa-solid fa-arrow-right"></i>
-                    </button>
-                `;
             }
 
             updateGamificationUI();
@@ -2496,6 +3366,8 @@
             initCandyChoiceGrid();
             switchPrereqSubPage(1);
             generateRainbow();
+            resetMultSteps();
+            initNumberGrid(50);
             changeGcdNumbers();
             changeLcmNumbers();
             initGcdPractice();
