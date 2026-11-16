@@ -1303,7 +1303,7 @@
 						<i class="fa-solid fa-arrow-left"></i> <span>上一頁 : 乘法：兩數相乘</span>
 					</button>
 					<button onclick="switchTab('tab-concepts')" class="px-8 py-3.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold text-lg rounded-2xl shadow-md hover:scale-105 active:scale-95 transition-all inline-flex items-center gap-3 cursor-pointer">
-						<span>學會了！前往技能解鎖（最大公因數/最小公倍數）</span> <i class="fa-solid fa-arrow-right"></i>
+						<span>學會了！前往技能解鎖（質數與公因倍數）</span> <i class="fa-solid fa-arrow-right"></i>
 					</button>
 				</div>
 			</div>
@@ -1314,28 +1314,164 @@
             <div class="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-600 rounded-3xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden">
                 <div class="relative z-10">
                     <span class="inline-block px-3.5 py-1 bg-white/20 rounded-full text-lg font-semibold backdrop-blur-md mb-2">觀念解密館</span>
-                    <h2 class="text-3xl md:text-4xl font-extrabold">⚔️ 技能解鎖：公因數與公倍數</h2>
+                    <h2 class="text-3xl md:text-4xl font-extrabold">⚔️ 技能解鎖：質數、公因倍數與標準分解式</h2>
                     <p class="text-teal-50 text-lg md:text-xl mt-2 leading-relaxed">
-                        掌握最大公因數與最小公倍數的求法，應對各種進階挑戰！
+                        從 6 年級的質數與短除法，一路進階到 7 年級的標準分解式，循序漸進解鎖四大核心技能！
                     </p>
                 </div>
                 <i class="fa-solid fa-lightbulb absolute -right-6 -bottom-6 text-9xl text-white/10 transform rotate-12"></i>
             </div>
 
+            <!-- 4 大 SKILL 導覽切換列 -->
             <div class="bg-white rounded-2xl p-2 md:p-3 shadow-sm border border-slate-200">
-                <div class="grid grid-cols-2 gap-2">
-                    <button onclick="switchConceptSubTab('c-sub-gcd')" id="btn-c-sub-gcd" class="c-sub-btn py-3 px-2 rounded-xl text-center font-bold text-base md:text-lg transition-all bg-indigo-600 text-white shadow-md cursor-pointer">
-                        <span class="block text-xs font-normal opacity-90">SKILL 1</span>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+                    <button onclick="switchConceptSubTab('c-sub-prime')" id="btn-c-sub-prime" class="c-sub-btn py-3 px-2 rounded-xl text-center font-bold text-base md:text-lg transition-all bg-indigo-600 text-white shadow-md cursor-pointer">
+                        <span class="block text-xs font-normal opacity-90">SKILL 1（6上基礎）</span>
+                        <span>質數、合數與質因數分解</span>
+                    </button>
+                    <button onclick="switchConceptSubTab('c-sub-gcd')" id="btn-c-sub-gcd" class="c-sub-btn py-3 px-2 rounded-xl text-center font-bold text-base md:text-lg transition-all bg-slate-100 text-slate-700 hover:bg-slate-200 cursor-pointer">
+                        <span class="block text-xs font-normal text-slate-500">SKILL 2（6上核心）</span>
                         <span>公因數 → 最大公因數</span>
                     </button>
                     <button onclick="switchConceptSubTab('c-sub-lcm')" id="btn-c-sub-lcm" class="c-sub-btn py-3 px-2 rounded-xl text-center font-bold text-base md:text-lg transition-all bg-slate-100 text-slate-700 hover:bg-slate-200 cursor-pointer">
-                        <span class="block text-xs font-normal text-slate-500">SKILL 2</span>
+                        <span class="block text-xs font-normal text-slate-500">SKILL 3（6上核心）</span>
                         <span>公倍數 → 最小公倍數</span>
+                    </button>
+                    <button onclick="switchConceptSubTab('c-sub-standard')" id="btn-c-sub-standard" class="c-sub-btn py-3 px-2 rounded-xl text-center font-bold text-base md:text-lg transition-all bg-slate-100 text-slate-700 hover:bg-slate-200 cursor-pointer">
+                        <span class="block text-xs font-normal text-slate-500">SKILL 4（7上國一）</span>
+                        <span>標準分解式與公因倍數</span>
                     </button>
                 </div>
             </div>
 
-            <div id="c-sub-gcd" class="concept-sub-content space-y-6">
+            <!-- ================= SKILL 1: 質數、合數與質因數分解 ================= -->
+            <div id="c-sub-prime" class="concept-sub-content space-y-6">
+                <!-- 1. 質數與合數觀念卡片 -->
+                <div class="bg-white p-6 md:p-7 rounded-2xl shadow-sm border border-slate-100 space-y-5">
+                    <div class="border-b border-slate-100 pb-4">
+                        <h3 class="text-2xl font-bold text-indigo-900 flex items-center gap-2">
+                            <i class="fa-solid fa-gem text-indigo-600"></i> 什麼是「質數」與「合數」？
+                        </h3>
+                        <p class="text-base md:text-lg text-slate-600 mt-2 leading-relaxed">
+                            觀察一個大於 $1$ 的整數有幾個因數，就能把它分成兩大家族：
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-slate-50 p-5 rounded-2xl border-2 border-slate-300 space-y-2">
+                            <div class="text-lg font-black text-slate-800 flex items-center gap-2">
+                                <span class="px-2.5 py-0.5 bg-slate-700 text-white rounded-lg text-sm">特例</span> 數字 1
+                            </div>
+                            <p class="text-slate-700 text-base leading-relaxed">
+                                $1$ 只有 <strong>1 個因數</strong>（就是它自己），所以 $1$ <strong>既不是質數，也不是合數</strong>！
+                            </p>
+                        </div>
+
+                        <div class="bg-indigo-50/80 p-5 rounded-2xl border-2 border-indigo-200 space-y-2">
+                            <div class="text-lg font-black text-indigo-900 flex items-center gap-2">
+                                <span class="px-2.5 py-0.5 bg-indigo-600 text-white rounded-lg text-sm">質數</span> 只有 2 個因數
+                            </div>
+                            <p class="text-slate-700 text-base leading-relaxed">
+                                因數<strong>只有 $1$ 和它自己</strong>的數（無法再拆解）。<br>
+                                例如：$2, 3, 5, 7, 11, 13\dots$（$2$ 是唯一的偶數質數）。
+                            </p>
+                        </div>
+
+                        <div class="bg-purple-50/80 p-5 rounded-2xl border-2 border-purple-200 space-y-2">
+                            <div class="text-lg font-black text-purple-900 flex items-center gap-2">
+                                <span class="px-2.5 py-0.5 bg-purple-600 text-white rounded-lg text-sm">合數</span> 3 個以上因數
+                            </div>
+                            <p class="text-slate-700 text-base leading-relaxed">
+                                除了 $1$ 和自己以外，<strong>還有其他因數</strong>的數。<br>
+                                例如：$4, 6, 8, 9, 10, 12\dots$
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 互動式百數篩選器（埃拉托斯特尼篩法） -->
+                    <div class="bg-gradient-to-br from-indigo-50 via-blue-50 to-purple-50 p-6 rounded-3xl border-2 border-indigo-200 space-y-4">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-indigo-100 pb-3">
+                            <div>
+                                <h4 class="text-xl font-black text-indigo-950 flex items-center gap-2">
+                                    <i class="fa-solid fa-filter text-indigo-600"></i> 互動百數篩法：找出 1 ~ 50 的所有質數
+                                </h4>
+                                <p class="text-sm text-slate-600 font-semibold mt-1">
+                                    依序點擊下方篩選按鈕，把不是質數的合數篩掉，留下來的就是質數！
+                                </p>
+                            </div>
+                            <button onclick="resetPrimeSieve()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl text-sm transition-all cursor-pointer shrink-0">
+                                <i class="fa-solid fa-rotate-left"></i> 全部重設
+                            </button>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="applyPrimeSieve(1)" id="btn-sieve-1" class="px-3.5 py-2 bg-white hover:bg-slate-100 border-2 border-slate-400 text-slate-800 font-bold rounded-xl text-sm cursor-pointer transition-all">
+                                ① 排除特例 1
+                            </button>
+                            <button onclick="applyPrimeSieve(2)" id="btn-sieve-2" class="px-3.5 py-2 bg-white hover:bg-blue-50 border-2 border-blue-400 text-blue-800 font-bold rounded-xl text-sm cursor-pointer transition-all">
+                                ② 篩掉 2 的倍數（保留 2）
+                            </button>
+                            <button onclick="applyPrimeSieve(3)" id="btn-sieve-3" class="px-3.5 py-2 bg-white hover:bg-orange-50 border-2 border-orange-400 text-orange-800 font-bold rounded-xl text-sm cursor-pointer transition-all">
+                                ③ 篩掉 3 的倍數（保留 3）
+                            </button>
+                            <button onclick="applyPrimeSieve(5)" id="btn-sieve-5" class="px-3.5 py-2 bg-white hover:bg-teal-50 border-2 border-teal-400 text-teal-800 font-bold rounded-xl text-sm cursor-pointer transition-all">
+                                ④ 篩掉 5 的倍數（保留 5）
+                            </button>
+                            <button onclick="applyPrimeSieve(7)" id="btn-sieve-7" class="px-3.5 py-2 bg-white hover:bg-purple-50 border-2 border-purple-400 text-purple-800 font-bold rounded-xl text-sm cursor-pointer transition-all">
+                                ⑤ 篩掉 7 的倍數（保留 7）
+                            </button>
+                        </div>
+
+                        <div id="primeSieveGrid" class="grid grid-cols-5 sm:grid-cols-10 gap-2 max-w-3xl mx-auto bg-white p-4 rounded-2xl border border-indigo-100 shadow-inner"></div>
+                        <div id="primeSieveSummary" class="text-base font-bold text-indigo-900 bg-white/80 p-3.5 rounded-xl border border-indigo-200 text-center">
+                            👉 請依序點擊上方按鈕，觀察質數是如何被篩選出來的！
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. 質因數分解探索器 -->
+                <div class="bg-white p-6 md:p-7 rounded-2xl shadow-sm border border-slate-100 space-y-5">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+                        <div>
+                            <h3 class="text-2xl font-bold text-purple-900 flex items-center gap-2">
+                                <i class="fa-solid fa-sitemap text-purple-600"></i> 什麼是「質因數」與「質因數分解」？
+                            </h3>
+                            <p class="text-base md:text-lg text-slate-600 mt-1">
+                                把一個合數寫成<b>全部都是質數相乘</b>的算式，就叫做「質因數分解」（這也是短除法左邊只能放質數的原因喔！）。
+                            </p>
+                        </div>
+                        <button onclick="changePrimeFactorDemo()" class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold rounded-xl text-base transition-all active:scale-95 shadow-sm cursor-pointer shrink-0">
+                            <i class="fa-solid fa-rotate"></i> 換一個數字分解
+                        </button>
+                    </div>
+
+                    <div id="prime-factor-demo-area" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+                </div>
+
+                <!-- 3. SKILL 1 即時小試身手 -->
+                <div class="bg-white p-6 md:p-8 rounded-3xl border-2 border-indigo-200 shadow-sm space-y-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+                        <h3 class="text-2xl font-black text-indigo-900 flex items-center gap-2">
+                            <i class="fa-solid fa-pencil text-indigo-600"></i> 即時小試身手：質數判別與質因數分解
+                        </h3>
+                        <button onclick="initPrimePractice()" class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 font-bold rounded-xl text-base transition-all active:scale-95 shadow-sm cursor-pointer">
+                            <i class="fa-solid fa-rotate"></i> 換一組題目試試
+                        </button>
+                    </div>
+
+                    <div id="prime-practice-container" class="space-y-6"></div>
+                </div>
+
+                <div class="pt-2 text-center">
+                    <button onclick="switchConceptSubTab('c-sub-gcd')" class="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold text-lg md:text-xl rounded-2xl shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-all inline-flex items-center justify-center gap-3 cursor-pointer">
+                        <span>下一步：SKILL 2 最大公因數</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ================= SKILL 2: 公因數 → 最大公因數 (原 SKILL 1) ================= -->
+            <div id="c-sub-gcd" class="concept-sub-content hidden space-y-6">
                 <div class="bg-white p-6 md:p-7 rounded-2xl shadow-sm border border-slate-100 space-y-4">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
                         <h3 class="text-2xl font-bold text-indigo-900 flex items-center gap-2">
@@ -1353,7 +1489,7 @@
                     <div id="gcd-demo-area" class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2"></div>
                 </div>
 
-                <!-- SKILL 1 即時小試身手區塊 -->
+                <!-- SKILL 2 即時小試身手區塊 -->
                 <div class="bg-white p-6 md:p-8 rounded-3xl border-2 border-indigo-200 shadow-sm space-y-6">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
                         <h3 class="text-2xl font-black text-indigo-900 flex items-center gap-2">
@@ -1369,12 +1505,13 @@
 
                 <div class="pt-2 text-center">
                     <button onclick="switchConceptSubTab('c-sub-lcm')" class="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold text-lg md:text-xl rounded-2xl shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-all inline-flex items-center justify-center gap-3 cursor-pointer">
-                        <span>下一步：挑戰最小公倍數</span>
+                        <span>下一步：SKILL 3 最小公倍數</span>
                         <i class="fa-solid fa-arrow-right"></i>
                     </button>
                 </div>
             </div>
             
+            <!-- ================= SKILL 3: 公倍數 → 最小公倍數 (原 SKILL 2) ================= -->
             <div id="c-sub-lcm" class="concept-sub-content hidden space-y-6">
                 <div class="bg-white p-6 md:p-7 rounded-2xl shadow-sm border border-slate-100 space-y-4">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
@@ -1393,7 +1530,7 @@
                     <div id="lcm-demo-area" class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2"></div>
                 </div>
 
-                <!-- SKILL 2 即時小試身手區塊 -->
+                <!-- SKILL 3 即時小試身手區塊 -->
                 <div class="bg-white p-6 md:p-8 rounded-3xl border-2 border-teal-200 shadow-sm space-y-6">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
                         <h3 class="text-2xl font-black text-teal-900 flex items-center gap-2">
@@ -1408,15 +1545,87 @@
                 </div>
 
                 <div class="pt-2 text-center">
+                    <button onclick="switchConceptSubTab('c-sub-standard')" class="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold text-lg md:text-xl rounded-2xl shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-all inline-flex items-center justify-center gap-3 cursor-pointer">
+                        <span>下一步：SKILL 4 標準分解式（國一進階）</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ================= SKILL 4: 7年級 標準分解式與公因倍數 ================= -->
+            <div id="c-sub-standard" class="concept-sub-content hidden space-y-6">
+                <!-- 1. 什麼是標準分解式 -->
+                <div class="bg-white p-6 md:p-7 rounded-2xl shadow-sm border border-slate-100 space-y-5">
+                    <div class="border-b border-slate-100 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                            <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-black">7年級（國一上）核心觀念</span>
+                            <h3 class="text-2xl font-bold text-indigo-950 flex items-center gap-2 mt-1">
+                                <i class="fa-solid fa-superscript text-purple-600"></i> 什麼是「標準分解式」？
+                            </h3>
+                        </div>
+                    </div>
+
+                    <p class="text-base md:text-lg text-slate-600 leading-relaxed">
+                        把質因數分解的結果，依照質因數<strong>由小到大排列</strong>，並把相同的質因數寫成<strong>次方（乘方）</strong>的形式，就叫做<b>「標準分解式」</b>！
+                    </p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-2">
+                            <div class="text-sm font-black text-slate-500">國小寫法（質因數連乘）</div>
+                            <div class="text-xl font-bold text-slate-800">$72 = 2 \times 2 \times 2 \times 3 \times 3$</div>
+                            <p class="text-sm text-slate-600">數字很大時，連乘寫起來又長又容易漏看有幾個 $2$ 或 $3$。</p>
+                        </div>
+                        <div class="bg-purple-50/80 p-5 rounded-2xl border-2 border-purple-300 space-y-2">
+                            <div class="text-sm font-black text-purple-700">國一寫法（標準分解式）</div>
+                            <div class="text-2xl font-black text-purple-950">$72 = 2^3 \times 3^2$</div>
+                            <p class="text-sm text-purple-900 font-semibold">底數由小到大（$2 < 3$），右上角的次方直接代表「連乘了幾個」！</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. 標準分解式求最大公因數與最小公倍數（互動比對器） -->
+                <div class="bg-white p-6 md:p-7 rounded-2xl shadow-sm border border-slate-100 space-y-5">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+                        <div>
+                            <h3 class="text-2xl font-bold text-indigo-900 flex items-center gap-2">
+                                <i class="fa-solid fa-code-compare text-indigo-600"></i> 標準分解式次方比對器（取小為因、取大為倍）
+                            </h3>
+                            <p class="text-base text-slate-600 mt-1">
+                                不需要把數字乘開，直接觀察兩個標準分解式的<b>底數</b>與<b>次方</b>就能秒殺！
+                            </p>
+                        </div>
+                        <button onclick="changeStandardFactorDemo()" class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 font-bold rounded-xl text-base transition-all active:scale-95 shadow-sm cursor-pointer shrink-0">
+                            <i class="fa-solid fa-rotate"></i> 換一組標準分解式
+                        </button>
+                    </div>
+
+                    <div id="standard-factor-demo-area" class="space-y-5"></div>
+                </div>
+
+                <!-- 3. SKILL 4 即時小試身手 -->
+                <div class="bg-white p-6 md:p-8 rounded-3xl border-2 border-purple-200 shadow-sm space-y-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+                        <h3 class="text-2xl font-black text-purple-900 flex items-center gap-2">
+                            <i class="fa-solid fa-pencil text-purple-600"></i> 即時小試身手：標準分解式挑戰（國一題型）
+                        </h3>
+                        <button onclick="initStandardPractice()" class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold rounded-xl text-base transition-all active:scale-95 shadow-sm cursor-pointer">
+                            <i class="fa-solid fa-rotate"></i> 換一組題目試試
+                        </button>
+                    </div>
+
+                    <div id="standard-practice-container" class="space-y-6"></div>
+                </div>
+
+                <div class="pt-2 text-center">
                     <button onclick="switchTab('tab-quiz')" class="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold text-lg md:text-xl rounded-2xl shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-all inline-flex items-center justify-center gap-3 cursor-pointer">
-                        <span>技能解鎖完成！開始闖關測驗</span>
+                        <span>四大技能全部解鎖！開始闖關測驗</span>
                         <i class="fa-solid fa-trophy"></i>
                     </button>
                 </div>
             </div>
         </section>
 
-		<!-- MODULE 3: 闖關挑戰 -->
+		<!-- ================= MODULE 3: 闖關挑戰 ================= -->
 		<section id="tab-quiz" class="tab-content hidden space-y-6">
 		<div class="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 rounded-3xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden">
 			<div class="relative z-10">
@@ -1570,7 +1779,7 @@
 				</div>
 			</section>
 
-		<!-- MODULE 4: 英雄榜 -->
+		<!-- ================= MODULE 4: 英雄榜 ================= -->
 		<section id="tab-dashboard" class="tab-content hidden space-y-6">
 			<div class="bg-gradient-to-r from-yellow-500 via-amber-500 to-orange-500 rounded-3xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden">
 				<div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -2053,7 +2262,7 @@
 			if (targetTabId === 'tab-prereq') {
 				switchPrereqSubPage(1);
 			} else if (targetTabId === 'tab-concepts') {
-				switchConceptSubTab('c-sub-gcd');
+				switchConceptSubTab('c-sub-prime');
 			}
 			
 			if (typeof triggerMathJax === 'function') {
@@ -2120,12 +2329,20 @@
 				}
 			}
 
-            if (subTabId === 'c-sub-gcd') {
+            if (subTabId === 'c-sub-prime') {
+                initPrimeSieveGrid();
+                changePrimeFactorDemo();
+                initPrimePractice();
+            } else if (subTabId === 'c-sub-gcd') {
                 initGcdPractice();
             } else if (subTabId === 'c-sub-lcm') {
                 initLcmPractice();
+            } else if (subTabId === 'c-sub-standard') {
+                changeStandardFactorDemo();
+                initStandardPractice();
             }
 
+            triggerMathJax(targetSubTab);
 			window.scrollTo({ top: 0, behavior: 'smooth' });
 		}
 
@@ -2660,6 +2877,239 @@
             }
         }
 
+        // ==================== SKILL 1 (新): 質數篩法、質因數分解與練習 ====================
+        let sieveEliminated = new Set();
+        let sieveConfirmedPrimes = new Set();
+
+        function initPrimeSieveGrid() {
+            const grid = document.getElementById('primeSieveGrid');
+            if (!grid) return;
+            let html = '';
+            for (let i = 1; i <= 50; i++) {
+                let cellClass = "p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-center font-black text-base text-slate-800 transition-all";
+                if (i === 1 && sieveEliminated.has(1)) {
+                    cellClass = "p-2.5 rounded-xl bg-slate-200 border border-slate-300 text-center font-bold text-base text-slate-400 line-through";
+                } else if (sieveConfirmedPrimes.has(i)) {
+                    cellClass = "p-2.5 rounded-xl bg-indigo-600 border-2 border-indigo-700 text-center font-black text-base text-white shadow-sm scale-105";
+                } else if (sieveEliminated.has(i)) {
+                    cellClass = "p-2.5 rounded-xl bg-rose-50 border border-rose-200 text-center font-bold text-base text-rose-300 line-through";
+                }
+                html += `<div class="${cellClass}">${i}</div>`;
+            }
+            grid.innerHTML = html;
+        }
+
+        function resetPrimeSieve() {
+            sieveEliminated.clear();
+            sieveConfirmedPrimes.clear();
+            [1, 2, 3, 5, 7].forEach(n => {
+                const btn = document.getElementById(`btn-sieve-${n}`);
+                if (btn) btn.classList.remove('ring-2', 'ring-offset-1', 'ring-indigo-500', 'bg-indigo-100');
+            });
+            initPrimeSieveGrid();
+            const summary = document.getElementById('primeSieveSummary');
+            if (summary) summary.innerHTML = '👉 請依序點擊上方按鈕，觀察質數是如何被篩選出來的！';
+        }
+
+        function applyPrimeSieve(stepPrime) {
+            const btn = document.getElementById(`btn-sieve-${stepPrime}`);
+            if (btn) btn.classList.add('ring-2', 'ring-offset-1', 'ring-indigo-500');
+
+            if (stepPrime === 1) {
+                sieveEliminated.add(1);
+            } else {
+                sieveConfirmedPrimes.add(stepPrime);
+                for (let m = stepPrime * 2; m <= 50; m += stepPrime) {
+                    sieveEliminated.add(m);
+                }
+            }
+
+            // 若 1, 2, 3, 5, 7 都篩過了，剩餘未被排除的 11~47 全部自動標為質數
+            if (sieveEliminated.has(1) && sieveConfirmedPrimes.has(2) && sieveConfirmedPrimes.has(3) && sieveConfirmedPrimes.has(5) && sieveConfirmedPrimes.has(7)) {
+                for (let k = 2; k <= 50; k++) {
+                    if (!sieveEliminated.has(k)) sieveConfirmedPrimes.add(k);
+                }
+                const summary = document.getElementById('primeSieveSummary');
+                if (summary) {
+                    summary.innerHTML = '🎉 篩選完成！1 ~ 50 共有 <strong>15 個質數</strong>：2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47！';
+                }
+            } else {
+                const summary = document.getElementById('primeSieveSummary');
+                if (summary) {
+                    summary.innerHTML = stepPrime === 1
+                        ? '✅ 已排除特例 <strong>1</strong>（1 不是質數也不是合數），請繼續篩選 2 的倍數！'
+                        : `✅ 已保留質數 <strong>${stepPrime}</strong>，並篩掉所有 ${stepPrime} 的倍數（合數）！`;
+                }
+            }
+            initPrimeSieveGrid();
+        }
+
+        function getPrimeFactorizationArray(n) {
+            let factors = [];
+            let d = 2;
+            let temp = n;
+            while (temp > 1) {
+                while (temp % d === 0) {
+                    factors.push(d);
+                    temp /= d;
+                }
+                d++;
+            }
+            return factors;
+        }
+
+        const PRIME_DEMO_NUMS = [12, 18, 24, 30, 36, 42, 45, 60];
+        let currentPrimeDemoIdx = 0;
+
+        function changePrimeFactorDemo() {
+            const num = PRIME_DEMO_NUMS[currentPrimeDemoIdx % PRIME_DEMO_NUMS.length];
+            currentPrimeDemoIdx++;
+
+            const pFactors = getPrimeFactorizationArray(num);
+            const uniquePrimes = [...new Set(pFactors)];
+
+            // 生成短除法步驟
+            let temp = num;
+            let rows = '';
+            pFactors.forEach(p => {
+                rows += `
+                    <tr>
+                        <td class="short-div-divisor l-highlight-left">$${p}$</td>
+                        <td class="short-div-row-border">$${temp}$</td>
+                    </tr>
+                `;
+                temp /= p;
+            });
+            rows += `<tr><td></td><td class="text-emerald-700 font-black">$1$</td></tr>`;
+
+            const area = document.getElementById('prime-factor-demo-area');
+            if (!area) return;
+
+            area.innerHTML = `
+                <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3">
+                    <span class="text-base font-bold px-3 py-1 bg-purple-100 text-purple-800 rounded-lg">方法一：樹狀拆解法</span>
+                    <div class="text-lg text-slate-700 space-y-2.5 pt-1">
+                        <div>將合數 <b>$${num}$</b> 一步一步拆成兩個數相乘，直到不能再拆（全部變成質數）為止：</div>
+                        <div class="bg-white p-4 rounded-xl border border-purple-100 text-center space-y-2">
+                            <div class="text-2xl font-black text-indigo-900">$${num}$</div>
+                            <div class="text-slate-400 text-sm">▼ 拆解為質數連乘</div>
+                            <div class="text-2xl font-black text-purple-700">$${pFactors.join(' \\times ')}$</div>
+                        </div>
+                        <div class="text-base font-bold text-slate-700">
+                            👉 $${num}$ 的質因數有：<strong class="text-rose-600">${uniquePrimes.join('、')}</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-indigo-50/60 p-5 rounded-2xl border border-indigo-200 space-y-3">
+                    <span class="text-base font-bold px-3 py-1 bg-indigo-600 text-white rounded-lg">方法二：短除法質因數分解</span>
+                    <p class="text-base text-slate-600 leading-relaxed">
+                        左側除數<b>只能放質數</b>（從最小的 $2, 3, 5\dots$ 試除），一路除到商變成 $1$ 為止：
+                    </p>
+                    <div class="bg-white p-4 rounded-xl border border-indigo-100 shadow-sm flex flex-col items-center">
+                        <table class="short-div-table">${rows}</table>
+                        <div class="mt-3 text-lg font-bold text-indigo-900 bg-indigo-100 px-4 py-2 rounded-lg text-center">
+                            $${num} = ${pFactors.join(' \\times ')}$
+                        </div>
+                    </div>
+                </div>
+            `;
+            triggerMathJax(area);
+        }
+
+        let primePracticeData = {};
+        function initPrimePractice() {
+            const container = document.getElementById('prime-practice-container');
+            if (!container) return;
+
+            const primeSets = [
+                { nums: [13, 15, 21, 27], ans: 13, explain: '13 只有 1 和 13 兩個因數，是質數；15=3×5、21=3×7、27=3×9 都是合數。' },
+                { nums: [9, 19, 25, 33], ans: 19, explain: '19 只有 1 和 19 兩個因數，是質數；9=3×3、25=5×5、33=3×11 都是合數。' },
+                { nums: [14, 21, 23, 35], ans: 23, explain: '23 只有 1 和 23 兩個因數，是質數；14、21、35 都有其他因數，是合數。' }
+            ];
+            const chosenPrimeQ = primeSets[Math.floor(Math.random() * primeSets.length)];
+
+            const factorTargets = [
+                { num: 20, ans: '2×2×5', alt: '2*2*5' },
+                { num: 18, ans: '2×3×3', alt: '2*3*3' },
+                { num: 30, ans: '2×3×5', alt: '2*3*5' },
+                { num: 28, ans: '2×2×7', alt: '2*2*7' }
+            ];
+            const chosenFactorQ = factorTargets[Math.floor(Math.random() * factorTargets.length)];
+
+            primePracticeData = { q1: chosenPrimeQ, q2: chosenFactorQ };
+
+            container.innerHTML = `
+                <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3">
+                    <div class="text-lg md:text-xl font-extrabold text-slate-800">
+                        練習 1：下列哪一個數字是<b>「質數」</b>？（請點擊選擇）
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        ${chosenPrimeQ.nums.map(n => `
+                            <button onclick="checkPrimePractice1(${n})" class="py-3 px-4 bg-white hover:bg-indigo-50 border-2 border-slate-300 hover:border-indigo-500 rounded-xl font-black text-xl text-slate-800 cursor-pointer transition-all">
+                                ${n}
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div id="prime-feedback-1" class="hidden p-4 rounded-xl text-base font-bold"></div>
+                </div>
+
+                <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3">
+                    <div class="text-lg md:text-xl font-extrabold text-slate-800">
+                        練習 2：請將 <b>$${chosenFactorQ.num}$</b> 寫成<b>質因數分解</b>（由小到大連乘，例如：<code>2*2*3</code>）：
+                    </div>
+                    <div class="flex flex-wrap gap-3 items-center">
+                        <span class="font-black text-xl text-indigo-900">$${chosenFactorQ.num} =$</span>
+                        <input type="text" id="prime-input-2" placeholder="例如：2*2*5" class="w-full sm:w-52 p-3 rounded-xl border-2 border-slate-300 font-bold text-lg bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <button onclick="checkPrimePractice2()" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold rounded-xl shadow transition-all cursor-pointer">
+                            提交答案
+                        </button>
+                    </div>
+                    <div id="prime-feedback-2" class="hidden p-4 rounded-xl text-base font-bold"></div>
+                </div>
+            `;
+            triggerMathJax(container);
+        }
+
+        function checkPrimePractice1(selected) {
+            const fb = document.getElementById('prime-feedback-1');
+            if (!fb) return;
+            fb.classList.remove('hidden');
+            if (selected === primePracticeData.q1.ans) {
+                playCorrectSound();
+                fb.className = "p-4 rounded-xl text-base font-bold bg-emerald-50 border-2 border-emerald-300 text-emerald-900";
+                fb.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i> 答對囉！${primePracticeData.q1.explain} 🎉`;
+            } else {
+                playWrongSound();
+                fb.className = "p-4 rounded-xl text-base font-bold bg-rose-50 border-2 border-rose-300 text-rose-900";
+                fb.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600"></i> 哎呀，${selected} 還可以拆成其他因數相乘，所以是合數喔！再試試看另一個數字吧！`;
+            }
+        }
+
+        function checkPrimePractice2() {
+            const input = document.getElementById('prime-input-2');
+            const fb = document.getElementById('prime-feedback-2');
+            if (!input || !fb) return;
+
+            const normalized = input.value.replace(/\s+/g, '').replace(/[×xX]/g, '*');
+            if (!normalized) {
+                alert('請輸入質因數連乘算式喔！');
+                return;
+            }
+            fb.classList.remove('hidden');
+            if (normalized === primePracticeData.q2.alt) {
+                playCorrectSound();
+                fb.className = "p-4 rounded-xl text-base font-bold bg-emerald-50 border-2 border-emerald-300 text-emerald-900";
+                fb.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i> 完全正確！$${primePracticeData.q2.num} = ${primePracticeData.q2.ans}$ 🎉`;
+            } else {
+                playWrongSound();
+                fb.className = "p-4 rounded-xl text-base font-bold bg-rose-50 border-2 border-rose-300 text-rose-900";
+                fb.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600"></i> 再檢查看看！記得所有的數字都必須是「質數」，且由小到大用 * 號連乘喔！`;
+            }
+            triggerMathJax(fb);
+        }
+
+        // ==================== SKILL 2 & 3 (原 SKILL 1 & 2) ====================
         const GCD_PAIRS = [
             [12, 18], [16, 24], [20, 30], [18, 27], [24, 36], [15, 25], [30, 45], [14, 21]
         ];
@@ -2768,7 +3218,7 @@
                 <div class="bg-indigo-50/60 p-5 rounded-2xl border border-indigo-200 space-y-3">
                     <span class="text-xl font-bold px-3 py-1 bg-indigo-600 text-white rounded-lg">方法二：短除法</span>
                     <p class="text-lg md:text-lg text-slate-600 leading-relaxed">
-                        用兩個數共同的因數一直除，直到<b>沒有共同的因數</b>為止。<br>左邊除數的乘積，就是<strong class="text-indigo-700 font-bold">最大公因數</strong>！
+                        用兩個數共同的質因數一直除，直到<b>沒有共同的因數</b>為止。<br>左邊除數的乘積，就是<strong class="text-indigo-700 font-bold">最大公因數</strong>！
                     </p>
                     <div class="bg-white p-4 rounded-xl border border-indigo-100 shadow-sm flex flex-col items-center">
                         <table class="short-div-table">${shortDivRows}</table>
@@ -2824,7 +3274,7 @@
                 <div class="bg-teal-50/60 p-5 rounded-2xl border border-teal-200 space-y-3">
                     <span class="text-xl font-bold px-3 py-1 bg-teal-600 text-white rounded-lg">方法二：短除法</span>
                     <p class="text-lg md:text-lg text-slate-600 leading-relaxed">
-                        先找兩個數共同的因數。能一起除就繼續。把<b>左邊和最下面的數全部乘起來</b>，就是<strong class="text-indigo-700 font-bold">最小公倍數</strong>！
+                        先找兩個數共同的質因數。能一起除就繼續。把<b>左邊和最下面的數全部乘起來</b>，就是<strong class="text-indigo-700 font-bold">最小公倍數</strong>！
                     </p>
                     <div class="bg-white p-4 rounded-xl border border-teal-100 shadow-sm flex flex-col items-center">
                         <table class="short-div-table">${shortDivRows}</table>
@@ -2959,6 +3409,184 @@
             }
         }
 
+        // ==================== SKILL 4 (新): 7年級標準分解式與公因倍數 ====================
+        const STANDARD_DEMOS = [
+            {
+                aExpr: '2^2 \\times 3^1',
+                bExpr: '2^1 \\times 3^2',
+                rows: [
+                    { base: '2', aPow: '2^2', bPow: '2^1', gcdPow: '2^1', lcmPow: '2^2', note: '都有底數 2，取小為 2^1，取大為 2^2' },
+                    { base: '3', aPow: '3^1', bPow: '3^2', gcdPow: '3^1', lcmPow: '3^2', note: '都有底數 3，取小為 3^1，取大為 3^2' }
+                ],
+                gcdAns: '2 \\times 3',
+                lcmAns: '2^2 \\times 3^2'
+            },
+            {
+                aExpr: '2^3 \\times 3^2 \\times 5',
+                bExpr: '2^2 \\times 3^3 \\times 7',
+                rows: [
+                    { base: '2', aPow: '2^3', bPow: '2^2', gcdPow: '2^2', lcmPow: '2^3', note: '共同底數 2：次方比大小（2 < 3）' },
+                    { base: '3', aPow: '3^2', bPow: '3^3', gcdPow: '3^2', lcmPow: '3^3', note: '共同底數 3：次方比大小（2 < 3）' },
+                    { base: '5', aPow: '5^1', bPow: '無 (5^0)', gcdPow: '無', lcmPow: '5', note: '只有 A 有 5：公因數不取，公倍數要全包' },
+                    { base: '7', aPow: '無 (7^0)', bPow: '7^1', gcdPow: '無', lcmPow: '7', note: '只有 B 有 7：公因數不取，公倍數要全包' }
+                ],
+                gcdAns: '2^2 \\times 3^2',
+                lcmAns: '2^3 \\times 3^3 \\times 5 \\times 7'
+            },
+            {
+                aExpr: '2^2 \\times 5^2',
+                bExpr: '2^4 \\times 3 \\times 5',
+                rows: [
+                    { base: '2', aPow: '2^2', bPow: '2^4', gcdPow: '2^2', lcmPow: '2^4', note: '共同底數 2：取小 2^2，取大 2^4' },
+                    { base: '3', aPow: '無', bPow: '3^1', gcdPow: '無', lcmPow: '3', note: '只有 B 有 3：公倍數要納入 3' },
+                    { base: '5', aPow: '5^2', bPow: '5^1', gcdPow: '5', lcmPow: '5^2', note: '共同底數 5：取小 5，取大 5^2' }
+                ],
+                gcdAns: '2^2 \\times 5',
+                lcmAns: '2^4 \\times 3 \\times 5^2'
+            }
+        ];
+        let currentStdDemoIdx = 0;
+
+        function changeStandardFactorDemo() {
+            const demo = STANDARD_DEMOS[currentStdDemoIdx % STANDARD_DEMOS.length];
+            currentStdDemoIdx++;
+
+            const area = document.getElementById('standard-factor-demo-area');
+            if (!area) return;
+
+            let tableRows = demo.rows.map(r => `
+                <tr class="border-b border-slate-200 text-center">
+                    <td class="p-3 font-black text-indigo-900 bg-slate-50">底數 $${r.base}$</td>
+                    <td class="p-3 font-mono font-bold">$${r.aPow}$</td>
+                    <td class="p-3 font-mono font-bold">$${r.bPow}$</td>
+                    <td class="p-3 font-mono font-black text-indigo-700 bg-indigo-50/70">$${r.gcdPow}$</td>
+                    <td class="p-3 font-mono font-black text-teal-700 bg-teal-50/70">$${r.lcmPow}$</td>
+                </tr>
+            `).join('');
+
+            area.innerHTML = `
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                        <span class="text-xs font-bold text-slate-500">甲數標準分解式</span>
+                        <div class="text-2xl font-black text-slate-800 mt-1">$A = ${demo.aExpr}$</div>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                        <span class="text-xs font-bold text-slate-500">乙數標準分解式</span>
+                        <div class="text-2xl font-black text-slate-800 mt-1">$B = ${demo.bExpr}$</div>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto rounded-2xl border border-slate-200 shadow-sm">
+                    <table class="w-full text-base">
+                        <thead class="bg-slate-100 text-slate-800 font-black">
+                            <tr>
+                                <th class="p-3">質因數底數</th>
+                                <th class="p-3">甲數 ($A$)</th>
+                                <th class="p-3">乙數 ($B$)</th>
+                                <th class="p-3 bg-indigo-100 text-indigo-900">最大公因數（取共同、次方小）</th>
+                                <th class="p-3 bg-teal-100 text-teal-900">最小公倍數（取全部、次方大）</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white">
+                            ${tableRows}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-4 bg-indigo-50 border-2 border-indigo-200 rounded-2xl space-y-1">
+                        <div class="text-sm font-black text-indigo-700">💡 國中符號 $(A, B)$ 代表最大公因數：</div>
+                        <div class="text-xl font-black text-indigo-950">$(A, B) = ${demo.gcdAns}$</div>
+                    </div>
+                    <div class="p-4 bg-teal-50 border-2 border-teal-200 rounded-2xl space-y-1">
+                        <div class="text-sm font-black text-teal-700">🚀 國中符號 $[A, B]$ 代表最小公倍數：</div>
+                        <div class="text-xl font-black text-teal-950">$[A, B] = ${demo.lcmAns}$</div>
+                    </div>
+                </div>
+            `;
+            triggerMathJax(area);
+        }
+
+        let standardPracticeData = {};
+        function initStandardPractice() {
+            const container = document.getElementById('standard-practice-container');
+            if (!container) return;
+
+            const q1Pool = [
+                { num: 36, options: ['$2^2 \\times 3^2$', '$2^3 \\times 3$', '$4 \\times 9$', '$2 \\times 3^3$'], ansIdx: 0, explain: '36 = 4 × 9 = 2×2×3×3 = 2² × 3²（注意 4 和 9 不是質數，不能留在標準分解式中）。' },
+                { num: 48, options: ['$2^3 \\times 6$', '$2^4 \\times 3$', '$2^3 \\times 3^2$', '$16 \\times 3$'], ansIdx: 1, explain: '48 = 16 × 3 = 2×2×2×2×3 = 2⁴ × 3。' },
+                { num: 75, options: ['$3 \\times 25$', '$3^2 \\times 5$', '$3 \\times 5^2$', '$5^3$'], ansIdx: 2, explain: '75 = 3 × 25 = 3 × 5 × 5 = 3 × 5²。' }
+            ];
+            const q2Pool = [
+                {
+                    prompt: '已知 $A = 2^3 \\times 3^2 \\times 5$，$B = 2^2 \\times 3^4$，則 $(A, B)$（最大公因數）為何？',
+                    options: ['$2^2 \\times 3^2$', '$2^3 \\times 3^4 \\times 5$', '$2^2 \\times 3^2 \\times 5$', '$2^3 \\times 3^2$'],
+                    ansIdx: 0,
+                    explain: '最大公因數只取「共同擁有的質因數」2 和 3，且次方取較小者：2² × 3²。'
+                },
+                {
+                    prompt: '已知 $A = 2^2 \\times 5^3$，$B = 2^4 \\times 3 \\times 5$，則 $[A, B]$（最小公倍數）為何？',
+                    options: ['$2^2 \\times 5$', '$2^4 \\times 5^3$', '$2^4 \\times 3 \\times 5^3$', '$2^2 \\times 3 \\times 5$'],
+                    ansIdx: 2,
+                    explain: '最小公倍數要包含「所有出現的質因數」2、3、5，且次方取較大者：2⁴ × 3 × 5³。'
+                }
+            ];
+
+            const q1 = q1Pool[Math.floor(Math.random() * q1Pool.length)];
+            const q2 = q2Pool[Math.floor(Math.random() * q2Pool.length)];
+            standardPracticeData = { q1, q2 };
+
+            container.innerHTML = `
+                <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3">
+                    <div class="text-lg md:text-xl font-extrabold text-slate-800">
+                        練習 1：請問 <b>$${q1.num}$</b> 的標準分解式是哪一個？
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        ${q1.options.map((opt, idx) => `
+                            <button onclick="checkStandardPractice(1, ${idx})" class="p-3.5 bg-white hover:bg-purple-50 border-2 border-slate-300 hover:border-purple-500 rounded-xl font-bold text-lg text-slate-800 cursor-pointer transition-all">
+                                ${opt}
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div id="std-feedback-1" class="hidden p-4 rounded-xl text-base font-bold"></div>
+                </div>
+
+                <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3">
+                    <div class="text-lg md:text-xl font-extrabold text-slate-800">
+                        練習 2：${q2.prompt}
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        ${q2.options.map((opt, idx) => `
+                            <button onclick="checkStandardPractice(2, ${idx})" class="p-3.5 bg-white hover:bg-indigo-50 border-2 border-slate-300 hover:border-indigo-500 rounded-xl font-bold text-lg text-slate-800 cursor-pointer transition-all">
+                                ${opt}
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div id="std-feedback-2" class="hidden p-4 rounded-xl text-base font-bold"></div>
+                </div>
+            `;
+            triggerMathJax(container);
+        }
+
+        function checkStandardPractice(qNum, selectedIdx) {
+            const q = qNum === 1 ? standardPracticeData.q1 : standardPracticeData.q2;
+            const fb = document.getElementById(`std-feedback-${qNum}`);
+            if (!fb) return;
+
+            fb.classList.remove('hidden');
+            if (selectedIdx === q.ansIdx) {
+                playCorrectSound();
+                fb.className = "p-4 rounded-xl text-base font-bold bg-emerald-50 border-2 border-emerald-300 text-emerald-900";
+                fb.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i> 太神啦！完全正確！${q.explain} 🎉`;
+            } else {
+                playWrongSound();
+                fb.className = "p-4 rounded-xl text-base font-bold bg-rose-50 border-2 border-rose-300 text-rose-900";
+                fb.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600"></i> 差一點點！提示：檢查底數是否都是質數，以及「最大公因數取小次方、最小公倍數取大次方」喔！`;
+            }
+            triggerMathJax(fb);
+        }
+
+        // ==================== MODULE 3: 闖關挑戰 (維持原架構不變) ====================
         function generateQuestion(stage) {
             let q = {};
             const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -3256,40 +3884,35 @@
         }
 
         function submitCurrentAnswer() {
-            if (!gameState.currentQuestion) return;
+            const q = gameState.currentQuestion;
+            if (!q) return;
 
             let isCorrect = false;
-            let userAnswerStr = '';
+            let userAnsValid = true;
 
-            if (gameState.currentQuestion.type === 'choice') {
+            if (q.type === 'choice') {
                 if (gameState.selectedOptionIndex === null) {
-                    alert('請先選取一個選項喔！');
+                    alert('請先選擇一個選項喔！');
                     return;
                 }
-                isCorrect = (gameState.selectedOptionIndex === gameState.currentQuestion.correctIndex);
-                userAnswerStr = gameState.currentQuestion.options[gameState.selectedOptionIndex];
+                isCorrect = (gameState.selectedOptionIndex === q.correctIndex);
             } else {
                 const inputEl = document.getElementById('quizInputAnswer');
                 if (!inputEl || inputEl.value.trim() === '' || parseInt(inputEl.value.trim()) <= 0) {
-                    alert('請輸入大於 0 的有效整數答案喔！');
+                    alert('請輸入大於 0 的有效數字喔！');
                     return;
                 }
-                userAnswerStr = inputEl.value.trim();
-                isCorrect = (userAnswerStr === gameState.currentQuestion.correctAnswer.toString());
+                isCorrect = (inputEl.value.trim() === q.correctAnswer);
             }
 
             const feedbackBox = document.getElementById('quizFeedbackBox');
             const actionContainer = document.getElementById('quizActionContainer');
+            feedbackBox.classList.remove('hidden');
 
             if (isCorrect) {
                 playCorrectSound();
-                triggerPetalRain(2500);
 
-                gameState.score += 10;
                 gameState.combo += 1;
-                if (gameState.combo >= 3) {
-                    gameState.score += 15;
-                }
                 gameState.totalCorrect += 1;
 
                 if (gameState.currentStage === 2 || gameState.currentStage === 3) {
@@ -3301,77 +3924,128 @@
                     gameState.stageMaxCombo[stage] = gameState.combo;
                 }
 
-                const praiseMsg = PRAISE_MESSAGES[Math.floor(Math.random() * PRAISE_MESSAGES.length)];
-                
-                if (feedbackBox) {
-                    feedbackBox.className = "p-6 rounded-2xl space-y-3 bg-emerald-50 border-2 border-emerald-200 text-emerald-900";
-                    feedbackBox.innerHTML = `
-                        <div class="flex items-center gap-2 font-extrabold text-xl text-emerald-700">
-                            <i class="fa-solid fa-circle-check text-2xl"></i> ${praiseMsg}
-                        </div>
-                        <div class="text-base font-semibold">
-                            答對得 +10 分！ ${gameState.combo >= 3 ? `<span class="text-orange-600 font-extrabold">（觸發 ${gameState.combo} 連擊 Bonus +15分！）</span>` : ''}
-                        </div>
-                        <div class="text-base text-slate-700 pt-2 border-t border-emerald-200/60 leading-relaxed">
-                            <b>解析說明：</b><br>${gameState.currentQuestion.solution}
-                        </div>
-                    `;
+                const comboBonus = Math.min(gameState.combo * 5, 50);
+                const pointsEarned = 10 + comboBonus;
+                gameState.score += pointsEarned;
+
+                let praiseTitle = PRAISE_MESSAGES[Math.floor(Math.random() * PRAISE_MESSAGES.length)];
+                if (gameState.combo >= 3) {
+                    praiseTitle = `🔥 ${gameState.combo} 連擊大爆發！ ${praiseTitle}`;
+                    triggerPetalRain(2500);
+                } else {
+                    triggerPetalRain(1500);
                 }
 
-                if (actionContainer) {
-                    actionContainer.innerHTML = `
-                        <button onclick="renderNextQuestion()" class="w-full py-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-extrabold rounded-2xl shadow-lg hover:shadow-emerald-200 hover:opacity-95 active:scale-98 transition-all text-lg flex items-center justify-center gap-2 cursor-pointer">
-                            下一題 <i class="fa-solid fa-arrow-right"></i>
-                        </button>
-                    `;
+                feedbackBox.className = 'p-6 rounded-2xl space-y-4 border-2 border-emerald-200 bg-emerald-50/90 text-emerald-950 transition-all block shadow-sm animate-bounce-short';
+                feedbackBox.innerHTML = `
+                    <div class="flex items-center gap-3 text-xl font-black text-emerald-700">
+                        <i class="fa-solid fa-circle-check text-2xl"></i> <span>${praiseTitle}</span>
+                    </div>
+                    <div class="text-base md:text-lg font-medium bg-white/90 p-5 rounded-xl border border-emerald-200 leading-relaxed text-slate-800 space-y-2">
+                        <div>${q.solution}</div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 text-xs md:text-sm font-bold text-emerald-700">
+                        <span class="bg-emerald-200/80 px-3 py-1 rounded-full">+${pointsEarned} 星</span>
+                        <span class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full">+25 EXP</span>
+                    </div>
+                `;
+
+                actionContainer.innerHTML = `
+                    <button onclick="renderNextQuestion()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold rounded-2xl shadow-lg hover:shadow-emerald-300 transition-all text-lg flex items-center justify-center gap-2 cursor-pointer">
+                        <span>太棒了！繼續下一題</span> <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                `;
+
+                if (q.type === 'choice') {
+                    q.options.forEach((_, idx) => {
+                        const btn = document.getElementById(`opt-btn-${idx}`);
+                        if (btn) btn.onclick = null;
+                    });
                 }
 
                 addExp(25);
+                saveGameState();
+                triggerMathJax(feedbackBox);
 
             } else {
                 playWrongSound();
                 gameState.combo = 0;
                 gameState.currentWrongCount += 1;
+                saveGameState();
 
                 const encourageMsg = ENCOURAGE_MESSAGES[Math.floor(Math.random() * ENCOURAGE_MESSAGES.length)];
 
                 if (gameState.currentWrongCount >= 2) {
-                    const btnRescue = document.getElementById('btnQuizRescue');
-                    if (btnRescue) {
-                        btnRescue.className = "w-full px-4 py-3 bg-gradient-to-r from-rose-500 to-orange-500 text-white font-extrabold rounded-xl text-base transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md animate-bounce";
-                    }
                     toggleQuizRescueHint(true);
                 }
 
-                if (feedbackBox) {
-                    feedbackBox.className = "p-6 rounded-2xl space-y-3 bg-rose-50 border-2 border-rose-200 text-rose-900";
-                    feedbackBox.innerHTML = `
-                        <div class="flex items-center gap-2 font-extrabold text-xl text-rose-700">
-                            <i class="fa-solid fa-circle-xmark text-2xl"></i> ${encourageMsg}
-                        </div>
-                        <div class="text-base text-slate-700 pt-2 border-t border-rose-200/60 leading-relaxed">
-                            <div>${gameState.currentWrongCount >= 2 ? '<b>🚨 救援機制啟動：</b>已為你自動展開下方<span>📏〈短除法步驟圖解〉</span>，參考圖解後再試一次！' : '<b>解題提示：</b>再試一次！如果卡住了, 可以點選下方〈💡 需要提示救援嗎？〉按鈕查看短除法圖解喔！💪'}</div>
-                        </div>
-                    `;
+                feedbackBox.className = 'p-6 rounded-2xl space-y-4 border-2 border-rose-200 bg-rose-50/90 text-rose-950 transition-all block shadow-sm';
+                feedbackBox.innerHTML = `
+                    <div class="flex items-center gap-3 text-xl font-black text-rose-700">
+                        <i class="fa-solid fa-circle-xmark text-2xl"></i> <span>${encourageMsg}</span>
+                    </div>
+                    <div class="text-base md:text-lg font-medium bg-white/90 p-5 rounded-xl border border-rose-200 leading-relaxed text-slate-800 space-y-2">
+                        <div class="text-rose-700 font-bold">目前累計答錯次數：第 ${gameState.currentWrongCount} 次。</div>
+                        ${gameState.currentWrongCount >= 2 ? '<div class="text-amber-700 font-extrabold">💡 偵測到多次挑戰，已自動為你展開上方的「短除法救援圖解」囉！參考圖解再試一次吧！</div>' : '<div class="text-slate-600">再檢查看看算式，或點擊上方的「💡 需要提示救援嗎？」查看圖解輔助喔！</div>'}
+                    </div>
+                `;
+
+                actionContainer.innerHTML = `
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <button onclick="retryCurrentQuestion()" class="flex-1 py-4 bg-rose-600 hover:bg-rose-700 text-white font-extrabold rounded-2xl shadow-lg hover:shadow-rose-300 transition-all text-lg flex items-center justify-center gap-2 cursor-pointer">
+                            <i class="fa-solid fa-rotate-left"></i> <span>再試一次</span>
+                        </button>
+                        <button onclick="renderNextQuestion()" class="px-6 py-4 bg-slate-200 hover:bg-slate-300 text-slate-700 font-extrabold rounded-2xl transition-all text-lg cursor-pointer">
+                            跳過此題
+                        </button>
+                    </div>
+                `;
+
+                updateGamificationUI();
+                triggerMathJax(feedbackBox);
+            }
+        }
+
+        function retryCurrentQuestion() {
+            const feedbackBox = document.getElementById('quizFeedbackBox');
+            const actionContainer = document.getElementById('quizActionContainer');
+
+            if (feedbackBox) {
+                feedbackBox.classList.add('hidden');
+            }
+
+            if (gameState.currentQuestion && gameState.currentQuestion.type === 'input') {
+                const inputEl = document.getElementById('quizInputAnswer');
+                if (inputEl) {
+                    inputEl.value = '';
+                    inputEl.focus();
                 }
             }
 
-            updateGamificationUI();
-            saveGameState();
-            triggerMathJax(feedbackBox);
+            if (actionContainer) {
+                actionContainer.innerHTML = `
+                    <button id="btnSubmitAnswer" onclick="submitCurrentAnswer()" class="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-extrabold rounded-2xl shadow-lg hover:shadow-indigo-300 hover:opacity-95 active:scale-98 transition-all text-lg cursor-pointer">
+                        提交答案
+                    </button>
+                `;
+            }
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', () => {
             loadGameState();
             initCandyChoiceGrid();
-            switchPrereqSubPage(1);
+            runBlockLabDivision();
             generateRainbow();
-            resetMultSteps();
-            initNumberGrid(50);
+            initPrimeSieveGrid();
+            changePrimeFactorDemo();
+            initPrimePractice();
             changeGcdNumbers();
             changeLcmNumbers();
             initGcdPractice();
             initLcmPractice();
+            changeStandardFactorDemo();
+            initStandardPractice();
+            checkBadgeUnlocks();
 
             if (gameState.activeTab) {
                 switchTab(gameState.activeTab);
