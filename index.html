@@ -845,7 +845,7 @@
 					</script>
 
 					<!-- 🌟 課本完全對齊升級版：3 的倍數數位拆解互動劇場 -->
-					<div class="bg-gradient-to-r from-amber-50 to-orange-50 p-6 rounded-3xl border-2 border-amber-300 space-y-4 shadow-sm">
+					<div class="bg-gradient-to-r from-amber-50 to-orange-50 p-6 rounded-3xl border-2 border-amber-300 space-y-4 shadow-sm overflow-x-hidden">
 						<div class="flex items-center justify-between flex-wrap gap-2">
 							<div class="flex items-center gap-3 text-amber-900 font-black text-xl">
 								<i class="fa-solid fa-person-chalkboard text-amber-500 text-2xl"></i>
@@ -876,7 +876,7 @@
 						</div>
 
 						<!-- 橫向並排表演舞臺 -->
-						<div id="animationStage" class="bg-white p-6 rounded-2xl border-2 border-dashed border-amber-300 min-h-[260px] flex flex-col items-center justify-center text-center space-y-4">
+						<div id="animationStage" class="bg-white p-5 rounded-2xl border-2 border-dashed border-amber-300 min-h-[260px] flex flex-col items-center justify-center text-center space-y-4 overflow-x-hidden">
 							<div class="text-slate-400 font-bold text-lg">👉 請在上方輸入三位數並點擊按鈕來開啟第一步解密！</div>
 						</div>
 					</div>
@@ -887,7 +887,7 @@
 						hundreds: 0,
 						tens: 0,
 						units: 0,
-						step: 0 
+						step: 0
 					};
 
 					function randomizeAnimNum() {
@@ -900,9 +900,24 @@
 						}
 					}
 
+					function setNextAnimBtnDisabled(text) {
+						const btnNext = document.getElementById('btnNextAnimStep');
+						if (!btnNext) return;
+						btnNext.disabled = true;
+						btnNext.className = "px-6 py-3 bg-slate-200 text-slate-400 border border-slate-300 font-extrabold rounded-xl shadow-none cursor-not-allowed flex items-center gap-2";
+						btnNext.innerText = text;
+					}
+
+					function setNextAnimBtnActive(text) {
+						const btnNext = document.getElementById('btnNextAnimStep');
+						if (!btnNext) return;
+						btnNext.disabled = false;
+						btnNext.className = "px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-90 text-white font-extrabold rounded-xl shadow transition-all cursor-pointer flex items-center gap-2";
+						btnNext.innerText = text;
+					}
+
 					function handleAnimNumInputChange() {
 						const input = document.getElementById('animNumInput');
-						const btnNext = document.getElementById('btnNextAnimStep');
 						if (!input) return;
 						let val = parseInt(input.value);
 						if (isNaN(val)) {
@@ -916,18 +931,12 @@
 						currentAnimState.units = val % 10;
 						currentAnimState.step = 0;
 
-						if (btnNext) {
-							btnNext.disabled = true;
-							btnNext.className = "px-6 py-3 bg-slate-300 text-slate-500 font-extrabold rounded-xl shadow-none cursor-not-allowed flex items-center gap-2 opacity-60";
-							btnNext.innerText = "下一步驟 ▶ (請先點擊重設)";
-						}
-
+						setNextAnimBtnDisabled("下一步驟 ▶（請先按重設）");
 						renderAnimStage();
 					}
 
 					function startThreeDigitStepByStep() {
 						const input = document.getElementById('animNumInput');
-						const btnNext = document.getElementById('btnNextAnimStep');
 						if (!input || !input.value) {
 							alert('請先輸入或隨機抽一個三位數喔！');
 							return;
@@ -943,11 +952,6 @@
 						currentAnimState.units = val % 10;
 						currentAnimState.step = 0;
 
-						if (btnNext) {
-							btnNext.disabled = false;
-							btnNext.className = "px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-90 text-white font-extrabold rounded-xl shadow transition-all cursor-pointer flex items-center gap-2";
-						}
-
 						nextThreeDigitStep();
 					}
 
@@ -957,21 +961,19 @@
 							alert('請先輸入或隨機抽一個三位數喔！');
 							return;
 						}
-						currentAnimState.step++;
-						if (currentAnimState.step > 4) {
-							currentAnimState.step = 1; 
+						if (currentAnimState.step < 4) {
+							currentAnimState.step++;
+							renderAnimStage();
 						}
-						renderAnimStage();
 					}
 
 					function renderAnimStage() {
 						const stage = document.getElementById('animationStage');
 						const indicator = document.getElementById('animStepIndicator');
-						const btnNext = document.getElementById('btnNextAnimStep');
 						if (!stage || !indicator) return;
 
 						const { val, hundreds, tens, units, step } = currentAnimState;
-						
+
 						if (!val) {
 							stage.innerHTML = '<div class="text-slate-400 font-bold text-lg">👉 請在上方輸入三位數並點擊按鈕來開啟第一步解密！</div>';
 							indicator.innerText = "狀態：請輸入數字或點擊隨機抽數字";
@@ -981,114 +983,132 @@
 						const totalSum = hundreds + tens + units;
 						const isDivisible = (totalSum % 3 === 0);
 
-						function makeBaseTenBlockSVG(type, countText) {
-							let innerGrid = "";
-							let containerStyle = "";
-
-							if (type === 'hundred') {
-								containerStyle = "w-[65px] h-[65px] bg-blue-50 border-2 border-blue-600";
-								innerGrid = `<div class="absolute inset-0 grid grid-cols-10 grid-rows-10">${Array.from({length: 100}).map(() => `<div class="border-[0.5px] border-blue-300"></div>`).join('')}</div>`;
-							} else if (type === 'ten') {
-								containerStyle = "w-[16px] h-[65px] bg-purple-50 border-2 border-purple-600";
-								innerGrid = `<div class="absolute inset-0 grid grid-rows-10">${Array.from({length: 10}).map(() => `<div class="border-[0.5px] border-purple-300"></div>`).join('')}</div>`;
-							} else {
-								containerStyle = "w-[16px] h-[16px] bg-emerald-50 border-2 border-emerald-600";
-								innerGrid = `<div class="absolute inset-0 flex items-center justify-center font-black text-emerald-900 text-[10px]">1</div>`;
-							}
+						// 統一全區單一積木單位大小為 10px x 10px，四邊皆無圓角（rounded-none）
+						function makeHundredSplitBlock() {
+							// 拿掉外層整圈實線框，讓第 100 格（右下角）單獨用虛線呈現原本的外輪廓，避免虛實線重疊殘影
+							const cells = Array.from({ length: 100 }, (_, idx) => {
+								if (idx === 99) {
+									return `<div style="width:10px;height:10px;border-right:1.5px dashed #1d4ed8;border-bottom:1.5px dashed #1d4ed8;" class="bg-blue-50/40 box-border rounded-none"></div>`;
+								}
+								return `<div style="width:10px;height:10px;" class="bg-blue-500 border border-blue-800 box-border rounded-none"></div>`;
+							}).join('');
 
 							return `
-								<div class="flex items-center justify-between gap-2 p-2.5 bg-white rounded-xl border border-slate-200 shadow-sm w-full">
-									<div class="flex items-center gap-2">
-										<div class="relative ${containerStyle} rounded-md overflow-hidden shadow flex items-center justify-center shrink-0">
-											${innerGrid}
+								<div class="flex items-end justify-between gap-1.5 p-2 bg-white border border-slate-200 rounded-none w-full">
+									<div class="flex items-end gap-1.5 min-w-0">
+										<div style="width:100px;min-width:100px;height:100px;min-height:100px;display:grid;grid-template-columns:repeat(10,10px);grid-template-rows:repeat(10,10px);" class="bg-white box-border rounded-none shrink-0">
+											${cells}
 										</div>
-										<span class="text-[11px] font-extrabold text-slate-700">${countText}</span>
+										<span class="text-[11px] font-extrabold text-slate-700 whitespace-nowrap shrink-0">99塊</span>
 									</div>
-									<div class="flex items-center gap-1.5 shrink-0 pl-1 border-l border-slate-200">
-										<span class="text-[10px] font-bold text-amber-700">剩1個</span>
-										<div class="w-[16px] h-[16px] bg-amber-500 border border-amber-600 rounded shadow animate-bounce flex items-center justify-center text-[9px] text-white font-black">1</div>
+									<div class="flex flex-col items-center gap-1 shrink-0 pl-1.5 border-l border-slate-200">
+										<span class="text-[10px] font-bold text-amber-700 whitespace-nowrap">移出1個</span>
+										<div style="width:10px;height:10px;" class="bg-amber-500 border border-amber-700 box-border rounded-none"></div>
 									</div>
 								</div>
 							`;
 						}
 
-						function makeUnitBlockSVG() {
+						function makeTenSplitBlock() {
+							// 拿掉外層整圈實線框，第 10 格（最下方）用左、右、下三邊虛線呈現缺口，與第 9 格的底邊實線自然銜接
+							const cells = Array.from({ length: 10 }, (_, idx) => {
+								if (idx === 9) {
+									return `<div style="width:10px;height:10px;border-left:1.5px dashed #6b21a8;border-right:1.5px dashed #6b21a8;border-bottom:1.5px dashed #6b21a8;" class="bg-purple-50/40 box-border rounded-none"></div>`;
+								}
+								return `<div style="width:10px;height:10px;" class="bg-purple-500 border border-purple-800 box-border rounded-none"></div>`;
+							}).join('');
+
 							return `
-								<div class="flex items-center justify-center p-1.5 bg-white rounded-xl border border-emerald-200 shadow-sm shrink-0">
-									<div class="w-[20px] h-[20px] bg-emerald-500 border-2 border-emerald-700 rounded-md shadow flex items-center justify-center text-[11px] text-white font-black">1</div>
+								<div class="flex items-end justify-between gap-1.5 p-2 bg-white border border-slate-200 rounded-none w-full">
+									<div class="flex items-end gap-1.5 min-w-0">
+										<div style="width:10px;min-width:10px;height:100px;min-height:100px;display:grid;grid-template-columns:10px;grid-template-rows:repeat(10,10px);" class="bg-white box-border rounded-none shrink-0">
+											${cells}
+										</div>
+										<span class="text-[11px] font-extrabold text-slate-700 whitespace-nowrap shrink-0">9塊</span>
+									</div>
+									<div class="flex flex-col items-center gap-1 shrink-0 pl-1.5 border-l border-slate-200">
+										<span class="text-[10px] font-bold text-amber-700 whitespace-nowrap">移出1個</span>
+										<div style="width:10px;height:10px;" class="bg-amber-500 border border-amber-700 box-border rounded-none"></div>
+									</div>
 								</div>
 							`;
 						}
 
-						let html = '<div class="w-full space-y-6 text-left">';
-						html += `<div class="grid grid-cols-1 md:grid-cols-4 gap-4">`;
+						function makeUnitBlock() {
+							return `
+								<div style="width:10px;height:10px;" class="bg-amber-500 border border-amber-700 box-border rounded-none shrink-0"></div>
+							`;
+						}
+
+						let html = '<div class="w-full space-y-6 text-left overflow-x-hidden">';
+						html += `<div class="grid grid-cols-1 md:grid-cols-4 gap-3">`;
 
 						let hundredBlocksHTML = '';
-						for (let i = 0; i < hundreds; i++) hundredBlocksHTML += makeBaseTenBlockSVG('hundred', '99塊');
+						for (let i = 0; i < hundreds; i++) hundredBlocksHTML += makeHundredSplitBlock();
 
 						html += `
-							<div class="p-4 bg-blue-50/95 border-2 border-blue-300 rounded-2xl space-y-3 shadow-sm flex flex-col justify-between ${step >= 1 ? 'opacity-100 scale-100' : 'opacity-40'} transition-all">
-								<div>
-									<div class="flex items-center justify-between text-blue-900 font-black text-base border-b border-blue-200 pb-2 mb-2">
-										<span class="flex items-center gap-1.5"><span class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs">1</span> 百位分解</span>
-										<span class="text-xs bg-blue-100 px-2 py-0.5 rounded text-blue-800">$${hundreds * 100}$</span>
+							<div class="p-3.5 bg-blue-50/95 border-2 border-blue-300 rounded-2xl space-y-3 shadow-sm flex flex-col justify-between min-w-0 ${step >= 1 ? 'opacity-100 scale-100' : 'opacity-40'} transition-all">
+								<div class="min-w-0">
+									<div class="flex items-center justify-between gap-1 text-blue-900 font-black text-base border-b border-blue-200 pb-2 mb-2">
+										<span class="flex items-center gap-1.5 whitespace-nowrap"><span class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs shrink-0">1</span> 百位分解</span>
+										<span class="text-xs bg-blue-100 px-2 py-0.5 rounded text-blue-800 whitespace-nowrap">$${hundreds * 100}$</span>
 									</div>
 									${step >= 1 ? `
 										<div class="space-y-2 animate-fade-in-step">
 											<div class="text-xs font-bold text-slate-600">課本圖解（$${hundreds}$ 個百）：</div>
-											<div class="flex flex-col gap-2 max-h-48 overflow-y-auto p-1">${hundredBlocksHTML}</div>
+											<div class="flex flex-col gap-2 max-h-72 overflow-y-auto overflow-x-hidden p-1">${hundredBlocksHTML}</div>
 										</div>
 									` : `<div class="text-xs text-slate-400 text-center py-6">等待解密下一步...</div>`}
 								</div>
 								${step >= 1 ? `
 									<div class="p-3 bg-blue-100/90 rounded-xl border border-blue-300 text-slate-800 text-xs font-bold space-y-1">
-										<div>每 1 個百，剩下 1 個 <span class="inline-block w-3 h-3 bg-amber-500 rounded-sm align-middle"></span></div>
-										<div class="text-rose-600 font-black text-sm">👉 剩 $1 \\times ${hundreds} = \\mathbf{${hundreds}}$ 個</div>
+										<div>每 1 個百，移出 1 個 <span style="width:10px;height:10px;" class="inline-block bg-amber-500 border border-amber-700 box-border rounded-none align-middle"></span></div>
+										<div class="text-rose-600 font-black text-sm">👉 共移出 $1 \\times ${hundreds} = \\mathbf{${hundreds}}$ 個</div>
 									</div>
 								` : ''}
 							</div>
 						`;
 
 						let tenBlocksHTML = '';
-						for (let i = 0; i < tens; i++) tenBlocksHTML += makeBaseTenBlockSVG('ten', '9塊');
+						for (let i = 0; i < tens; i++) tenBlocksHTML += makeTenSplitBlock();
 
 						html += `
-							<div class="p-4 bg-purple-50/95 border-2 border-purple-300 rounded-2xl space-y-3 shadow-sm flex flex-col justify-between ${step >= 2 ? 'opacity-100 scale-100' : 'opacity-40'} transition-all">
-								<div>
-									<div class="flex items-center justify-between text-purple-900 font-black text-base border-b border-purple-200 pb-2 mb-2">
-										<span class="flex items-center gap-1.5"><span class="w-6 h-6 rounded-full bg-purple-600 text-white flex items-center justify-center text-xs">2</span> 十位分解</span>
-										<span class="text-xs bg-purple-100 px-2 py-0.5 rounded text-purple-800">$${tens * 10}$</span>
+							<div class="p-3.5 bg-purple-50/95 border-2 border-purple-300 rounded-2xl space-y-3 shadow-sm flex flex-col justify-between min-w-0 ${step >= 2 ? 'opacity-100 scale-100' : 'opacity-40'} transition-all">
+								<div class="min-w-0">
+									<div class="flex items-center justify-between gap-1 text-purple-900 font-black text-base border-b border-purple-200 pb-2 mb-2">
+										<span class="flex items-center gap-1.5 whitespace-nowrap"><span class="w-6 h-6 rounded-full bg-purple-600 text-white flex items-center justify-center text-xs shrink-0">2</span> 十位分解</span>
+										<span class="text-xs bg-purple-100 px-2 py-0.5 rounded text-purple-800 whitespace-nowrap">$${tens * 10}$</span>
 									</div>
 									${step >= 2 ? `
 										<div class="space-y-2 animate-fade-in-step">
 											<div class="text-xs font-bold text-slate-600">課本圖解（$${tens}$ 個十）：</div>
-											<div class="flex flex-col gap-2 max-h-48 overflow-y-auto p-1">${tenBlocksHTML}</div>
+											<div class="flex flex-col gap-2 max-h-72 overflow-y-auto overflow-x-hidden p-1">${tenBlocksHTML}</div>
 										</div>
 									` : `<div class="text-xs text-slate-400 text-center py-6">等待解密下一步...</div>`}
 								</div>
 								${step >= 2 ? `
 									<div class="p-3 bg-purple-100/90 rounded-xl border border-purple-300 text-slate-800 text-xs font-bold space-y-1">
-										<div>每 1 個十，剩下 1 個 <span class="inline-block w-3 h-3 bg-amber-500 rounded-sm align-middle"></span></div>
-										<div class="text-rose-600 font-black text-sm">👉 剩 $1 \\times ${tens} = \\mathbf{${tens}}$ 個</div>
+										<div>每 1 個十，移出 1 個 <span style="width:10px;height:10px;" class="inline-block bg-amber-500 border border-amber-700 box-border rounded-none align-middle"></span></div>
+										<div class="text-rose-600 font-black text-sm">👉 共移出 $1 \\times ${tens} = \\mathbf{${tens}}$ 個</div>
 									</div>
 								` : ''}
 							</div>
 						`;
 
 						let unitBlocksHTML = '';
-						for (let i = 0; i < units; i++) unitBlocksHTML += makeUnitBlockSVG();
+						for (let i = 0; i < units; i++) unitBlocksHTML += makeUnitBlock();
 
 						html += `
-							<div class="p-4 bg-emerald-50/95 border-2 border-emerald-300 rounded-2xl space-y-3 shadow-sm flex flex-col justify-between ${step >= 3 ? 'opacity-100 scale-100' : 'opacity-40'} transition-all">
-								<div>
-									<div class="flex items-center justify-between text-emerald-900 font-black text-base border-b border-emerald-200 pb-2 mb-2">
-										<span class="flex items-center gap-1.5"><span class="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs">3</span> 個位保留</span>
-										<span class="text-xs bg-emerald-100 px-2 py-0.5 rounded text-emerald-800">原有 $${units}$</span>
+							<div class="p-3.5 bg-emerald-50/95 border-2 border-emerald-300 rounded-2xl space-y-3 shadow-sm flex flex-col justify-between min-w-0 ${step >= 3 ? 'opacity-100 scale-100' : 'opacity-40'} transition-all">
+								<div class="min-w-0">
+									<div class="flex items-center justify-between gap-1 text-emerald-900 font-black text-base border-b border-emerald-200 pb-2 mb-2">
+										<span class="flex items-center gap-1.5 whitespace-nowrap"><span class="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs shrink-0">3</span> 個位保留</span>
+										<span class="text-xs bg-emerald-100 px-2 py-0.5 rounded text-emerald-800 whitespace-nowrap">原有 $${units}$</span>
 									</div>
 									${step >= 3 ? `
 										<div class="space-y-2 animate-fade-in-step">
 											<div class="text-xs font-bold text-slate-600">個位數不管有幾個都不分堆：</div>
-											<div class="flex flex-wrap gap-1.5 justify-center max-h-48 overflow-y-auto p-1">${unitBlocksHTML}</div>
+											<div class="flex flex-wrap gap-1.5 justify-center max-h-72 overflow-y-auto overflow-x-hidden p-2 bg-white border border-emerald-200 rounded-none">${unitBlocksHTML || '<span class="text-xs text-slate-400">0 個</span>'}</div>
 										</div>
 									` : `<div class="text-xs text-slate-400 text-center py-6">等待解密下一步...</div>`}
 								</div>
@@ -1102,17 +1122,17 @@
 						`;
 
 						html += `
-							<div class="p-4 bg-amber-50/95 border-2 border-amber-300 rounded-2xl space-y-3 shadow-sm flex flex-col justify-between ${step >= 4 ? 'opacity-100 scale-100' : 'opacity-40'} transition-all">
-								<div>
-									<div class="flex items-center justify-between text-amber-900 font-black text-base border-b border-amber-200 pb-2 mb-2">
-										<span class="flex items-center gap-1.5"><span class="w-6 h-6 rounded-full bg-amber-600 text-white flex items-center justify-center text-xs">4</span> 總和加總</span>
-										<span class="text-xs bg-amber-100 px-2 py-0.5 rounded text-amber-800">判定倍數</span>
+							<div class="p-3.5 bg-amber-50/95 border-2 border-amber-300 rounded-2xl space-y-3 shadow-sm flex flex-col justify-between min-w-0 ${step >= 4 ? 'opacity-100 scale-100' : 'opacity-40'} transition-all">
+								<div class="min-w-0">
+									<div class="flex items-center justify-between gap-1 text-amber-900 font-black text-base border-b border-amber-200 pb-2 mb-2">
+										<span class="flex items-center gap-1.5 whitespace-nowrap"><span class="w-6 h-6 rounded-full bg-amber-600 text-white flex items-center justify-center text-xs shrink-0">4</span> 總和加總</span>
+										<span class="text-xs bg-amber-100 px-2 py-0.5 rounded text-amber-800 whitespace-nowrap">判定倍數</span>
 									</div>
 									${step >= 4 ? `
 										<div class="space-y-2.5 animate-fade-in-step text-xs font-bold text-slate-700">
 											<div class="bg-white p-2.5 rounded-xl border border-amber-200 space-y-1 shadow-inner">
-												<div>百位剩下：<strong class="text-blue-700">${hundreds}</strong> 個</div>
-												<div>十位剩下：<strong class="text-purple-700">${tens}</strong> 個</div>
+												<div>百位移出：<strong class="text-blue-700">${hundreds}</strong> 個</div>
+												<div>十位移出：<strong class="text-purple-700">${tens}</strong> 個</div>
 												<div>個位原有：<strong class="text-emerald-700">${units}</strong> 個</div>
 											</div>
 										</div>
@@ -1134,39 +1154,19 @@
 
 						if (step === 0) {
 							indicator.innerText = "狀態：已修改數字，請點擊上方「重設並從頭開始」";
-							if (btnNext) {
-								btnNext.disabled = true;
-								btnNext.className = "px-6 py-3 bg-slate-300 text-slate-500 font-extrabold rounded-xl shadow-none cursor-not-allowed flex items-center gap-2 opacity-60";
-								btnNext.innerText = "下一步驟 ▶ (請先點擊重設)";
-							}
+							setNextAnimBtnDisabled("下一步驟 ▶（請先按重設）");
 						} else if (step === 1) {
 							indicator.innerText = "目前進度：步驟 1 顯示中（百位分解）";
-							if (btnNext) {
-								btnNext.disabled = false;
-								btnNext.className = "px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-90 text-white font-extrabold rounded-xl shadow transition-all cursor-pointer flex items-center gap-2";
-								btnNext.innerText = "下一步：看十位分解 ▶";
-							}
+							setNextAnimBtnActive("下一步：看十位分解 ▶");
 						} else if (step === 2) {
 							indicator.innerText = "目前進度：步驟 1 與 2 顯示中（百位 + 十位）";
-							if (btnNext) {
-								btnNext.disabled = false;
-								btnNext.className = "px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-90 text-white font-extrabold rounded-xl shadow transition-all cursor-pointer flex items-center gap-2";
-								btnNext.innerText = "下一步：看個位保留 ▶";
-							}
+							setNextAnimBtnActive("下一步：看個位保留 ▶");
 						} else if (step === 3) {
 							indicator.innerText = "目前進度：步驟 1、2、3 顯示中（百位 + 十位 + 個位）";
-							if (btnNext) {
-								btnNext.disabled = false;
-								btnNext.className = "px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-90 text-white font-extrabold rounded-xl shadow transition-all cursor-pointer flex items-center gap-2";
-								btnNext.innerText = "下一步：看總和與總結算 ▶";
-							}
+							setNextAnimBtnActive("下一步：看總和與總結算 ▶");
 						} else if (step === 4) {
-							indicator.innerText = "目前進度：4 個步驟橫向完整呈現完畢（一目了然）";
-							if (btnNext) {
-								btnNext.disabled = false;
-								btnNext.className = "px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-90 text-white font-extrabold rounded-xl shadow transition-all cursor-pointer flex items-center gap-2";
-								btnNext.innerText = "重新從頭開始 ↺";
-							}
+							indicator.innerText = "目前進度：4 個步驟橫向完整呈現完畢（如需重看請按左側重設）";
+							setNextAnimBtnDisabled("已顯示全部步驟（需重設請按左側）");
 						}
 
 						triggerMathJax(stage);
