@@ -132,6 +132,31 @@
         .animate-fade-in-step {
             animation: fadeInStep 0.5s ease-out forwards;
         }
+
+        /* 彩虹拱橋與因數對小卡聯動高亮樣式 */
+        .rainbow-arc {
+            transition: stroke-width 0.25s ease, filter 0.25s ease, opacity 0.25s ease;
+        }
+        .rainbow-arc.is-highlighted {
+            stroke-width: 8;
+            filter: drop-shadow(0 0 8px currentColor);
+        }
+        .rainbow-node {
+            transform-box: fill-box;
+            transform-origin: center;
+            transition: transform 0.25s ease, filter 0.25s ease;
+        }
+        .rainbow-node.is-highlighted {
+            transform: scale(1.18);
+            filter: drop-shadow(0 0 6px rgba(15, 23, 42, 0.35));
+        }
+        .rainbow-formula-badge {
+            transition: transform 0.25s ease, box-shadow 0.25s ease, ring 0.25s ease;
+        }
+        .rainbow-formula-badge.is-highlighted {
+            transform: scale(1.04);
+            box-shadow: 0 6px 16px rgba(15, 23, 42, 0.16);
+        }
     </style>
 </head>
 <body class="text-slate-800 pb-12 text-base">
@@ -232,8 +257,8 @@
 							<i class="fa-solid fa-cookie-bite"></i>
 						</div>
 						<div>
-							<div class="text-sm font-bold text-blue-600 mb-1">SECTION 1</div>
-							<h3 class="text-2xl font-extrabold text-slate-800">用除法算式，找出 12 個糖果可以平分的袋數</h3>
+							<div class="text-sm font-bold text-blue-600 mb-1">任務 1</div>
+							<h3 class="text-3xl font-extrabold text-slate-800">除法算算看！找出 12 個糖果可以平分的袋數</h3>
 						</div>
 					</div>
 
@@ -355,7 +380,7 @@
 							<i class="fa-solid fa-lightbulb"></i>
 						</div>
 						<div>
-							<div class="text-sm font-bold text-purple-600 mb-0.5">SECTION 2</div>
+							<div class="text-sm font-bold text-purple-600 mb-0.5">任務 2</div>
 							<h3 class="text-2xl md:text-3xl font-black text-slate-800">找找看，12 的因數有哪些？</h3>
 						</div>
 					</div>
@@ -429,134 +454,179 @@
 				</div>
 
 				<div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border-2 border-indigo-200 space-y-6">
-					<div class="flex items-center gap-3 border-b border-indigo-100 pb-4">
-						<div class="w-14 h-14 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-black text-2xl shrink-0">
-							<i class="fa-solid fa-puzzle-piece"></i>
+					<!-- 單一標題與文字敘述 -->
+					<div class="flex flex-wrap items-center justify-between gap-4 border-b border-indigo-100 pb-4">
+						<div class="flex items-center gap-3">
+							<div class="w-14 h-14 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-black text-2xl shrink-0">
+								<i class="fa-solid fa-rainbow"></i>
+							</div>
+							<div>
+								<h3 class="text-2xl md:text-3xl font-extrabold text-slate-800">因數對小卡與彩虹拱橋（以 12 為例）</h3>
+								<p class="text-base text-slate-500 font-bold mt-0.5">先想想哪兩個數相乘是 12，再點卡片翻開算式，看看彩虹拱橋怎麼連線！</p>
+							</div>
 						</div>
-						<div>
-							<h3 class="text-2xl md:text-3xl font-extrabold text-slate-800">互動因數對小卡：點擊看看乘積</h3>
-							<p class="text-base text-slate-500 font-bold mt-0.5">點擊下方卡片，觀察因數如何成對相乘等於 12</p>
+
+						<!-- 輔助控制按鈕 -->
+						<div class="flex items-center gap-2">
+							<button type="button" onclick="showAllFactorPairs()" class="px-3.5 py-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-sm font-extrabold border border-indigo-200 transition-colors cursor-pointer">
+								全部亮起
+							</button>
+							<button type="button" onclick="resetFactorPairs()" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-extrabold transition-colors cursor-pointer">
+								重新來一次
+							</button>
 						</div>
 					</div>
 
-					<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-						<div onclick="toggleFactorCard(this, '1 × 12 = 12')" class="p-5 rounded-2xl bg-indigo-50 border-2 border-indigo-300 text-center cursor-pointer transition-all hover:scale-102 shadow-sm">
+					<!-- 互動小卡區 -->
+					<div id="factorCardsGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+						<div data-pair="1-12" data-base-title="1 與 12" data-formula="1 × 12 = 12" data-card-bg="bg-indigo-50" onclick="toggleFactorCard(this, '1 × 12 = 12', '1-12')" class="p-5 rounded-2xl bg-indigo-50 border-2 border-indigo-300 text-center cursor-pointer transition-all hover:scale-[1.02] shadow-sm">
 							<div class="text-2xl font-black text-indigo-900">1 與 12</div>
-							<div class="text-sm font-bold text-indigo-600 mt-1">點擊看算式</div>
+							<div class="text-sm font-bold text-indigo-600 mt-1">先猜猜看，再點我翻開</div>
 						</div>
-						<div onclick="toggleFactorCard(this, '2 × 6 = 12')" class="p-5 rounded-2xl bg-purple-50 border-2 border-purple-300 text-center cursor-pointer transition-all hover:scale-102 shadow-sm">
+						<div data-pair="2-6" data-base-title="2 與 6" data-formula="2 × 6 = 12" data-card-bg="bg-purple-50" onclick="toggleFactorCard(this, '2 × 6 = 12', '2-6')" class="p-5 rounded-2xl bg-purple-50 border-2 border-purple-300 text-center cursor-pointer transition-all hover:scale-[1.02] shadow-sm">
 							<div class="text-2xl font-black text-purple-900">2 與 6</div>
-							<div class="text-sm font-bold text-purple-600 mt-1">點擊看算式</div>
+							<div class="text-sm font-bold text-purple-600 mt-1">先猜猜看，再點我翻開</div>
 						</div>
-						<div onclick="toggleFactorCard(this, '3 × 4 = 12')" class="p-5 rounded-2xl bg-pink-50 border-2 border-pink-300 text-center cursor-pointer transition-all hover:scale-102 shadow-sm">
+						<div data-pair="3-4" data-base-title="3 與 4" data-formula="3 × 4 = 12" data-card-bg="bg-pink-50" onclick="toggleFactorCard(this, '3 × 4 = 12', '3-4')" class="p-5 rounded-2xl bg-pink-50 border-2 border-pink-300 text-center cursor-pointer transition-all hover:scale-[1.02] shadow-sm">
 							<div class="text-2xl font-black text-pink-900">3 與 4</div>
-							<div class="text-sm font-bold text-pink-600 mt-1">點擊看算式</div>
-						</div>
-					</div>
-				</div>
-
-				<script>
-				function toggleFactorCard(cardEl, formulaText) {
-					const titleEl = cardEl.querySelector('div:first-child');
-					const subEl = cardEl.querySelector('div:last-child');
-					if (cardEl.dataset.flipped === "true") {
-						cardEl.dataset.flipped = "false";
-						if (cardEl.classList.contains('bg-indigo-50')) titleEl.innerText = "1 與 12";
-						else if (cardEl.classList.contains('bg-purple-50')) titleEl.innerText = "2 與 6";
-						else titleEl.innerText = "3 與 4";
-						subEl.innerText = "點擊看算式";
-					} else {
-						cardEl.dataset.flipped = "true";
-						titleEl.innerText = formulaText;
-						subEl.innerText = "✨ 成對因數乘積正確！";
-					}
-				}
-
-				let currentMultStep = 0;
-				function nextMultStep() {
-					if (currentMultStep < 5) {
-						currentMultStep++;
-						const el = document.getElementById(`mult-step-${currentMultStep}`);
-						if (el) el.classList.remove('hidden');
-						
-						const indicator = document.getElementById('multStepIndicator');
-						const btnNext = document.getElementById('btnNextMultStep');
-						
-						if (indicator) indicator.innerText = `目前進度：步驟 ${currentMultStep} / 5 顯示中`;
-						
-						if (currentMultStep === 5 && btnNext) {
-							btnNext.innerText = "已完成全部 ↺";
-							btnNext.className = "px-4 py-2 bg-slate-400 hover:bg-slate-500 text-white text-sm font-bold rounded-lg transition-all cursor-pointer";
-						}
-						
-						triggerMathJax(document.getElementById('multStepsContainer'));
-					} else {
-						resetMultSteps();
-					}
-				}
-
-				function resetMultSteps() {
-					currentMultStep = 0;
-					for (let i = 1; i <= 5; i++) {
-						const el = document.getElementById(`mult-step-${i}`);
-						if (el) el.classList.add('hidden');
-					}
-					const indicator = document.getElementById('multStepIndicator');
-					const btnNext = document.getElementById('btnNextMultStep');
-					if (indicator) indicator.innerText = `目前進度：請點擊下一步`;
-					if (btnNext) {
-						btnNext.innerText = "下一步驟 ▶";
-						btnNext.className = "px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-lg transition-all cursor-pointer flex items-center gap-1";
-					}
-				}
-				</script>
-
-				<div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border-2 border-slate-100 space-y-6">
-					<div class="flex items-center gap-3 border-b border-slate-100 pb-4">
-						<div class="w-14 h-14 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-black text-2xl shrink-0">
-							<i class="fa-solid fa-rainbow"></i>
-						</div>
-						<div>
-							<h3 class="text-2xl md:text-3xl font-extrabold text-slate-800">彩虹拱橋連連看：一頭一尾成對配對</h3>
-							<p class="text-base text-slate-500 font-bold mt-0.5">由小到大，兩兩相乘等於 12 就連成一條彩虹</p>
+							<div class="text-sm font-bold text-pink-600 mt-1">先猜猜看，再點我翻開</div>
 						</div>
 					</div>
 
+					<!-- 彩虹拱橋與乘積對照區 -->
 					<div class="bg-gradient-to-b from-indigo-50/50 to-amber-50/30 p-6 rounded-2xl border border-indigo-100 space-y-4">
 						<div class="w-full overflow-x-auto flex justify-center py-2">
-							<svg viewBox="0 0 340 160" class="w-full max-w-md">
-								<path d="M 30 110 A 140 85 0 0 1 310 110" fill="none" stroke="#EF4444" stroke-width="4" stroke-linecap="round" />
-								<path d="M 86 110 A 86 55 0 0 1 254 110" fill="none" stroke="#10B981" stroke-width="4" stroke-linecap="round" />
-								<path d="M 142 110 A 28 25 0 0 1 198 110" fill="none" stroke="#3B82F6" stroke-width="4" stroke-linecap="round" />
-								
+							<svg viewBox="0 0 340 160" class="w-full max-w-md overflow-visible">
+								<path id="rainbow-arc-1-12" d="M 30 110 A 140 85 0 0 1 310 110" fill="none" stroke="#EF4444" stroke-width="4" stroke-linecap="round" class="rainbow-arc" style="color: #EF4444;" />
+								<path id="rainbow-arc-2-6" d="M 86 110 A 86 55 0 0 1 254 110" fill="none" stroke="#10B981" stroke-width="4" stroke-linecap="round" class="rainbow-arc" style="color: #10B981;" />
+								<path id="rainbow-arc-3-4" d="M 142 110 A 28 25 0 0 1 198 110" fill="none" stroke="#3B82F6" stroke-width="4" stroke-linecap="round" class="rainbow-arc" style="color: #3B82F6;" />
+
 								<g>
-									<circle cx="30" cy="110" r="16" fill="#EF4444" />
-									<text x="30" y="115" text-anchor="middle" fill="white" font-size="13" font-weight="bold">1</text>
-
-									<circle cx="86" cy="110" r="16" fill="#10B981" />
-									<text x="86" y="115" text-anchor="middle" fill="white" font-size="13" font-weight="bold">2</text>
-
-									<circle cx="142" cy="110" r="16" fill="#3B82F6" />
-									<text x="142" y="115" text-anchor="middle" fill="white" font-size="13" font-weight="bold">3</text>
-
-									<circle cx="198" cy="110" r="16" fill="#3B82F6" />
-									<text x="198" y="115" text-anchor="middle" fill="white" font-size="13" font-weight="bold">4</text>
-
-									<circle cx="254" cy="110" r="16" fill="#10B981" />
-									<text x="254" y="115" text-anchor="middle" fill="white" font-size="13" font-weight="bold">6</text>
-
-									<circle cx="310" cy="110" r="16" fill="#EF4444" />
-									<text x="310" y="115" text-anchor="middle" fill="white" font-size="12" font-weight="bold">12</text>
+									<g id="rainbow-node-1" class="rainbow-node">
+										<circle cx="30" cy="110" r="16" fill="#EF4444" />
+										<text x="30" y="115" text-anchor="middle" fill="white" font-size="13" font-weight="bold">1</text>
+									</g>
+									<g id="rainbow-node-2" class="rainbow-node">
+										<circle cx="86" cy="110" r="16" fill="#10B981" />
+										<text x="86" y="115" text-anchor="middle" fill="white" font-size="13" font-weight="bold">2</text>
+									</g>
+									<g id="rainbow-node-3" class="rainbow-node">
+										<circle cx="142" cy="110" r="16" fill="#3B82F6" />
+										<text x="142" y="115" text-anchor="middle" fill="white" font-size="13" font-weight="bold">3</text>
+									</g>
+									<g id="rainbow-node-4" class="rainbow-node">
+										<circle cx="198" cy="110" r="16" fill="#3B82F6" />
+										<text x="198" y="115" text-anchor="middle" fill="white" font-size="13" font-weight="bold">4</text>
+									</g>
+									<g id="rainbow-node-6" class="rainbow-node">
+										<circle cx="254" cy="110" r="16" fill="#10B981" />
+										<text x="254" y="115" text-anchor="middle" fill="white" font-size="13" font-weight="bold">6</text>
+									</g>
+									<g id="rainbow-node-12" class="rainbow-node">
+										<circle cx="310" cy="110" r="16" fill="#EF4444" />
+										<text x="310" y="115" text-anchor="middle" fill="white" font-size="12" font-weight="bold">12</text>
+									</g>
 								</g>
 							</svg>
 						</div>
 
+						<!-- 先隱藏乘積算式，點開卡片才顯示 -->
 						<div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center text-lg font-bold">
-							<div class="bg-red-100 text-red-700 py-2.5 rounded-xl">$1 \times 12 = 12$</div>
-							<div class="bg-emerald-100 text-emerald-700 py-2.5 rounded-xl">$2 \times 6 = 12$</div>
-							<div class="bg-blue-100 text-blue-700 py-2.5 rounded-xl">$3 \times 4 = 12$</div>
+							<div id="rainbow-badge-1-12" data-revealed-html="$1 \times 12 = 12$" class="rainbow-formula-badge bg-red-100/70 text-red-700 py-2.5 rounded-xl">？ × ？ = 12</div>
+							<div id="rainbow-badge-2-6" data-revealed-html="$2 \times 6 = 12$" class="rainbow-formula-badge bg-emerald-100/70 text-emerald-700 py-2.5 rounded-xl">？ × ？ = 12</div>
+							<div id="rainbow-badge-3-4" data-revealed-html="$3 \times 4 = 12$" class="rainbow-formula-badge bg-blue-100/70 text-blue-700 py-2.5 rounded-xl">？ × ？ = 12</div>
 						</div>
+
+						<!-- 補救引導提問 -->
+						<p id="factorGuideTip" class="text-sm md:text-base font-bold text-slate-600 text-center pt-1">
+							💡 小提醒：像彩虹一樣一頭一尾配對，找到 3 和 4 中間就沒有其他整數因數對囉！
+						</p>
 					</div>
+
+					<script>
+						function syncRainbowHighlight(pairKey, isActive, revealBadge) {
+							if (!pairKey) return;
+
+							const arcEl = document.getElementById(`rainbow-arc-${pairKey}`);
+							if (arcEl) {
+								arcEl.classList.toggle('is-highlighted', isActive);
+							}
+
+							const badgeEl = document.getElementById(`rainbow-badge-${pairKey}`);
+							if (badgeEl) {
+								if (revealBadge && badgeEl.dataset.revealedHtml) {
+									badgeEl.innerHTML = badgeEl.dataset.revealedHtml;
+									if (window.MathJax && typeof MathJax.typesetPromise === 'function') {
+										MathJax.typesetPromise([badgeEl]);
+									}
+								} else if (!revealBadge) {
+									badgeEl.textContent = "？ × ？ = 12";
+								}
+
+								badgeEl.classList.toggle('is-highlighted', isActive);
+								if (isActive) {
+									badgeEl.classList.add('ring-4', 'ring-amber-300');
+								} else {
+									badgeEl.classList.remove('ring-4', 'ring-amber-300');
+								}
+							}
+
+							const pairNodes = {
+								'1-12': ['rainbow-node-1', 'rainbow-node-12'],
+								'2-6': ['rainbow-node-2', 'rainbow-node-6'],
+								'3-4': ['rainbow-node-3', 'rainbow-node-4']
+							}[pairKey] || [];
+
+							pairNodes.forEach(nodeId => {
+								const nodeEl = document.getElementById(nodeId);
+								if (nodeEl) {
+									nodeEl.classList.toggle('is-highlighted', isActive);
+								}
+							});
+						}
+
+						function setFactorCardState(cardEl, shouldOpen) {
+							if (!cardEl) return;
+							const titleEl = cardEl.querySelector('div:first-child');
+							const subEl = cardEl.querySelector('div:last-child');
+							const pairKey = cardEl.dataset.pair;
+							const baseTitle = cardEl.dataset.baseTitle || titleEl.innerText;
+							const formulaText = cardEl.dataset.formula || '';
+
+							if (!shouldOpen) {
+								cardEl.dataset.flipped = "false";
+								cardEl.classList.remove('ring-4', 'ring-amber-300');
+								titleEl.innerText = baseTitle;
+								subEl.innerText = "先猜猜看，再點我翻開";
+								syncRainbowHighlight(pairKey, false, false);
+							} else {
+								cardEl.dataset.flipped = "true";
+								cardEl.classList.add('ring-4', 'ring-amber-300');
+								titleEl.innerText = formulaText;
+								subEl.innerText = "都是 12 的因數！";
+								syncRainbowHighlight(pairKey, true, true);
+							}
+						}
+
+						function toggleFactorCard(cardEl, formulaText, pairKey) {
+							if (formulaText) cardEl.dataset.formula = formulaText;
+							if (pairKey) cardEl.dataset.pair = pairKey;
+							const isCurrentlyFlipped = cardEl.dataset.flipped === "true";
+							setFactorCardState(cardEl, !isCurrentlyFlipped);
+						}
+
+						function showAllFactorPairs() {
+							document.querySelectorAll('#factorCardsGrid > div[data-pair]').forEach(card => {
+								setFactorCardState(card, true);
+							});
+						}
+
+						function resetFactorPairs() {
+							document.querySelectorAll('#factorCardsGrid > div[data-pair]').forEach(card => {
+								setFactorCardState(card, false);
+							});
+						}
+						</script>
 				</div>
 
 				<div class="bg-gradient-to-br from-indigo-50 to-purple-50 p-6 md:p-8 rounded-3xl border-2 border-indigo-100 shadow-md">
@@ -598,7 +668,7 @@
 							<i class="fa-solid fa-magnifying-glass"></i>
 						</div>
 						<div>
-							<div class="text-sm font-bold text-amber-600 mb-0.5">SECTION 3</div>
+							<div class="text-sm font-bold text-amber-600 mb-0.5">任務 3</div>
 							<h3 class="text-2xl md:text-3xl font-black text-slate-800">如何快速判別 2、3、5、10 的倍數？</h3>
 						</div>
 					</div>
@@ -2785,10 +2855,78 @@
             return factors;
         }
 
+let isLabFormulasRevealed = false;
+
+        function toggleLabAllFormulas() {
+            isLabFormulasRevealed = !isLabFormulasRevealed;
+            updateLabFormulasUI();
+        }
+
+        function toggleSingleLabFormula(cardEl) {
+            if (!cardEl) return;
+            const isOpen = cardEl.dataset.open === 'true';
+            cardEl.dataset.open = isOpen ? 'false' : 'true';
+            const num = cardEl.dataset.num;
+            if (cardEl.dataset.open === 'true') {
+                cardEl.innerHTML = cardEl.dataset.formulaHtml;
+                cardEl.classList.remove('text-slate-400', 'bg-slate-50');
+                cardEl.classList.add('text-slate-700', 'bg-white');
+                if (typeof triggerMathJax === 'function') {
+                    triggerMathJax(cardEl);
+                }
+            } else {
+                cardEl.innerHTML = `？ × ？ = ${num} <span class="text-xs font-sans text-indigo-500 ml-1">(點擊看算式)</span>`;
+                cardEl.classList.remove('text-slate-700', 'bg-white');
+                cardEl.classList.add('text-slate-400', 'bg-slate-50');
+            }
+        }
+
+        function updateLabFormulasUI() {
+            const btn = document.getElementById('btnToggleLabFormulas');
+            const squareTextGroup = document.getElementById('labSquareFormulaText');
+            const cards = document.querySelectorAll('.lab-formula-item');
+
+            if (btn) {
+                if (isLabFormulasRevealed) {
+                    btn.innerHTML = '<i class="fa-solid fa-eye-slash"></i> 隱藏乘法算式';
+                    btn.className = 'px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-base font-extrabold rounded-xl transition-all cursor-pointer flex items-center gap-2 shadow-sm';
+                } else {
+                    btn.innerHTML = '<i class="fa-solid fa-eye"></i> 顯示乘法算式';
+                    btn.className = 'px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-base font-extrabold rounded-xl transition-all cursor-pointer flex items-center gap-2 shadow-sm';
+                }
+            }
+
+            if (squareTextGroup) {
+                squareTextGroup.style.display = isLabFormulasRevealed ? '' : 'none';
+            }
+
+            cards.forEach(card => {
+                const num = card.dataset.num;
+                card.dataset.open = isLabFormulasRevealed ? 'true' : 'false';
+                if (isLabFormulasRevealed) {
+                    card.innerHTML = card.dataset.formulaHtml;
+                    card.classList.remove('text-slate-400', 'bg-slate-50');
+                    card.classList.add('text-slate-700', 'bg-white');
+                } else {
+                    card.innerHTML = `？ × ？ = ${num} <span class="text-xs font-sans text-indigo-500 ml-1">(點擊看算式)</span>`;
+                    card.classList.remove('text-slate-700', 'bg-white');
+                    card.classList.add('text-slate-400', 'bg-slate-50');
+                }
+            });
+
+            if (isLabFormulasRevealed && typeof triggerMathJax === 'function') {
+                const displayArea = document.getElementById('rainbow-display-area');
+                if (displayArea) triggerMathJax(displayArea);
+            }
+        }
+
         function generateRainbow() {
             const inputEl = document.getElementById('rainbow-input');
             const displayArea = document.getElementById('rainbow-display-area');
             if (!inputEl || !displayArea) return;
+
+            // 每次重新生成新數字時，預設先隱藏算式讓學生先觀察拱橋猜一猜
+            isLabFormulasRevealed = false;
 
             const num = parseInt(inputEl.value) || 12;
             const factors = getFactors(num);
@@ -2820,8 +2958,10 @@
                     svgHTML += `
                         <g>
                             <path d="M ${x1 - 14} ${baselineY - 12} A 16 16 0 1 1 ${x1 + 14} ${baselineY - 12}" fill="none" stroke="${color}" stroke-width="3" stroke-dasharray="4,3" />
-                            <text x="${x1}" y="${baselineY - 40}" text-anchor="middle" fill="none" stroke="white" stroke-width="6" stroke-linejoin="round" font-size="14" font-weight="900">${factors[i]} × ${factors[i]} = ${num}</text>
-                            <text x="${x1}" y="${baselineY - 40}" text-anchor="middle" fill="${color}" font-size="14" font-weight="900">${factors[i]} × ${factors[i]} = ${num}</text>
+                            <g id="labSquareFormulaText" style="display: none;">
+                                <text x="${x1}" y="${baselineY - 40}" text-anchor="middle" fill="none" stroke="white" stroke-width="6" stroke-linejoin="round" font-size="14" font-weight="900">${factors[i]} × ${factors[i]} = ${num}</text>
+                                <text x="${x1}" y="${baselineY - 40}" text-anchor="middle" fill="${color}" font-size="14" font-weight="900">${factors[i]} × ${factors[i]} = ${num}</text>
+                            </g>
                         </g>
                     `;
                 } else {
@@ -2854,17 +2994,23 @@
                     <div class="bg-white p-4 rounded-2xl border border-indigo-100 shadow-inner">
                         ${svgHTML}
                     </div>
-                    <div class="text-xl font-semibold text-slate-500">成對乘法算式列表：</div>
-                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-lg font-mono text-slate-700">
+                    <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+                        <div class="text-lg md:text-xl font-bold text-slate-600">成對乘法算式列表（看彩虹連線先猜猜看）：</div>
+                        <button type="button" id="btnToggleLabFormulas" onclick="toggleLabAllFormulas()" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-base font-extrabold rounded-xl transition-all cursor-pointer flex items-center gap-2 shadow-sm">
+                            <i class="fa-solid fa-eye"></i> 顯示乘法算式
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 text-lg font-mono">
             `;
 
             for (let i = 0; i < pairCount; i++) {
                 const p1 = factors[i];
                 const p2 = factors[len - 1 - i];
                 const color = rainbowColors[i % rainbowColors.length];
+                const formulaHtml = `$${p1} \\times ${p2} = ${num}$`;
                 html += `
-                    <div class="bg-white p-2.5 rounded-xl border-l-4 shadow-sm" style="border-left-color: ${color}">
-                        $${p1} \\times ${p2} = ${num}$
+                    <div onclick="toggleSingleLabFormula(this)" data-open="false" data-num="${num}" data-formula-html="${formulaHtml}" class="lab-formula-item bg-slate-50 text-slate-400 p-3 rounded-xl border-l-4 shadow-sm cursor-pointer hover:bg-indigo-50/50 transition-all select-none" style="border-left-color: ${color}">
+                        ？ × ？ = ${num} <span class="text-xs font-sans text-indigo-500 ml-1">(點擊看算式)</span>
                     </div>
                 `;
             }
@@ -2924,7 +3070,6 @@
                 }
             }
 
-            // 若 1, 2, 3, 5, 7 都篩過了，剩餘未被排除的 11~47 全部自動標為質數
             if (sieveEliminated.has(1) && sieveConfirmedPrimes.has(2) && sieveConfirmedPrimes.has(3) && sieveConfirmedPrimes.has(5) && sieveConfirmedPrimes.has(7)) {
                 for (let k = 2; k <= 50; k++) {
                     if (!sieveEliminated.has(k)) sieveConfirmedPrimes.add(k);
@@ -2968,7 +3113,6 @@
             const pFactors = getPrimeFactorizationArray(num);
             const uniquePrimes = [...new Set(pFactors)];
 
-            // 生成短除法步驟
             let temp = num;
             let rows = '';
             pFactors.forEach(p => {
@@ -3821,92 +3965,99 @@
                 `;
             }
 
-            gameState.currentQuestion = generateQuestion(gameState.currentStage);
+            const q = generateQuestion(gameState.currentStage);
+            gameState.currentQuestion = q;
             gameState.selectedOptionIndex = null;
 
-            const questionContainer = document.getElementById('quizQuestionContainer');
-            const answerArea = document.getElementById('quizAnswerArea');
+            const qContainer = document.getElementById('quizQuestionContainer');
+            const ansArea = document.getElementById('quizAnswerArea');
             const rescueContent = document.getElementById('quizRescueContent');
 
-            if (questionContainer) questionContainer.innerHTML = gameState.currentQuestion.prompt;
-            if (rescueContent) rescueContent.innerHTML = gameState.currentQuestion.rescueHtml || '暫無額外圖解說明。';
-            if (answerArea) answerArea.innerHTML = '';
-
-            if (gameState.currentQuestion.type === 'choice') {
-                gameState.currentQuestion.options.forEach((opt, idx) => {
-                    const btn = document.createElement('button');
-                    btn.type = 'button';
-                    btn.className = 'w-full p-4 rounded-2xl border-2 border-slate-200 hover:border-indigo-400 bg-white text-slate-800 font-extrabold text-left text-lg transition-all flex items-center justify-between group cursor-pointer shadow-sm';
-                    btn.onclick = () => selectOption(idx);
-                    btn.id = `opt-btn-${idx}`;
-                    btn.innerHTML = `
-                        <span class="flex items-center gap-3">
-                            <span class="w-8 h-8 rounded-xl bg-slate-100 group-hover:bg-indigo-100 text-slate-600 group-hover:text-indigo-600 flex items-center justify-center text-sm font-bold transition-colors">
-                                ${String.fromCharCode(65 + idx)}
-                            </span>
-                            <span>${opt}</span>
-                        </span>
-                        <i class="fa-regular fa-circle text-slate-300 text-xl group-hover:text-indigo-400 transition-colors"></i>
-                    `;
-                    answerArea.appendChild(btn);
-                });
-            } else {
-                const inputGroup = document.createElement('div');
-                inputGroup.className = 'space-y-3';
-                inputGroup.innerHTML = `
-                    <input type="number" id="quizInputAnswer" min="1" placeholder="請在此輸入大於0的整數答案..." class="w-full p-4 text-xl md:text-2xl font-bold rounded-2xl border-2 border-slate-200 focus:border-indigo-500 focus:outline-none shadow-inner bg-slate-50 text-indigo-900" onkeydown="if(event.key==='Enter') submitCurrentAnswer()" oninput="if(this.value<1)this.value=''">
-                `;
-                answerArea.appendChild(inputGroup);
+            if (qContainer) {
+                qContainer.innerHTML = q.prompt;
             }
 
-            triggerMathJax(questionContainer);
-            triggerMathJax(answerArea);
-            triggerMathJax(rescueContent);
+            if (rescueContent) {
+                rescueContent.innerHTML = q.rescueHtml || '仔細思考題目的因倍數條件，一步一步算出來！';
+            }
+
+            if (ansArea) {
+                if (q.type === 'choice') {
+                    let optsHtml = '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">';
+                    q.options.forEach((optText, idx) => {
+                        optsHtml += `
+                            <button type="button" onclick="selectQuizOption(${idx})" id="quiz-opt-${idx}" 
+                                class="p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-indigo-300 text-left font-bold text-lg text-slate-700 transition-all shadow-sm cursor-pointer flex items-center gap-3">
+                                <span class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-black flex items-center justify-center text-sm shrink-0 border border-slate-200">
+                                    ${String.fromCharCode(65 + idx)}
+                                </span>
+                                <span class="flex-1">${optText}</span>
+                            </button>
+                        `;
+                    });
+                    optsHtml += '</div>';
+                    ansArea.innerHTML = optsHtml;
+                } else {
+                    ansArea.innerHTML = `
+                        <div class="bg-indigo-50/40 p-5 rounded-2xl border border-indigo-100 flex flex-col sm:flex-row sm:items-center gap-3">
+                            <label class="font-bold text-slate-700 text-lg shrink-0">你的答案：</label>
+                            <input type="number" id="quizInputAnswer" min="1" placeholder="請輸入大於0的數字..." 
+                                class="flex-1 p-3.5 rounded-xl border-2 border-indigo-200 font-bold text-xl text-indigo-950 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-inner"
+                                oninput="if(this.value<1)this.value=''"
+                                onkeydown="if(event.key==='Enter') submitCurrentAnswer()">
+                        </div>
+                    `;
+                }
+            }
+
+            triggerMathJax(document.getElementById('activeQuizArea'));
         }
 
-        function selectOption(idx) {
-            gameState.selectedOptionIndex = idx;
-            if (!gameState.currentQuestion || gameState.currentQuestion.type !== 'choice') return;
+        function selectQuizOption(index) {
+            gameState.selectedOptionIndex = index;
 
-            gameState.currentQuestion.options.forEach((_, i) => {
-                const btn = document.getElementById(`opt-btn-${i}`);
-                if (!btn) return;
-                if (i === idx) {
-                    btn.className = 'w-full p-4 rounded-2xl border-2 border-indigo-600 bg-indigo-50/80 text-indigo-900 font-extrabold text-left text-lg transition-all flex items-center justify-between shadow-sm cursor-pointer';
-                    const icon = btn.querySelector('i');
-                    if (icon) icon.className = 'fa-solid fa-circle-check text-indigo-600 text-xl';
+            for (let i = 0; i < 4; i++) {
+                const btn = document.getElementById(`quiz-opt-${i}`);
+                if (!btn) continue;
+
+                const badge = btn.querySelector('span:first-child');
+                if (i === index) {
+                    btn.className = "p-4 rounded-2xl border-2 border-indigo-600 bg-indigo-50 text-left font-extrabold text-lg text-indigo-950 transition-all shadow-md cursor-pointer flex items-center gap-3";
+                    if (badge) badge.className = "w-8 h-8 rounded-full bg-indigo-600 text-white font-black flex items-center justify-center text-sm shrink-0 border border-indigo-600";
                 } else {
-                    btn.className = 'w-full p-4 rounded-2xl border-2 border-slate-200 hover:border-indigo-400 bg-white text-slate-800 font-extrabold text-left text-lg transition-all flex items-center justify-between group cursor-pointer shadow-sm';
-                    const icon = btn.querySelector('i');
-                    if (icon) icon.className = 'fa-regular fa-circle text-slate-300 text-xl group-hover:text-indigo-400 transition-colors';
+                    btn.className = "p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-indigo-300 text-left font-bold text-lg text-slate-700 transition-all shadow-sm cursor-pointer flex items-center gap-3";
+                    if (badge) badge.className = "w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-black flex items-center justify-center text-sm shrink-0 border border-slate-200";
                 }
-            });
+            }
         }
 
         function submitCurrentAnswer() {
             const q = gameState.currentQuestion;
             if (!q) return;
 
+            let userAnswerText = '';
             let isCorrect = false;
-            let userAnsValid = true;
 
             if (q.type === 'choice') {
                 if (gameState.selectedOptionIndex === null) {
-                    alert('請先選擇一個選項喔！');
+                    alert('請先點選一個選項再提交答案喔！');
                     return;
                 }
+                userAnswerText = q.options[gameState.selectedOptionIndex];
                 isCorrect = (gameState.selectedOptionIndex === q.correctIndex);
             } else {
                 const inputEl = document.getElementById('quizInputAnswer');
-                if (!inputEl || inputEl.value.trim() === '' || parseInt(inputEl.value.trim()) <= 0) {
-                    alert('請輸入大於 0 的有效數字喔！');
+                if (!inputEl) return;
+                userAnswerText = inputEl.value.trim();
+                if (!userAnswerText || parseInt(userAnswerText) <= 0) {
+                    alert('請輸入大於 0 的整數答案再提交喔！');
                     return;
                 }
-                isCorrect = (inputEl.value.trim() === q.correctAnswer);
+                isCorrect = (userAnswerText === q.correctAnswer);
             }
 
             const feedbackBox = document.getElementById('quizFeedbackBox');
-            const actionContainer = document.getElementById('quizActionContainer');
+            if (!feedbackBox) return;
             feedbackBox.classList.remove('hidden');
 
             if (isCorrect) {
@@ -3924,132 +4075,125 @@
                     gameState.stageMaxCombo[stage] = gameState.combo;
                 }
 
-                const comboBonus = Math.min(gameState.combo * 5, 50);
-                const pointsEarned = 10 + comboBonus;
-                gameState.score += pointsEarned;
+                const baseScore = 10;
+                const comboBonus = Math.min(gameState.combo * 2, 20);
+                const earnedScore = baseScore + comboBonus;
+                const earnedExp = 25 + (gameState.combo >= 3 ? 10 : 0);
 
-                let praiseTitle = PRAISE_MESSAGES[Math.floor(Math.random() * PRAISE_MESSAGES.length)];
-                if (gameState.combo >= 3) {
-                    praiseTitle = `🔥 ${gameState.combo} 連擊大爆發！ ${praiseTitle}`;
+                gameState.score += earnedScore;
+                addExp(earnedExp);
+
+                if (gameState.combo === 3 || gameState.combo === 5 || gameState.combo === 8) {
                     triggerPetalRain(2500);
                 } else {
-                    triggerPetalRain(1500);
+                    triggerPetalRain(1200);
                 }
 
-                feedbackBox.className = 'p-6 rounded-2xl space-y-4 border-2 border-emerald-200 bg-emerald-50/90 text-emerald-950 transition-all block shadow-sm animate-bounce-short';
+                const randomPraise = PRAISE_MESSAGES[Math.floor(Math.random() * PRAISE_MESSAGES.length)];
+                let comboBanner = '';
+                if (gameState.combo >= 3) {
+                    comboBanner = `<div class="inline-flex items-center gap-1.5 px-3 py-1 bg-orange-100 text-orange-700 font-black text-sm rounded-full border border-orange-300 animate-pulse">
+                        <i class="fa-solid fa-fire text-orange-500"></i> 🔥 連擊加成！目前 ${gameState.combo} 連擊 (+${comboBonus}星 / +${earnedExp} EXP)
+                    </div>`;
+                } else {
+                    comboBanner = `<div class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100 text-emerald-800 font-bold text-sm rounded-full">
+                        +${earnedScore} 星 / +${earnedExp} EXP
+                    </div>`;
+                }
+
+                feedbackBox.className = "p-6 rounded-2xl space-y-4 border-2 border-emerald-300 bg-emerald-50/90 text-emerald-950 transition-all animate-fade-in-step";
                 feedbackBox.innerHTML = `
-                    <div class="flex items-center gap-3 text-xl font-black text-emerald-700">
-                        <i class="fa-solid fa-circle-check text-2xl"></i> <span>${praiseTitle}</span>
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <div class="flex items-center gap-2 font-black text-2xl text-emerald-700">
+                            <i class="fa-solid fa-circle-check"></i> ${randomPraise}
+                        </div>
+                        ${comboBanner}
                     </div>
-                    <div class="text-base md:text-lg font-medium bg-white/90 p-5 rounded-xl border border-emerald-200 leading-relaxed text-slate-800 space-y-2">
-                        <div>${q.solution}</div>
-                    </div>
-                    <div class="flex flex-wrap gap-2 text-xs md:text-sm font-bold text-emerald-700">
-                        <span class="bg-emerald-200/80 px-3 py-1 rounded-full">+${pointsEarned} 星</span>
-                        <span class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full">+25 EXP</span>
+                    <div class="bg-white/80 p-4 rounded-xl border border-emerald-200 text-slate-700 text-base leading-relaxed">
+                        <div class="font-bold text-emerald-900 mb-1">💡 詳解：</div>
+                        ${q.solution}
                     </div>
                 `;
 
-                actionContainer.innerHTML = `
-                    <button onclick="renderNextQuestion()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold rounded-2xl shadow-lg hover:shadow-emerald-300 transition-all text-lg flex items-center justify-center gap-2 cursor-pointer">
-                        <span>太棒了！繼續下一題</span> <i class="fa-solid fa-arrow-right"></i>
-                    </button>
-                `;
-
-                if (q.type === 'choice') {
-                    q.options.forEach((_, idx) => {
-                        const btn = document.getElementById(`opt-btn-${idx}`);
-                        if (btn) btn.onclick = null;
-                    });
+                const actionContainer = document.getElementById('quizActionContainer');
+                if (actionContainer) {
+                    actionContainer.innerHTML = `
+                        <button onclick="renderNextQuestion()" class="w-full py-4 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-extrabold rounded-2xl shadow-lg hover:opacity-95 active:scale-98 transition-all text-lg cursor-pointer flex items-center justify-center gap-2">
+                            <span>下一題</span> <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    `;
                 }
-
-                addExp(25);
-                saveGameState();
-                triggerMathJax(feedbackBox);
 
             } else {
                 playWrongSound();
                 gameState.combo = 0;
                 gameState.currentWrongCount += 1;
                 saveGameState();
-
-                const encourageMsg = ENCOURAGE_MESSAGES[Math.floor(Math.random() * ENCOURAGE_MESSAGES.length)];
-
-                if (gameState.currentWrongCount >= 2) {
-                    toggleQuizRescueHint(true);
-                }
-
-                feedbackBox.className = 'p-6 rounded-2xl space-y-4 border-2 border-rose-200 bg-rose-50/90 text-rose-950 transition-all block shadow-sm';
-                feedbackBox.innerHTML = `
-                    <div class="flex items-center gap-3 text-xl font-black text-rose-700">
-                        <i class="fa-solid fa-circle-xmark text-2xl"></i> <span>${encourageMsg}</span>
-                    </div>
-                    <div class="text-base md:text-lg font-medium bg-white/90 p-5 rounded-xl border border-rose-200 leading-relaxed text-slate-800 space-y-2">
-                        <div class="text-rose-700 font-bold">目前累計答錯次數：第 ${gameState.currentWrongCount} 次。</div>
-                        ${gameState.currentWrongCount >= 2 ? '<div class="text-amber-700 font-extrabold">💡 偵測到多次挑戰，已自動為你展開上方的「短除法救援圖解」囉！參考圖解再試一次吧！</div>' : '<div class="text-slate-600">再檢查看看算式，或點擊上方的「💡 需要提示救援嗎？」查看圖解輔助喔！</div>'}
-                    </div>
-                `;
-
-                actionContainer.innerHTML = `
-                    <div class="flex flex-col sm:flex-row gap-3">
-                        <button onclick="retryCurrentQuestion()" class="flex-1 py-4 bg-rose-600 hover:bg-rose-700 text-white font-extrabold rounded-2xl shadow-lg hover:shadow-rose-300 transition-all text-lg flex items-center justify-center gap-2 cursor-pointer">
-                            <i class="fa-solid fa-rotate-left"></i> <span>再試一次</span>
-                        </button>
-                        <button onclick="renderNextQuestion()" class="px-6 py-4 bg-slate-200 hover:bg-slate-300 text-slate-700 font-extrabold rounded-2xl transition-all text-lg cursor-pointer">
-                            跳過此題
-                        </button>
-                    </div>
-                `;
-
                 updateGamificationUI();
-                triggerMathJax(feedbackBox);
-            }
-        }
 
-        function retryCurrentQuestion() {
-            const feedbackBox = document.getElementById('quizFeedbackBox');
-            const actionContainer = document.getElementById('quizActionContainer');
+                const randomEncourage = ENCOURAGE_MESSAGES[Math.floor(Math.random() * ENCOURAGE_MESSAGES.length)];
 
-            if (feedbackBox) {
-                feedbackBox.classList.add('hidden');
-            }
+                if (gameState.currentWrongCount === 1) {
+                    feedbackBox.className = "p-6 rounded-2xl space-y-4 border-2 border-amber-300 bg-amber-50/90 text-amber-950 transition-all animate-fade-in-step";
+                    feedbackBox.innerHTML = `
+                        <div class="flex items-center gap-2 font-black text-xl text-amber-800">
+                            <i class="fa-solid fa-triangle-exclamation text-amber-500"></i> ${randomEncourage}（第 1 次嘗試未答對）
+                        </div>
+                        <div class="text-slate-700 text-base leading-relaxed">
+                            別氣餒！建議你可以點擊上方 <b>💡 提示救援</b> 查看步驟指導，重新調整你的答案再提交一次喔！
+                        </div>
+                    `;
+                } else {
+                    feedbackBox.className = "p-6 rounded-2xl space-y-4 border-2 border-rose-300 bg-rose-50/90 text-rose-950 transition-all animate-fade-in-step";
+                    feedbackBox.innerHTML = `
+                        <div class="flex items-center gap-2 font-black text-xl text-rose-700">
+                            <i class="fa-solid fa-circle-xmark"></i> ${randomEncourage}（已為你開啟完整步驟解析）
+                        </div>
+                        <div class="bg-white/90 p-5 rounded-xl border border-rose-200 text-slate-800 text-base space-y-2 leading-relaxed">
+                            <div class="font-bold text-rose-900">📖 完整解析：</div>
+                            ${q.solution}
+                        </div>
+                    `;
 
-            if (gameState.currentQuestion && gameState.currentQuestion.type === 'input') {
-                const inputEl = document.getElementById('quizInputAnswer');
-                if (inputEl) {
-                    inputEl.value = '';
-                    inputEl.focus();
+                    toggleQuizRescueHint(true);
+
+                    const actionContainer = document.getElementById('quizActionContainer');
+                    if (actionContainer) {
+                        actionContainer.innerHTML = `
+                            <button onclick="renderNextQuestion()" class="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-extrabold rounded-2xl shadow-lg hover:opacity-95 active:scale-98 transition-all text-lg cursor-pointer flex items-center justify-center gap-2">
+                                <span>了解解析，前往下一題</span> <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        `;
+                    }
                 }
             }
 
-            if (actionContainer) {
-                actionContainer.innerHTML = `
-                    <button id="btnSubmitAnswer" onclick="submitCurrentAnswer()" class="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-extrabold rounded-2xl shadow-lg hover:shadow-indigo-300 hover:opacity-95 active:scale-98 transition-all text-lg cursor-pointer">
-                        提交答案
-                    </button>
-                `;
-            }
+            triggerMathJax(feedbackBox);
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
+        window.addEventListener('DOMContentLoaded', () => {
             loadGameState();
             initCandyChoiceGrid();
             runBlockLabDivision();
             generateRainbow();
-            initPrimeSieveGrid();
-            changePrimeFactorDemo();
-            initPrimePractice();
-            changeGcdNumbers();
-            changeLcmNumbers();
-            initGcdPractice();
-            initLcmPractice();
-            changeStandardFactorDemo();
-            initStandardPractice();
-            checkBadgeUnlocks();
+            initNumberGrid(currentGridMax);
 
-            if (gameState.activeTab) {
-                switchTab(gameState.activeTab);
+            const initialTab = gameState.activeTab || 'tab-prereq';
+            switchTab(initialTab);
+
+            if (initialTab === 'tab-concepts') {
+                initPrimeSieveGrid();
+                changePrimeFactorDemo();
+                initPrimePractice();
+                initGcdPractice();
+                initLcmPractice();
+                changeStandardFactorDemo();
+                initStandardPractice();
             }
+
+            checkBadgeUnlocks();
+            updateBadgesUI();
+            triggerMathJax();
         });
     </script>
 </body>
