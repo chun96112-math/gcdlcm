@@ -99,41 +99,98 @@
             z-index: 9999;
         }
 
-        .short-div-table {
-            border-collapse: collapse;
-            margin: 0 auto;
-            font-family: monospace;
-            font-weight: 700;
-        }
-        .short-div-table td {
-            padding: 8px 16px;
-            text-align: center;
-            font-size: 1.5rem;
-        }
-        .short-div-divisor {
-            border-right: 3px solid #4F46E5;
-            color: #4F46E5;
-        }
-        .short-div-row-border {
-            border-bottom: 3px solid #4F46E5;
-        }
-        .l-highlight-left {
-            background-color: #EEF2FF;
-            border-radius: 8px 0 0 8px;
-        }
-        .l-highlight-bottom {
-            background-color: #ECFDF5;
-            border-radius: 0 0 8px 8px;
-        }
+		/* 【短除法專用】只有左側除數與 L 型框線逐層階梯內縮，右側被除數欄位完全垂直對齊、個位十位靠右對齊 */
+		.short-div-ladder {
+			--step-w: 1.65rem;
+			--border-w: 2.5px;
+			--cell-w: 2.5rem;
+			--cell-gap: 1.25rem;
+			display: inline-flex;
+			flex-direction: column;
+			align-items: flex-start;
+			font-family: 'Noto Sans TC', sans-serif;
+			font-variant-numeric: tabular-nums;
+			font-weight: 800;
+			font-size: 1.38rem;
+			line-height: 1.3;
+			color: #1e293b;
+			user-select: none;
+		}
 
-        @keyframes fadeInStep {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in-step {
-            animation: fadeInStep 0.5s ease-out forwards;
-        }
+		.short-div-row {
+			display: flex;
+			align-items: stretch;
+			padding-left: calc(var(--step, 0) * var(--step-w));
+		}
 
+		.short-div-divisor {
+			width: var(--step-w);
+			min-width: var(--step-w);
+			padding: 4px 4px 3px 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #4338ca;
+			background-color: #eef2ff;
+			border-radius: 6px 0 0 0;
+		}
+
+		.short-div-quotients {
+			display: flex;
+			align-items: center;
+			gap: var(--cell-gap);
+			padding: 4px 12px 3px calc((var(--total-steps, 1) - var(--step, 0) - 1) * var(--step-w) + 10px);
+			border-left: var(--border-w) solid #4f46e5;
+			border-bottom: var(--border-w) solid #4f46e5;
+			background-color: #ffffff;
+		}
+
+		.short-div-q {
+			width: var(--cell-w);
+			min-width: var(--cell-w);
+			text-align: right;
+			padding-right: 0.35rem;
+		}
+
+		.short-div-bottom {
+			display: flex;
+			align-items: center;
+			gap: var(--cell-gap);
+			padding: 5px 12px 3px calc(var(--total-steps, 1) * var(--step-w) + var(--border-w) + 10px);
+			color: #475569;
+		}
+
+		.short-div-bottom.is-lcm {
+			color: #0f766e;
+		}
+
+		.short-div-bottom.is-lcm .short-div-q {
+			background-color: #f0fdfa;
+			border-radius: 6px;
+			padding-top: 2px;
+			padding-bottom: 2px;
+		}
+
+		.short-div-bottom.is-prime-one {
+			color: #047857;
+		}
+
+		.short-div-bottom.is-prime-one .short-div-q {
+			background-color: #ecfdf5;
+			border-radius: 6px;
+			padding-top: 2px;
+			padding-bottom: 2px;
+		}
+
+		@keyframes fadeInStep {
+			from { opacity: 0; transform: translateY(15px); }
+			to { opacity: 1; transform: translateY(0); }
+		}
+
+		.animate-fade-in-step {
+			animation: fadeInStep 0.5s ease-out forwards;
+		}
+		
         /* 彩虹拱橋與因數對小卡聯動高亮樣式 */
         .rainbow-arc {
             transition: stroke-width 0.25s ease, filter 0.25s ease, opacity 0.25s ease;
@@ -162,7 +219,7 @@
 		/* 只微調「互動百數篩法」區域的垂直高度 */
 		@media (max-width: 1280px) and (max-height: 860px) {
 		  #primeSieveGrid {
-			max-width: 960px !important;
+			max-width: 100% !important;
 			gap: 4px !important;
 			padding: 8px !important;
 		  }
@@ -188,6 +245,33 @@
 			font-size: 0.85rem !important;
 		  }
 		}
+		
+		/* 防止平板橫／直向切換時水平溢出與整體偏移 */
+		html, body {
+			overflow-x: hidden;
+			max-width: 100vw;
+		}
+		.rwd-scroll-x {
+			max-width: 100%;
+			overflow-x: auto;
+			-webkit-overflow-scrolling: touch;
+		}
+		.rwd-media-fit svg,
+		.rwd-media-fit img,
+		.rwd-media-fit canvas {
+			max-width: 100%;
+			height: auto;
+		}
+
+		/* 平板直式／橫式過渡區間（768px～1180px）統一格距與卡片寬度，避免轉向跳動 */
+		@media (max-width: 1180px) {
+		  #primeSieveGrid,
+		  #interactiveNumberGrid {
+			max-width: 100%;
+			gap: 0.35rem;
+		  }
+		}
+		
     </style>
 </head>
 <body class="text-slate-800 pb-12 text-base">
@@ -203,7 +287,7 @@
 				</div>
 				<div>
 					<h1 class="text-2xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600">
-						PASSION 因倍數大冒險
+						PASSION-因倍數大冒險
 					</h1>
 					<p class="text-lg text-slate-600 font-semibold">國中小數學玩家的冒險基地</p>
 				</div>
@@ -252,7 +336,7 @@
 		</nav>
 	</header>
 
-	<main class="max-w-6xl mx-auto px-4 mt-6">
+	<main class="w-full max-w-6xl mx-auto px-3 sm:px-4 mt-4 sm:mt-6 overflow-x-hidden">
 
 		<!-- ================= MODULE 1: 新手任務 ================= -->
 		<section id="tab-prereq" class="tab-content space-y-6">
@@ -2461,6 +2545,28 @@
 			initStandardPractice();
 		}
 
+		const TAB_BTN_ACTIVE_CLASS =
+			'tab-btn px-4 py-2.5 rounded-xl text-lg md:text-xl font-bold flex items-center gap-2 transition-all shrink-0 bg-indigo-600 text-white shadow-md';
+
+		const TAB_BTN_INACTIVE_CLASS =
+			'tab-btn px-4 py-2.5 rounded-xl text-lg md:text-xl font-bold flex items-center gap-2 transition-all shrink-0 bg-white text-slate-700 hover:bg-slate-100 border border-slate-200/60';
+
+		function syncTabButtonState(activeTabId) {
+			document.querySelectorAll('.tab-btn').forEach(btn => {
+				btn.className = TAB_BTN_INACTIVE_CLASS;
+			});
+
+			const activeBtn =
+				document.getElementById(`btn-${activeTabId}`) ||
+				document.getElementById(`btn-${activeTabId.replace('tab-', '')}`);
+			if (activeBtn) {
+				activeBtn.className = TAB_BTN_ACTIVE_CLASS;
+			}
+		}
+
+		let prereqInitialized = false;
+		let conceptInitialized = false;
+
 		function switchTab(tabId, options = {}) {
 			const targetTabId = tabId.startsWith('tab-') ? tabId : `tab-${tabId}`;
 			gameState.activeTab = targetTabId;
@@ -2468,44 +2574,53 @@
 
 			// 切換分頁時，確保闖關挑戰回到 4 個關卡的入口畫面
 			exitQuizToStageSelect();
-			// 重置新手任務與技能解鎖的所有互動按鈕狀態
-			resetAllPrereqInteractions();
-			resetAllConceptInteractions();
+
+			// 僅在首次進入時初始化互動狀態，避免切分頁洗掉既有操作
+			if (!prereqInitialized) {
+				resetAllPrereqInteractions();
+				prereqInitialized = true;
+			}
+			if (!conceptInitialized) {
+				resetAllConceptInteractions();
+				conceptInitialized = true;
+			}
 
 			document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-			
-			document.querySelectorAll('.tab-btn').forEach(btn => {
-				btn.classList.remove('bg-indigo-600', 'text-white', 'shadow-md');
-				btn.classList.add('bg-white', 'text-slate-600');
-			});
 
 			const activeTab = document.getElementById(targetTabId);
 			if (activeTab) {
 				activeTab.classList.remove('hidden');
 			}
-			
-			const activeBtn = document.getElementById(`btn-${targetTabId}`) || document.getElementById(`btn-${tabId.replace('tab-', '')}`);
-			if (activeBtn) {
-				activeBtn.classList.remove('bg-white', 'text-slate-600');
-				activeBtn.classList.add('bg-indigo-600', 'text-white', 'shadow-md');
-			}
-			
+
 			if (targetTabId === 'tab-prereq') {
 				const targetSubPage = options.prereqSubPage || 1;
 				switchPrereqSubPage(targetSubPage);
+				syncTabButtonState(targetTabId);
 				return;
 			} else if (targetTabId === 'tab-concepts') {
 				const targetConceptSub = options.conceptSubTab || 'c-sub-prime';
 				switchConceptSubTab(targetConceptSub);
+				syncTabButtonState(targetTabId);
 				return;
 			}
-			
+
+			syncTabButtonState(targetTabId);
+
 			if (typeof triggerMathJax === 'function') {
 				triggerMathJax(activeTab);
 			}
 
 			scrollPageToTop();
 		}
+
+		window.addEventListener('orientationchange', () => {
+			setTimeout(() => {
+				if (typeof resizeCanvas === 'function') resizeCanvas();
+				if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
+					window.MathJax.typesetPromise().catch(() => {});
+				}
+			}, 150);
+		});
 
 		let currentMultStep = 0;
 
@@ -3377,6 +3492,36 @@ let isLabFormulasRevealed = false;
             return factors;
         }
 
+        /* 【短除法核心函式】只有左側除數與 L 型短除號階梯式排列，右側被除數的十位、個位完全垂直靠右對齊 */
+        function renderLadderShortDivision({ rows, bottomCells, bottomStyle = '' }) {
+            const totalSteps = Math.max(rows.length, 1);
+
+            const rowsHtml = rows.map((r, idx) => {
+                const quotientsHtml = r.quotients
+                    .map(q => `<span class="short-div-q">${q}</span>`)
+                    .join('');
+                return `
+                    <div class="short-div-row" style="--step: ${idx}; --total-steps: ${totalSteps};">
+                        <div class="short-div-divisor">${r.divisor}</div>
+                        <div class="short-div-quotients">${quotientsHtml}</div>
+                    </div>
+                `;
+            }).join('');
+
+            const bottomCellsHtml = bottomCells
+                .map(c => `<span class="short-div-q">${c}</span>`)
+                .join('');
+
+            return `
+                <div class="short-div-ladder" style="--total-steps: ${totalSteps};">
+                    ${rowsHtml}
+                    <div class="short-div-bottom ${bottomStyle}" style="--total-steps: ${totalSteps};">
+                        ${bottomCellsHtml}
+                    </div>
+                </div>
+            `;
+        }
+
         const PRIME_DEMO_NUMS = [12, 18, 24, 30, 36, 42, 45, 60];
         let currentPrimeDemoIdx = 0;
 
@@ -3388,17 +3533,17 @@ let isLabFormulasRevealed = false;
             const uniquePrimes = [...new Set(pFactors)];
 
             let temp = num;
-            let rows = '';
-            pFactors.forEach(p => {
-                rows += `
-                    <tr>
-                        <td class="short-div-divisor l-highlight-left">$${p}$</td>
-                        <td class="short-div-row-border">$${temp}$</td>
-                    </tr>
-                `;
+            const ladderRows = pFactors.map(p => {
+                const row = { divisor: p, quotients: [temp] };
                 temp /= p;
+                return row;
             });
-            rows += `<tr><td></td><td class="text-emerald-700 font-black">$1$</td></tr>`;
+
+            const ladderHtml = renderLadderShortDivision({
+                rows: ladderRows,
+                bottomCells: [1],
+                bottomStyle: 'is-prime-one'
+            });
 
             const area = document.getElementById('prime-factor-demo-area');
             if (!area) return;
@@ -3422,11 +3567,11 @@ let isLabFormulasRevealed = false;
                 <div class="bg-indigo-50/60 p-5 rounded-2xl border border-indigo-200 space-y-3">
                     <span class="text-base font-bold px-3 py-1 bg-indigo-600 text-white rounded-lg">方法二：短除法質因數分解</span>
                     <p class="text-base text-slate-600 leading-relaxed">
-                        左側除數<b>只能放質數</b>（從最小的 $2, 3, 5, \\dots$ 試除），一路除到商變成 $1$ 為止：
+                        左側除數<b>只能放質數</b>（從最小的 $2, 3, 5, \\dots$ 試除），逐層向右階梯式內縮除到商變成 $1$ 為止：
                     </p>
-                    <div class="bg-white p-4 rounded-xl border border-indigo-100 shadow-sm flex flex-col items-center">
-                        <table class="short-div-table">${rows}</table>
-                        <div class="mt-3 text-lg font-bold text-indigo-900 bg-indigo-100 px-4 py-2 rounded-lg text-center">
+                    <div class="bg-white p-5 rounded-xl border border-indigo-100 shadow-sm flex flex-col items-center rwd-scroll-x">
+                        ${ladderHtml}
+                        <div class="mt-4 text-lg font-bold text-indigo-900 bg-indigo-100 px-4 py-2 rounded-lg text-center">
                             $${num} = ${pFactors.join(' \\times ')}$
                         </div>
                     </div>
@@ -3571,55 +3716,34 @@ let isLabFormulasRevealed = false;
         }
 
         function generateShortDivisionHTML(a, b, isLcm = false) {
-            let x = a, y = b;
-            let steps = [];
-            for (let d = 2; d <= Math.min(x, y); d++) {
-                while (x % d === 0 && y % d === 0) {
-                    steps.push({ divisor: d, num1: x, num2: y });
-                    x /= d;
-                    y /= d;
-                }
-            }
-            let shortDivRows = '';
-            steps.forEach(s => {
-                shortDivRows += `
-                    <tr>
-                        <td class="short-div-divisor l-highlight-left">$${s.divisor}$</td>
-                        <td class="short-div-row-border">$${s.num1}$</td>
-                        <td class="short-div-row-border">$${s.num2}$</td>
-                    </tr>`;
-            });
-            shortDivRows += `
-                <tr>
-                    <td class="${isLcm ? 'l-highlight-left' : ''}"></td>
-                    <td class="${isLcm ? 'l-highlight-bottom font-bold text-teal-800' : 'text-slate-500'}">$${x}$</td>
-                    <td class="${isLcm ? 'l-highlight-bottom font-bold text-teal-800' : 'text-slate-500'}">$${y}$</td>
-                </tr>`;
-            return `<table class="short-div-table">${shortDivRows}</table>`;
-        }
+			const data = getGcdDetails(a, b);
+			const rows = data.steps.map(s => ({
+				divisor: s.divisor,
+				quotients: [s.num1, s.num2]
+			}));
+			return renderLadderShortDivision({
+				rows,
+				bottomCells: [data.remA, data.remB],
+				bottomStyle: isLcm ? 'is-lcm' : ''
+			});
+		}
 
         function changeGcdNumbers() {
             const randomPair = GCD_PAIRS[Math.floor(Math.random() * GCD_PAIRS.length)];
             const data = getGcdDetails(randomPair[0], randomPair[1]);
             const commonFactors = data.factorsA.filter(f => data.factorsB.includes(f));
 
-            let shortDivRows = '';
-            data.steps.forEach(s => {
-                shortDivRows += `
-                    <tr>
-                        <td class="short-div-divisor l-highlight-left">$${s.divisor}$</td>
-                        <td class="short-div-row-border">$${s.num1}$</td>
-                        <td class="short-div-row-border">$${s.num2}$</td>
-                    </tr>`;
+            const ladderRows = data.steps.map(s => ({
+                divisor: s.divisor,
+                quotients: [s.num1, s.num2]
+            }));
+            const shortDivHtml = renderLadderShortDivision({
+                rows: ladderRows,
+                bottomCells: [data.remA, data.remB],
+                bottomStyle: ''
             });
-            shortDivRows += `
-                <tr>
-                    <td></td>
-                    <td class="text-slate-500">$${data.remA}$</td>
-                    <td class="text-slate-500">$${data.remB}$</td>
-                </tr>`;
 
-            let expText = data.steps.map(s => s.divisor).join(' × ');
+            let expText = data.steps.length > 0 ? data.steps.map(s => s.divisor).join(' \\times ') : '1';
 
             const html = `
                 <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3">
@@ -3636,11 +3760,11 @@ let isLabFormulasRevealed = false;
                 <div class="bg-indigo-50/60 p-5 rounded-2xl border border-indigo-200 space-y-3">
                     <span class="text-xl font-bold px-3 py-1 bg-indigo-600 text-white rounded-lg">方法二：短除法</span>
                     <p class="text-lg md:text-lg text-slate-600 leading-relaxed">
-                        用兩個數共同的質因數一直除，直到<b>沒有共同的因數</b>為止。<br>左邊除數的乘積，就是<strong class="text-indigo-700 font-bold">最大公因數</strong>！
+                        用兩個數共同的質因數逐層向右階梯式內縮除，直到<b>沒有共同的因數</b>為止。<br>左邊除數的乘積，就是<strong class="text-indigo-700 font-bold">最大公因數</strong>！
                     </p>
-                    <div class="bg-white p-4 rounded-xl border border-indigo-100 shadow-sm flex flex-col items-center">
-                        <table class="short-div-table">${shortDivRows}</table>
-                        <div class="mt-3 text-lg font-bold text-indigo-800 bg-indigo-100 px-4 py-2 rounded-lg text-center">
+                    <div class="bg-white p-5 rounded-xl border border-indigo-100 shadow-sm flex flex-col items-center rwd-scroll-x">
+                        ${shortDivHtml}
+                        <div class="mt-4 text-lg font-bold text-indigo-800 bg-indigo-100 px-4 py-2 rounded-lg text-center">
                             最大公因數 $= \\underbrace{${expText}}_{\\text{左側公因數相乘}} = ${data.gcd}$
                         </div>
                     </div>
@@ -3659,24 +3783,18 @@ let isLabFormulasRevealed = false;
             for (let i = 1; i <= 6; i++) multA.push(data.originalA * i);
             for (let i = 1; i <= 6; i++) multB.push(data.originalB * i);
 
-            let shortDivRows = '';
-            data.steps.forEach(s => {
-                shortDivRows += `
-                    <tr>
-                        <td class="short-div-divisor l-highlight-left">$${s.divisor}$</td>
-                        <td class="short-div-row-border">$${s.num1}$</td>
-                        <td class="short-div-row-border">$${s.num2}$</td>
-                    </tr>`;
+            const ladderRows = data.steps.map(s => ({
+                divisor: s.divisor,
+                quotients: [s.num1, s.num2]
+            }));
+            const shortDivHtml = renderLadderShortDivision({
+                rows: ladderRows,
+                bottomCells: [data.remA, data.remB],
+                bottomStyle: 'is-lcm'
             });
-            shortDivRows += `
-                <tr>
-                    <td class="l-highlight-left"></td>
-                    <td class="l-highlight-bottom font-bold text-teal-800">$${data.remA}$</td>
-                    <td class="l-highlight-bottom font-bold text-teal-800">$${data.remB}$</td>
-                </tr>`;
 
-            let leftText = data.steps.map(s => s.divisor).join(' × ');
-            let bottomText = `${data.remA} × ${data.remB}`;
+            let leftText = data.steps.length > 0 ? data.steps.map(s => s.divisor).join(' \\times ') : '1';
+            let bottomText = `${data.remA} \\times ${data.remB}`;
 
             const html = `
                 <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3">
@@ -3692,11 +3810,11 @@ let isLabFormulasRevealed = false;
                 <div class="bg-teal-50/60 p-5 rounded-2xl border border-teal-200 space-y-3">
                     <span class="text-xl font-bold px-3 py-1 bg-teal-600 text-white rounded-lg">方法二：短除法</span>
                     <p class="text-lg md:text-lg text-slate-600 leading-relaxed">
-                        先找兩個數共同的質因數。能一起除就繼續。把<b>左邊和最下面的數全部乘起來</b>，就是<strong class="text-indigo-700 font-bold">最小公倍數</strong>！
+                        先找兩個數共同的質因數，逐層向右階梯式內縮繼續除。把<b>左邊和最下面的數全部乘起來</b>，就是<strong class="text-indigo-700 font-bold">最小公倍數</strong>！
                     </p>
-                    <div class="bg-white p-4 rounded-xl border border-teal-100 shadow-sm flex flex-col items-center">
-                        <table class="short-div-table">${shortDivRows}</table>
-                        <div class="mt-3 text-lg font-bold text-teal-800 bg-teal-100 px-4 py-2 rounded-lg text-center">
+                    <div class="bg-white p-5 rounded-xl border border-teal-100 shadow-sm flex flex-col items-center rwd-scroll-x">
+                        ${shortDivHtml}
+                        <div class="mt-4 text-lg font-bold text-teal-800 bg-teal-100 px-4 py-2 rounded-lg text-center">
                             最小公倍數 $= \\underbrace{${leftText}}_{\\text{左側}} \\times \\underbrace{${bottomText}}_{\\text{底部}} = ${lcmVal}$
                         </div>
                     </div>
@@ -3855,9 +3973,9 @@ let isLabFormulasRevealed = false;
                 aExpr: '2^2 \\times 5^2',
                 bExpr: '2^4 \\times 3 \\times 5',
                 rows: [
-                    { base: '2', aPow: '2^2', bPow: '2^4', gcdPow: '2^2', lcmPow: '2^4', note: '共同底數 2：取小 2^2，取大 2^4' },
-                    { base: '3', aPow: '無', bPow: '3^1', gcdPow: '無', lcmPow: '3', note: '只有 B 有 3：公倍數要納入 3' },
-                    { base: '5', aPow: '5^2', bPow: '5^1', gcdPow: '5', lcmPow: '5^2', note: '共同底數 5：取小 5，取大 5^2' }
+                    { base: '2', aPow: '2^2', bPow: '2^4', gcdPow: '2^2', lcmPow: '2^4', note: '共同底數 2：取較小次方 2^2、較大次方 2^4' },
+                    { base: '3', aPow: '無 (3^0)', bPow: '3^1', gcdPow: '無', lcmPow: '3', note: '只有 B 有 3：公因數不取，公倍數要全包' },
+                    { base: '5', aPow: '5^2', bPow: '5^1', gcdPow: '5^1', lcmPow: '5^2', note: '共同底數 5：取較小次方 5^1、較大次方 5^2' }
                 ],
                 gcdAns: '2^2 \\times 5',
                 lcmAns: '2^4 \\times 3 \\times 5^2'
@@ -3872,97 +3990,99 @@ let isLabFormulasRevealed = false;
             const area = document.getElementById('standard-factor-demo-area');
             if (!area) return;
 
-            let tableRows = demo.rows.map(r => `
-                <tr class="border-b border-slate-200 text-center">
-                    <td class="p-3 font-black text-indigo-900 bg-slate-50">底數 $${r.base}$</td>
-                    <td class="p-3 font-mono font-bold">$${r.aPow}$</td>
-                    <td class="p-3 font-mono font-bold">$${r.bPow}$</td>
-                    <td class="p-3 font-mono font-black text-indigo-700 bg-indigo-50/70">$${r.gcdPow}$</td>
-                    <td class="p-3 font-mono font-black text-teal-700 bg-teal-50/70">$${r.lcmPow}$</td>
-                </tr>
-            `).join('');
-
             area.innerHTML = `
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
-                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
-                        <span class="text-xs font-bold text-slate-500">甲數標準分解式</span>
-                        <div class="text-2xl font-black text-slate-800 mt-1">$A = ${demo.aExpr}$</div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="p-4 bg-indigo-50 rounded-2xl border border-indigo-200 text-center">
+                        <span class="text-xs font-extrabold text-indigo-600 uppercase">數 A 的標準分解式</span>
+                        <div class="text-2xl font-black text-indigo-950 mt-1">$A = ${demo.aExpr}$</div>
                     </div>
-                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
-                        <span class="text-xs font-bold text-slate-500">乙數標準分解式</span>
-                        <div class="text-2xl font-black text-slate-800 mt-1">$B = ${demo.bExpr}$</div>
+                    <div class="p-4 bg-purple-50 rounded-2xl border border-purple-200 text-center">
+                        <span class="text-xs font-extrabold text-purple-600 uppercase">數 B 的標準分解式</span>
+                        <div class="text-2xl font-black text-purple-950 mt-1">$B = ${demo.bExpr}$</div>
                     </div>
                 </div>
 
-                <div class="overflow-x-auto rounded-2xl border border-slate-200 shadow-sm">
-                    <table class="w-full text-base">
-                        <thead class="bg-slate-100 text-slate-800 font-black">
-                            <tr>
+                <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                    <table class="w-full text-center border-collapse bg-white text-base">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700 font-extrabold border-b border-slate-200">
                                 <th class="p-3">質因數底數</th>
-                                <th class="p-3">甲數 ($A$)</th>
-                                <th class="p-3">乙數 ($B$)</th>
-                                <th class="p-3 bg-indigo-100 text-indigo-900">最大公因數（取共同、次方小）</th>
-                                <th class="p-3 bg-teal-100 text-teal-900">最小公倍數（取全部、次方大）</th>
+                                <th class="p-3 text-indigo-700">A 的次方</th>
+                                <th class="p-3 text-purple-700">B 的次方</th>
+                                <th class="p-3 bg-blue-50 text-blue-900">最大公因數（取共同、次方小）</th>
+                                <th class="p-3 bg-teal-50 text-teal-900">最小公倍數（全都要、次方大）</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white">
-                            ${tableRows}
+                        <tbody class="divide-y divide-slate-100 font-bold">
+                            ${demo.rows.map(r => `
+                                <tr>
+                                    <td class="p-3 font-black text-slate-800">$${r.base}$</td>
+                                    <td class="p-3 text-indigo-800">$${r.aPow}$</td>
+                                    <td class="p-3 text-purple-800">$${r.bPow}$</td>
+                                    <td class="p-3 bg-blue-50/50 text-blue-900 font-black">${r.gcdPow === '無' ? '<span class="text-slate-400 text-sm">不取</span>' : `$${r.gcdPow}$`}</td>
+                                    <td class="p-3 bg-teal-50/50 text-teal-900 font-black">$${r.lcmPow}$</td>
+                                </tr>
+                            `).join('')}
                         </tbody>
                     </table>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="p-4 bg-indigo-50 border-2 border-indigo-200 rounded-2xl space-y-1">
-                        <div class="text-sm font-black text-indigo-700">💡 國中符號 $(A, B)$ 代表最大公因數：</div>
-                        <div class="text-xl font-black text-indigo-950">$(A, B) = ${demo.gcdAns}$</div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+                    <div class="p-5 bg-blue-50/80 border-2 border-blue-200 rounded-2xl space-y-1.5">
+                        <div class="text-sm font-black text-blue-800">✅ 最大公因數 $(A, B)$：找「共同底數」，次方「取最小」</div>
+                        <div class="text-2xl font-black text-blue-950">$(A, B) = ${demo.gcdAns}$</div>
                     </div>
-                    <div class="p-4 bg-teal-50 border-2 border-teal-200 rounded-2xl space-y-1">
-                        <div class="text-sm font-black text-teal-700">🚀 國中符號 $[A, B]$ 代表最小公倍數：</div>
-                        <div class="text-xl font-black text-teal-950">$[A, B] = ${demo.lcmAns}$</div>
+                    <div class="p-5 bg-teal-50/80 border-2 border-teal-200 rounded-2xl space-y-1.5">
+                        <div class="text-sm font-black text-teal-800">✅ 最小公倍數 $[A, B]$：找「所有底數」，次方「取最大」</div>
+                        <div class="text-2xl font-black text-teal-950">$[A, B] = ${demo.lcmAns}$</div>
                     </div>
                 </div>
             `;
             triggerMathJax(area);
         }
 
-        let standardPracticeData = {};
+        let stdPracticeCurrent = {};
         function initStandardPractice() {
             const container = document.getElementById('standard-practice-container');
             if (!container) return;
 
-            const q1Pool = [
-                { num: 36, options: ['$2^2 \\times 3^2$', '$2^3 \\times 3$', '$4 \\times 9$', '$2 \\times 3^3$'], ansIdx: 0, explain: '36 = 4 × 9 = 2×2×3×3 = 2² × 3²（注意 4 和 9 不是質數，不能留在標準分解式中）。' },
-                { num: 48, options: ['$2^3 \\times 6$', '$2^4 \\times 3$', '$2^3 \\times 3^2$', '$16 \\times 3$'], ansIdx: 1, explain: '48 = 16 × 3 = 2×2×2×2×3 = 2⁴ × 3。' },
-                { num: 75, options: ['$3 \\times 25$', '$3^2 \\times 5$', '$3 \\times 5^2$', '$5^3$'], ansIdx: 2, explain: '75 = 3 × 25 = 3 × 5 × 5 = 3 × 5²。' }
-            ];
-            const q2Pool = [
+            const bank = [
                 {
-                    prompt: '已知 $A = 2^3 \\times 3^2 \\times 5$，$B = 2^2 \\times 3^4$，則 $(A, B)$（最大公因數）為何？',
-                    options: ['$2^2 \\times 3^2$', '$2^3 \\times 3^4 \\times 5$', '$2^2 \\times 3^2 \\times 5$', '$2^3 \\times 3^2$'],
-                    ansIdx: 0,
-                    explain: '最大公因數只取「共同擁有的質因數」2 和 3，且次方取較小者：2² × 3²。'
+                    a: '2^3 \\times 3^2',
+                    b: '2^2 \\times 3^4 \\times 5',
+                    gcdOptions: ['2^2 \\times 3^2', '2^3 \\times 3^4', '2^2 \\times 3^2 \\times 5', '2^3 \\times 3^2 \\times 5'],
+                    gcdCorrect: 0,
+                    gcdReason: '最大公因數只能取「兩者共同擁有」的質因數（2 和 3），且次方取較小的：$2^2 \\times 3^2$。',
+                    lcmOptions: ['2^2 \\times 3^2', '2^3 \\times 3^4', '2^3 \\times 3^4 \\times 5', '2^2 \\times 3^4 \\times 5'],
+                    lcmCorrect: 2,
+                    lcmReason: '最小公倍數要把「出現過的所有質因數」都包進來（2、3、5），且次方取最大的：$2^3 \\times 3^4 \\times 5$。'
                 },
                 {
-                    prompt: '已知 $A = 2^2 \\times 5^3$，$B = 2^4 \\times 3 \\times 5$，則 $[A, B]$（最小公倍數）為何？',
-                    options: ['$2^2 \\times 5$', '$2^4 \\times 5^3$', '$2^4 \\times 3 \\times 5^3$', '$2^2 \\times 3 \\times 5$'],
-                    ansIdx: 2,
-                    explain: '最小公倍數要包含「所有出現的質因數」2、3、5，且次方取較大者：2⁴ × 3 × 5³。'
+                    a: '2 \\times 5^3 \\times 7',
+                    b: '2^2 \\times 3 \\times 5^2',
+                    gcdOptions: ['2 \\times 5^2', '2^2 \\times 5^3', '2 \\times 3 \\times 5^2 \\times 7', '2^2 \\times 3 \\times 5^3 \\times 7'],
+                    gcdCorrect: 0,
+                    gcdReason: '共同質因數只有 2 和 5，次方各取較小者，得到 $2^1 \\times 5^2 = 2 \\times 5^2$。',
+                    lcmOptions: ['2 \\times 5^2', '2^2 \\times 5^3', '2^2 \\times 3 \\times 5^3 \\times 7', '2 \\times 3 \\times 5^2 \\times 7'],
+                    lcmCorrect: 2,
+                    lcmReason: '全部出現過的底數 2、3、5、7 都要取，次方各取最大者，得到 $2^2 \\times 3 \\times 5^3 \\times 7$。'
                 }
             ];
-
-            const q1 = q1Pool[Math.floor(Math.random() * q1Pool.length)];
-            const q2 = q2Pool[Math.floor(Math.random() * q2Pool.length)];
-            standardPracticeData = { q1, q2 };
+            stdPracticeCurrent = bank[Math.floor(Math.random() * bank.length)];
 
             container.innerHTML = `
+                <div class="p-4 bg-purple-50 rounded-2xl border border-purple-200 text-center text-lg md:text-xl font-black text-purple-950">
+                    已知 $A = ${stdPracticeCurrent.a}$ ， $B = ${stdPracticeCurrent.b}$
+                </div>
+
                 <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3">
-                    <div class="text-lg md:text-xl font-extrabold text-slate-800">
-                        練習 1：請問 <b>$${q1.num}$</b> 的標準分解式是哪一個？
+                    <div class="text-lg font-extrabold text-slate-800">
+                        練習 1：請問 $A$ 與 $B$ 的<b>最大公因數</b> $(A, B)$ 是哪一個？
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        ${q1.options.map((opt, idx) => `
-                            <button onclick="checkStandardPractice(1, ${idx})" class="p-3.5 bg-white hover:bg-purple-50 border-2 border-slate-300 hover:border-purple-500 rounded-xl font-bold text-lg text-slate-800 cursor-pointer transition-all">
-                                ${opt}
+                        ${stdPracticeCurrent.gcdOptions.map((opt, idx) => `
+                            <button onclick="checkStdPractice(1, ${idx})" class="p-3.5 bg-white hover:bg-blue-50 border-2 border-slate-300 hover:border-blue-500 rounded-xl font-black text-lg text-slate-800 cursor-pointer transition-all">
+                                $${opt}$
                             </button>
                         `).join('')}
                     </div>
@@ -3970,13 +4090,13 @@ let isLabFormulasRevealed = false;
                 </div>
 
                 <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3">
-                    <div class="text-lg md:text-xl font-extrabold text-slate-800">
-                        練習 2：${q2.prompt}
+                    <div class="text-lg font-extrabold text-slate-800">
+                        練習 2：請問 $A$ 與 $B$ 的<b>最小公倍數</b> $[A, B]$ 是哪一個？
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        ${q2.options.map((opt, idx) => `
-                            <button onclick="checkStandardPractice(2, ${idx})" class="p-3.5 bg-white hover:bg-indigo-50 border-2 border-slate-300 hover:border-indigo-500 rounded-xl font-bold text-lg text-slate-800 cursor-pointer transition-all">
-                                ${opt}
+                        ${stdPracticeCurrent.lcmOptions.map((opt, idx) => `
+                            <button onclick="checkStdPractice(2, ${idx})" class="p-3.5 bg-white hover:bg-teal-50 border-2 border-slate-300 hover:border-teal-500 rounded-xl font-black text-lg text-slate-800 cursor-pointer transition-all">
+                                $${opt}$
                             </button>
                         `).join('')}
                     </div>
@@ -3986,309 +4106,460 @@ let isLabFormulasRevealed = false;
             triggerMathJax(container);
         }
 
-        function checkStandardPractice(qNum, selectedIdx) {
-            const qObj = qNum === 1 ? standardPracticeData.q1 : standardPracticeData.q2;
+        function checkStdPractice(qNum, chosenIdx) {
             const fb = document.getElementById(`std-feedback-${qNum}`);
             if (!fb) return;
-
             fb.classList.remove('hidden');
-            if (selectedIdx === qObj.ansIdx) {
+
+            const isCorrect = qNum === 1
+                ? chosenIdx === stdPracticeCurrent.gcdCorrect
+                : chosenIdx === stdPracticeCurrent.lcmCorrect;
+            const reason = qNum === 1 ? stdPracticeCurrent.gcdReason : stdPracticeCurrent.lcmReason;
+
+            if (isCorrect) {
                 playCorrectSound();
                 fb.className = "p-4 rounded-xl text-base font-bold bg-emerald-50 border-2 border-emerald-300 text-emerald-900";
-                fb.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i> 完全正確！${qObj.explain} 🎉`;
+                fb.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i> 完全正確！${reason} 🎉`;
             } else {
                 playWrongSound();
                 fb.className = "p-4 rounded-xl text-base font-bold bg-rose-50 border-2 border-rose-300 text-rose-900";
-                fb.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600"></i> 差一點點！提示：${qObj.explain}`;
+                fb.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600"></i> 再檢查看看喔！${reason}`;
             }
             triggerMathJax(fb);
         }
 
-        function generateStage1Question() {
-            const types = ['findFactor', 'findMultiple', 'checkFactor', 'countFactors'];
-            const type = types[Math.floor(Math.random() * types.length)];
-            const sampleNums = [12, 16, 18, 20, 24, 30, 36];
-            const num = sampleNums[Math.floor(Math.random() * sampleNums.length)];
-            const factors = getFactors(num);
-
-            if (type === 'findFactor') {
-                const wrongChoices = [5, 7, 11, 13, 14, 15, 17, 19, 21, 22, 23, 25].filter(x => !factors.includes(x));
-                const answer = factors[Math.floor(Math.random() * (factors.length - 2)) + 1] || factors[0];
-                const distractors = wrongChoices.sort(() => Math.random() - 0.5).slice(0, 3);
-                const options = [answer, ...distractors].sort(() => Math.random() - 0.5);
-
-                return {
-                    type: 'mc',
-                    prompt: `請問下列哪一個數字是 $${num}$ 的「因數」？`,
-                    options: options.map(o => `$${o}$`),
-                    answerIndex: options.indexOf(answer),
-                    explanation: `因為 $${num} \\div ${answer} = ${num / answer}$ 可以整除沒有餘數，所以 $${answer}$ 是 $${num}$ 的因數！`,
-                    rescueHTML: `<div class="space-y-2 text-lg"><p><b>💡 尋找因數妙招：</b>試著把 $${num}$ 除以各選項看看能不能整除！</p><p class="text-indigo-700 font-bold">$${num} = ${answer} \\times ${num / answer}$</p></div>`
-                };
-            } else if (type === 'findMultiple') {
-                const base = [4, 6, 7, 8, 9, 12, 15][Math.floor(Math.random() * 7)];
-                const answer = base * (Math.floor(Math.random() * 5) + 3);
-                const distractors = [answer + 1, answer - 2, answer + 3].filter(x => x % base !== 0);
-                const options = [answer, ...distractors].sort(() => Math.random() - 0.5);
-
-                return {
-                    type: 'mc',
-                    prompt: `請問下列哪一個數字是 $${base}$ 的「倍數」？`,
-                    options: options.map(o => `$${o}$`),
-                    answerIndex: options.indexOf(answer),
-                    explanation: `$${base} \\times ${answer / base} = ${answer}$，剛好可以整除，所以 $${answer}$ 是 $${base}$ 的倍數。`,
-                    rescueHTML: `<div class="space-y-2 text-lg"><p><b>💡 尋找倍數妙招：</b>把 $${base}$ 乘以 $1, 2, 3, 4 \\dots$，看看哪一個選項在乘法表裡！</p></div>`
-                };
-            } else if (type === 'countFactors') {
-                return {
+        const QUESTION_BANK = {
+            1: [
+                {
+                    type: 'choice',
+                    prompt: "下列哪一個數字<strong>是 36 的因數</strong>？",
+                    options: ["5", "8", "9", "15"],
+                    correctIndex: 2,
+                    explanation: "因為 $36 \\div 9 = 4$ 可以整除，沒有餘數，所以 $9$ 是 $36$ 的因數！",
+                    hint: "試試看哪一個選項可以讓 $36$ 除以它之後「餘數是 0」！",
+                    rescueHTML: `
+                        <p class="font-bold text-slate-700 mb-2">我們一起用除法來檢驗 36 能不能被各選項整除：</p>
+                        <ul class="list-disc pl-5 space-y-1 text-slate-700">
+                            <li>$36 \\div 5 = 7 \\dots 1$ （不能整除）</li>
+                            <li>$36 \\div 8 = 4 \\dots 4$ （不能整除）</li>
+                            <li><strong>$36 \\div 9 = 4$</strong> （剛好整除！）</li>
+                        </ul>
+                    `
+                },
+                {
                     type: 'input',
-                    prompt: `請問數字 $${num}$ 一共有「幾個」正因數？（請輸入阿拉伯數字）`,
-                    answer: factors.length.toString(),
-                    placeholder: "請輸入個數...",
-                    explanation: `$${num}$ 的因數有：$${factors.join(', ')}$，總共有 $${factors.length}$ 個。`,
-                    rescueHTML: `<div class="space-y-2 text-lg"><p><b>💡 尋找所有因數技巧：</b>利用乘法配對，找出所有相乘等於 $${num}$ 的整數：</p><p class="font-mono text-indigo-800 bg-white p-2 rounded border">$${factors.join(', ')}$</p></div>`
-                };
-            } else {
-                const candidate = Math.random() > 0.5 ? factors[Math.floor(Math.random() * factors.length)] : 7;
-                const isFactor = (num % candidate === 0);
-                return {
-                    type: 'mc',
-                    prompt: `請問 $${candidate}$ 是不是 $${num}$ 的因數？`,
-                    options: ["是，可以整除", "不是，不能整除"],
-                    answerIndex: isFactor ? 0 : 1,
-                    explanation: isFactor 
-                        ? `$${num} \\div ${candidate} = ${num / candidate}$，餘數為 $0$，所以是因數！` 
-                        : `$${num} \\div ${candidate} = ${Math.floor(num / candidate)} \\dots ${num % candidate}$，有餘數所以不是因數！`,
-                    rescueHTML: `<div class="space-y-2 text-lg"><p><b>💡 檢查能否整除：</b>計算 $${num} \\div ${candidate}$，看看餘數是不是 $0$ 喔！</p></div>`
-                };
-            }
-        }
-
-        function generateStage2Question() {
-            const pair = GCD_PAIRS[Math.floor(Math.random() * GCD_PAIRS.length)];
-            const a = pair[0], b = pair[1];
-            const ansGcd = gcd(a, b);
-            const commonFactors = getFactors(a).filter(f => getFactors(b).includes(f));
-            const shortDivHTML = generateShortDivisionHTML(a, b, false);
-
-            if (Math.random() > 0.4) {
-                return {
+                    prompt: "請寫出 <strong>24 的最大因數</strong>是多少？（請輸入數字）",
+                    answer: "24",
+                    explanation: "任何正整數「最大的因數」都是它自己本身，因此 $24$ 的最大因數就是 $24$。",
+                    hint: "想一想，一個數字最大的因數是誰呢？就是它自己！",
+                    rescueHTML: `
+                        <p class="font-bold text-slate-700">把 $24$ 的所有因數從小到大列出來看看：</p>
+                        <div class="p-3 bg-white rounded-xl border border-amber-200 font-mono font-bold text-center text-indigo-800 my-2">
+                            1, 2, 3, 4, 6, 8, 12, <strong class="text-rose-600 text-xl">24</strong>
+                        </div>
+                        <p class="text-slate-600">最大的那一個永遠都是數字本身喔！</p>
+                    `
+                },
+                {
+                    type: 'choice',
+                    prompt: "下列哪一個數字<strong>是 7 的倍數</strong>？",
+                    options: ["24", "35", "45", "52"],
+                    correctIndex: 1,
+                    explanation: "因為 $7 \\times 5 = 35$，所以 $35$ 是 $7$ 的倍數。",
+                    hint: "想一想九九乘法表中，$7$ 乘以多少會等於選項中的數字？",
+                    rescueHTML: `
+                        <p class="font-bold text-slate-700 mb-2">從小到大列出 $7$ 的倍數：</p>
+                        <div class="p-3 bg-white rounded-xl border border-amber-200 font-mono font-bold text-indigo-800">
+                            $7 \\times 1 = 7$、$7 \\times 2 = 14$、$7 \\times 3 = 21$、$7 \\times 4 = 28$、<strong class="text-rose-600">$7 \\times 5 = 35$</strong>
+                        </div>
+                    `
+                },
+                {
                     type: 'input',
-                    prompt: `請計算 $${a}$ 和 $${b}$ 的「最大公因數」是多少？`,
-                    answer: ansGcd.toString(),
-                    placeholder: "輸入最大公因數...",
-                    explanation: `$${a}$ 和 $${b}$ 的公因數有 $${commonFactors.join(', ')}$，所以最大公因數是 $${ansGcd}$。`,
+                    prompt: "1 到 30 之間，<strong>8 的倍數中最大的是多少</strong>？（請輸入數字）",
+                    answer: "24",
+                    explanation: "$8 \\times 1 = 8$，$8 \\times 2 = 16$，$8 \\times 3 = 24$，$8 \\times 4 = 32$（超過 30 了），所以最大的是 $24$。",
+                    hint: "把 $8$ 的倍數依序乘出來：$8, 16, 24, 32 \\dots$，找出不超過 30 的最大數字。",
                     rescueHTML: `
-                        <div class="space-y-2 text-center">
-                            <p class="text-base text-slate-700">使用短除法把左側共同的質因數相乘：</p>
-                            ${shortDivHTML}
-                            <p class="text-indigo-700 font-bold text-lg">左側所有質因數相乘就是答案喔！</p>
-                        </div>`
-                };
-            } else {
-                const wrongChoices = [5, 7, 8, 9, 10, 11, 14, 15, 16, 20].filter(x => !commonFactors.includes(x));
-                const answer = commonFactors[Math.floor(Math.random() * commonFactors.length)];
-                const distractors = wrongChoices.sort(() => Math.random() - 0.5).slice(0, 3);
-                const options = [answer, ...distractors].sort(() => Math.random() - 0.5);
-
-                return {
-                    type: 'mc',
-                    prompt: `下列哪一個數是 $${a}$ 和 $${b}$ 的「公因數」？`,
-                    options: options.map(o => `$${o}$`),
-                    answerIndex: options.indexOf(answer),
-                    explanation: `$${a}$ 和 $${b}$ 都能被 $${answer}$ 整除，所以 $${answer}$ 是兩者的公因數。`,
-                    rescueHTML: `
-                        <div class="space-y-2 text-center">
-                            <p class="text-base text-slate-700">找出同時能整除 $${a}$ 和 $${b}$ 的數字：</p>
-                            ${shortDivHTML}
-                        </div>`
-                };
-            }
-        }
-
-        function generateStage3Question() {
-            const pair = LCM_PAIRS[Math.floor(Math.random() * LCM_PAIRS.length)];
-            const a = pair[0], b = pair[1];
-            const ansLcm = lcm(a, b);
-            const shortDivHTML = generateShortDivisionHTML(a, b, true);
-
-            if (Math.random() > 0.4) {
-                return {
-                    type: 'input',
-                    prompt: `請計算 $${a}$ 和 $${b}$ 的「最小公倍數」是多少？`,
-                    answer: ansLcm.toString(),
-                    placeholder: "輸入最小公倍數...",
-                    explanation: `$${a}$ 的倍數有 $${a}, ${a*2}, ${a*3}...$；$${b}$ 的倍數有 $${b}, ${b*2}, ${b*3}...$，最小的共同倍數是 $${ansLcm}$。`,
-                    rescueHTML: `
-                        <div class="space-y-2 text-center">
-                            <p class="text-base text-slate-700">使用短除法，將<b>左側除數</b>與<b>底部數字</b>（L 型）全部相乘：</p>
-                            ${shortDivHTML}
-                        </div>`
-                };
-            } else {
-                const multipleK = Math.floor(Math.random() * 3) + 2;
-                const answer = ansLcm * multipleK;
-                const distractors = [answer + 3, answer - 4, answer + 5].filter(x => x % ansLcm !== 0);
-                const options = [answer, ...distractors].sort(() => Math.random() - 0.5);
-
-                return {
-                    type: 'mc',
-                    prompt: `下列哪一個數是 $${a}$ 和 $${b}$ 的「公倍數」？`,
-                    options: options.map(o => `$${o}$`),
-                    answerIndex: options.indexOf(answer),
-                    explanation: `$${a}$ 和 $${b}$ 的最小公倍數是 $${ansLcm}$，而 $${ansLcm} \\times ${multipleK} = ${answer}$，所以 $${answer}$ 是它們的公倍數。`,
-                    rescueHTML: `
-                        <div class="space-y-2 text-center">
-                            <p class="text-base text-slate-700">公倍數一定是最小公倍數的倍數！先求出最小公倍數：</p>
-                            ${shortDivHTML}
-                        </div>`
-                };
-            }
-        }
-
-        function generateStage4Question() {
-            const scenarios = [
-                {
-                    prompt: `老師有 $24$ 顆巧克力和 $36$ 顆水果糖，想平分裝在禮盒裡，每個禮盒裡的巧克力一樣多，水果糖也一樣多。請問<b>最多可以分裝成幾個禮盒</b>？`,
-                    answer: "12",
-                    explanation: `「最多可以分裝成幾個禮盒」是求 $24$ 和 $36$ 的<b>最大公因數</b>。$(24, 36) = 12$，所以最多可分裝成 $12$ 個禮盒。`,
-                    rescueHTML: `<div class="space-y-2 text-center"><p class="text-base text-slate-700">平分東西且求「最多幾盒」＝ 求<b>最大公因數</b>：</p>${generateShortDivisionHTML(24, 36, false)}</div>`
+                        <p class="font-bold text-slate-700">把 $8$ 的倍數一個一個算出來比對：</p>
+                        <ul class="list-disc pl-5 space-y-1 text-slate-700 mt-1">
+                            <li>$8 \\times 1 = 8$</li>
+                            <li>$8 \\times 2 = 16$</li>
+                            <li><strong class="text-rose-600">$8 \\times 3 = 24$</strong> （還在 30 以內！）</li>
+                            <li>$8 \\times 4 = 32$ （超過 30 囉！）</li>
+                        </ul>
+                    `
                 },
                 {
-                    prompt: `公車 $6$ 號每 $12$ 分鐘發一班車，公車 $8$ 號每 $18$ 分鐘發一班車。早上 $8:00$ 兩班車同時從總站出發，請問<b>最少過幾分鐘後</b>，兩班車會再次同時發車？`,
-                    answer: "36",
-                    explanation: `求「再次同時發生」的最少時間，是求 $12$ 和 $18$ 的<b>最小公倍數</b>。$[12, 18] = 36$，所以 $36$ 分鐘後會再次同時發車。`,
-                    rescueHTML: `<div class="space-y-2 text-center"><p class="text-base text-slate-700">同時出發且求「最少幾分鐘再次同時」＝ 求<b>最小公倍數</b>：</p>${generateShortDivisionHTML(12, 18, true)}</div>`
+                    type: 'choice',
+                    prompt: "關於「因數與倍數」的敘述，下列哪一項是<strong>正確的</strong>？",
+                    options: [
+                        "任何大於 0 的整數，最小的因數都是 0",
+                        "一個數的倍數有無限多個",
+                        "12 的因數只有 2, 3, 4, 6",
+                        "5 的倍數只有 5, 10, 15, 20"
+                    ],
+                    correctIndex: 1,
+                    explanation: "因為整數可以一直乘以 $1, 2, 3, 4 \\dots$ 無限延伸下去，所以一個數的倍數有無限多個！",
+                    hint: "思考一下：一個數字可以乘以 $1, 2, 3, 4, 5 \\dots$ 到多大呢？",
+                    rescueHTML: `
+                        <p class="font-bold text-slate-700 mb-2">我們一起逐條檢查每個選項：</p>
+                        <ul class="list-disc pl-5 space-y-1 text-slate-700">
+                            <li>最小的因數永遠是 <strong>1</strong>（不能除以 0）。</li>
+                            <li>12 的因數還要加上 <strong>1 和 12</strong> 才完整。</li>
+                            <li>一個數可以無限往後乘，所以倍數有<strong class="text-emerald-700">無限多個</strong>！</li>
+                        </ul>
+                    `
                 },
                 {
-                    prompt: `小美有一張長 $20$ 公分、寬 $15$ 公分的長方形卡紙，她想把它剪成數個大小相同、邊長為整數的正方形，且<b>不能有剩餘的紙</b>。請問正方形的<b>邊長最大是幾公分</b>？`,
-                    answer: "5",
-                    explanation: `要剛好剪完長和寬，正方形邊長必須同時整除 $20$ 和 $15$，求「最大邊長」即為<b>最大公因數</b> $(20, 15) = 5$ 公分。`,
-                    rescueHTML: `<div class="space-y-2 text-center"><p class="text-base text-slate-700">分割長方形且求「正方形最大邊長」＝ 求<b>最大公因數</b>：</p>${generateShortDivisionHTML(20, 15, false)}</div>`
-                },
-                {
-                    prompt: `小華用長 $6$ 公分、寬 $4$ 公分的長方形磁磚，要拼成一個實心的正方形，請問拼成的<b>最小正方形邊長是多少公分</b>？`,
-                    answer: "12",
-                    explanation: `要用長 $6$、寬 $4$ 的磁磚拼成正方形，邊長必須是 $6$ 和 $4$ 的<b>最小公倍數</b>。$[6, 4] = 12$ 公分。`,
-                    rescueHTML: `<div class="space-y-2 text-center"><p class="text-base text-slate-700">小磁磚拼大正方形且求「最小邊長」＝ 求<b>最小公倍數</b>：</p>${generateShortDivisionHTML(6, 4, true)}</div>`
-                },
-                {
-                    prompt: `男生有 $30$ 人，女生有 $45$ 人，一起去露營要分組，每組男生人數一樣多，女生人數也一樣多。請問<b>最多可以分成幾組</b>？`,
-                    answer: "15",
-                    explanation: `分組問題求「最多分幾組」，是求 $30$ 和 $45$ 的<b>最大公因數</b> $(30, 45) = 15$ 組。`,
-                    rescueHTML: `<div class="space-y-2 text-center"><p class="text-base text-slate-700">男女生平均分組且求「最多幾組」＝ 求<b>最大公因數</b>：</p>${generateShortDivisionHTML(30, 45, false)}</div>`
+                    type: 'choice',
+                    prompt: "在 1 到 20 的整數中，下列哪一個數字是<strong>質數</strong>？",
+                    options: ["9", "15", "17", "21"],
+                    correctIndex: 2,
+                    explanation: "因為 $17$ 只有 $1$ 和 $17$ 兩個因數，無法再拆成其他整數相乘，所以 $17$ 是質數（$9=3\\times3$、$15=3\\times5$、$21=3\\times7$ 都是合數）。",
+                    hint: "檢查每個數字除了 1 和自己之外，還能被誰整除？",
+                    rescueHTML: `
+                        <ul class="list-disc pl-5 space-y-1 text-slate-700">
+                            <li>$9 = 3 \\times 3$（有 3 個因數，是合數）</li>
+                            <li>$15 = 3 \\times 5$（有 4 個因數，是合數）</li>
+                            <li><strong class="text-emerald-700">$17 = 1 \\times 17$</strong>（只有 2 個因數，是質數！）</li>
+                        </ul>
+                    `
                 }
-            ];
-
-            const chosen = scenarios[Math.floor(Math.random() * scenarios.length)];
-            return {
-                type: 'input',
-                prompt: chosen.prompt,
-                answer: chosen.answer,
-                placeholder: "請輸入數字答案...",
-                explanation: chosen.explanation,
-                rescueHTML: chosen.rescueHTML
-            };
-        }
+            ],
+            2: [
+                {
+                    type: 'input',
+                    prompt: "請計算 <strong>18 與 24 的最大公因數</strong>是多少？（請輸入數字）",
+                    answer: "6",
+                    explanation: "$18$ 的因數有 $1, 2, 3, 6, 9, 18$；$24$ 的因數有 $1, 2, 3, 4, 6, 8, 12, 24$，兩者最大的公因數為 $6$。",
+                    hint: "使用短除法！先用 $2$ 除，再用 $3$ 除，把左邊的數字相乘！",
+                    rescueHTML: `
+                        <div class="flex flex-col items-center">
+                            ${generateShortDivisionHTML(18, 24, false)}
+                            <p class="mt-3 font-bold text-indigo-800">把左邊的公因數相乘：$2 \\times 3 = \\mathbf{6}$</p>
+                        </div>
+                    `
+                },
+                {
+                    type: 'choice',
+                    prompt: "下列哪一個數字<strong>是 16 與 24 的公因數</strong>？",
+                    options: ["3", "6", "8", "12"],
+                    correctIndex: 2,
+                    explanation: "$16 \\div 8 = 2$ 且 $24 \\div 8 = 3$，$8$ 同時是 $16$ 與 $24$ 的因數，所以 $8$ 是它們的公因數。",
+                    hint: "把選項帶入看看，哪個數字可以同時整除 $16$ 和 $24$？",
+                    rescueHTML: `
+                        <p class="font-bold text-slate-700 mb-2">列出兩數的因數比對：</p>
+                        <div class="bg-white p-3 rounded-xl border border-amber-200 space-y-1 text-slate-700">
+                            <div>$16$ 的因數：1, 2, 4, <strong class="text-rose-600">8</strong>, 16</div>
+                            <div>$24$ 的因數：1, 2, 3, 4, 6, <strong class="text-rose-600">8</strong>, 12, 24</div>
+                        </div>
+                    `
+                },
+                {
+                    type: 'input',
+                    prompt: "請計算 <strong>20 與 30 的最大公因數</strong>是多少？（請輸入數字）",
+                    answer: "10",
+                    explanation: "用短除法先用 $2$ 除得 $10, 15$，再用 $5$ 除得 $2, 3$，左側相乘 $2 \\times 5 = 10$。",
+                    hint: "$20$ 和 $30$ 的個位數都是 $0$，可以先用質因數 $2$ 和 $5$ 來短除！",
+                    rescueHTML: `
+                        <div class="flex flex-col items-center">
+                            ${generateShortDivisionHTML(20, 30, false)}
+                            <p class="mt-3 font-bold text-indigo-800">左邊除數相乘：$2 \\times 5 = \\mathbf{10}$</p>
+                        </div>
+                    `
+                },
+                {
+                    type: 'choice',
+                    prompt: "<strong>15 與 25 的最大公因數</strong>是多少？",
+                    options: ["1", "3", "5", "15"],
+                    correctIndex: 2,
+                    explanation: "$15$ 和 $25$ 共同擁有的最大因數是 $5$（$15 = 5 \\times 3$，$25 = 5 \\times 5$）。",
+                    hint: "觀察 $15$ 和 $25$ 都可以被哪個數字整除？",
+                    rescueHTML: `
+                        <div class="flex flex-col items-center">
+                            ${generateShortDivisionHTML(15, 25, false)}
+                            <p class="mt-3 font-bold text-indigo-800">只有一個共同質因數，最大公因數就是 $\\mathbf{5}$！</p>
+                        </div>
+                    `
+                },
+                {
+                    type: 'choice',
+                    prompt: "已知 $A = 2^3 \\times 3^2$，$B = 2^2 \\times 3^3 \\times 5$，請問 $A$ 與 $B$ 的<strong>最大公因數</strong>為何？（7上標準分解式題型）",
+                    options: ["$2^2 \\times 3^2$", "$2^3 \\times 3^3$", "$2^2 \\times 3^2 \\times 5$", "$2^3 \\times 3^3 \\times 5$"],
+                    correctIndex: 0,
+                    explanation: "利用標準分解式求最大公因數：只取「兩者共同擁有」的質因數（2 和 3），且次方取「較小」的，因此為 $2^2 \\times 3^2$。",
+                    hint: "口訣：最大公因數「取共同底數，次方取小」！（5 只有 B 有，不能取喔）",
+                    rescueHTML: `
+                        <p class="font-bold text-slate-700">比較相同底數的次方大小：</p>
+                        <ul class="list-disc pl-5 space-y-1 text-slate-700 mt-1">
+                            <li>底數 $2$：$2^3$ 與 $2^2$ 共同擁有，取較小次方 $\\mathbf{2^2}$</li>
+                            <li>底數 $3$：$3^2$ 與 $3^3$ 共同擁有，取較小次方 $\\mathbf{3^2}$</li>
+                            <li>底數 $5$：只有 $B$ 有，$A$ 沒有，所以不取！</li>
+                        </ul>
+                    `
+                }
+            ],
+            3: [
+                {
+                    type: 'input',
+                    prompt: "請計算 <strong>6 與 8 的最小公倍數</strong>是多少？（請輸入數字）",
+                    answer: "24",
+                    explanation: "$6$ 的倍數有 $6, 12, 18, 24, 30 \\dots$；$8$ 的倍數有 $8, 16, 24, 32 \\dots$，第一個共同倍數是 $24$。",
+                    hint: "用短除法！先用 $2$ 除得 $3, 4$，再把 $2 \\times 3 \\times 4$ 全部乘起來！",
+                    rescueHTML: `
+                        <div class="flex flex-col items-center">
+                            ${generateShortDivisionHTML(6, 8, true)}
+                            <p class="mt-3 font-bold text-teal-800">左邊與底部全部相乘：$2 \\times 3 \\times 4 = \\mathbf{24}$</p>
+                        </div>
+                    `
+                },
+                {
+                    type: 'choice',
+                    prompt: "下列哪一個數字<strong>是 4 與 6 的公倍數</strong>？",
+                    options: ["10", "16", "24", "30"],
+                    correctIndex: 2,
+                    explanation: "$24 \\div 4 = 6$ 且 $24 \\div 6 = 4$，所以 $24$ 同時是 $4$ 與 $6$ 的倍數。",
+                    hint: "看看哪一個選項可以同時被 $4$ 和 $6$ 整除？",
+                    rescueHTML: `
+                        <p class="font-bold text-slate-700 mb-2">列出兩數的倍數：</p>
+                        <div class="bg-white p-3 rounded-xl border border-amber-200 space-y-1 text-slate-700">
+                            <div>$4$ 的倍數：4, 8, <strong class="text-rose-600">12</strong>, 16, 20, <strong class="text-rose-600">24</strong>...</div>
+                            <div>$6$ 的倍數：6, <strong class="text-rose-600">12</strong>, 18, <strong class="text-rose-600">24</strong>, 30...</div>
+                        </div>
+                    `
+                },
+                {
+                    type: 'input',
+                    prompt: "請計算 <strong>9 與 12 的最小公倍數</strong>是多少？（請輸入數字）",
+                    answer: "36",
+                    explanation: "用短除法先用 $3$ 除得 $3, 4$，將左側與下方數字全部相乘：$3 \\times 3 \\times 4 = 36$。",
+                    hint: "$9$ 與 $12$ 可以用 $3$ 進行短除，算算看 $3 \\times 3 \\times 4$ 是多少？",
+                    rescueHTML: `
+                        <div class="flex flex-col items-center">
+                            ${generateShortDivisionHTML(9, 12, true)}
+                            <p class="mt-3 font-bold text-teal-800">L 型全部相乘：$3 \\times 3 \\times 4 = \\mathbf{36}$</p>
+                        </div>
+                    `
+                },
+                {
+                    type: 'choice',
+                    prompt: "<strong>10 與 15 的最小公倍數</strong>是多少？",
+                    options: ["5", "25", "30", "150"],
+                    correctIndex: 2,
+                    explanation: "$10$ 的倍數：$10, 20, 30 \\dots$；$15$ 的倍數：$15, 30, 45 \\dots$，最小公倍數是 $30$。",
+                    hint: "注意別直接把 $10 \\times 15 = 150$ 喔！先用短除法除以 $5$ 看看！",
+                    rescueHTML: `
+                        <div class="flex flex-col items-center">
+                            ${generateShortDivisionHTML(10, 15, true)}
+                            <p class="mt-3 font-bold text-teal-800">L 型全部相乘：$5 \\times 2 \\times 3 = \\mathbf{30}$</p>
+                        </div>
+                    `
+                },
+                {
+                    type: 'choice',
+                    prompt: "已知 $A = 2^2 \\times 3^3$，$B = 2^3 \\times 3 \\times 7$，請問 $A$ 與 $B$ 的<strong>最小公倍數</strong>為何？（7上標準分解式題型）",
+                    options: ["$2^2 \\times 3$", "$2^3 \\times 3^3$", "$2^3 \\times 3^3 \\times 7$", "$2^2 \\times 3 \\times 7$"],
+                    correctIndex: 2,
+                    explanation: "利用標準分解式求最小公倍數：所有出現過的質因數（2、3、7）全部都要取，且次方取「較大」的，因此為 $2^3 \\times 3^3 \\times 7$。",
+                    hint: "口訣：最小公倍數「所有底數都要取，次方取大」！",
+                    rescueHTML: `
+                        <p class="font-bold text-slate-700">比較所有質因數底數的最大次方：</p>
+                        <ul class="list-disc pl-5 space-y-1 text-slate-700 mt-1">
+                            <li>底數 $2$：$2^2$ 與 $2^3$ 取較大次方 $\\mathbf{2^3}$</li>
+                            <li>底數 $3$：$3^3$ 與 $3^1$ 取較大次方 $\\mathbf{3^3}$</li>
+                            <li>底數 $7$：只有 $B$ 有，公倍數必須包含所有因數，取 $\\mathbf{7}$</li>
+                        </ul>
+                    `
+                }
+            ],
+            4: [
+                {
+                    type: 'input',
+                    prompt: "老師買了 <strong>24 顆蘋果</strong>和 <strong>36 顆橘子</strong>，要平分裝進禮盒裡，每個禮盒裡的蘋果一樣多、橘子也一樣多，<strong>最多可以裝成幾盒</strong>？（請輸入數字）",
+                    answer: "12",
+                    explanation: "要平分裝成「最多盒」，就是在求 $24$ 與 $36$ 的<strong>最大公因數</strong>。用短除法可得 $2 \\times 2 \\times 3 = 12$ 盒。",
+                    hint: "關鍵字「平分」、「最多幾盒」 $\\rightarrow$ 這是在求「最大公因數」喔！",
+                    rescueHTML: `
+                        <div class="flex flex-col items-center">
+                            <p class="font-bold text-slate-700 mb-2">求 24 與 36 的最大公因數：</p>
+                            ${generateShortDivisionHTML(24, 36, false)}
+                            <p class="mt-3 font-bold text-indigo-800">左側公因數相乘：$2 \\times 2 \\times 3 = \\mathbf{12}$ 盒</p>
+                        </div>
+                    `
+                },
+                {
+                    type: 'input',
+                    prompt: "公車 1 號每 <strong>12 分鐘</strong>發一班車，公車 2 號每 <strong>18 分鐘</strong>發一班車。早上 8:00 兩車同時發車後，<strong>至少要經過幾分鐘</strong>才會再次同時發車？（請輸入數字）",
+                    answer: "36",
+                    explanation: "同時發車的時間點是兩者發車間隔的<strong>最小公倍數</strong>。求 $12$ 與 $18$ 的最小公倍數為 $36$ 分鐘。",
+                    hint: "關鍵字「同時發車」、「再次相遇」 $\\rightarrow$ 這是在求「最小公倍數」喔！",
+                    rescueHTML: `
+                        <div class="flex flex-col items-center">
+                            <p class="font-bold text-slate-700 mb-2">求 12 與 18 的最小公倍數：</p>
+                            ${generateShortDivisionHTML(12, 18, true)}
+                            <p class="mt-3 font-bold text-teal-800">L 型全部相乘：$2 \\times 3 \\times 2 \\times 3 = \\mathbf{36}$ 分鐘</p>
+                        </div>
+                    `
+                },
+                {
+                    type: 'choice',
+                    prompt: "用長 <strong>8 公分</strong>、寬 <strong>6 公分</strong>的長方形磁磚，要拼成一個<strong>最小的正方形</strong>，請問這個正方形的邊長是多少公分？",
+                    options: ["14 公分", "24 公分", "36 公分", "48 公分"],
+                    correctIndex: 1,
+                    explanation: "正方形的四條邊一樣長，所以邊長必須是 $8$ 和 $6$ 的<strong>最小公倍數</strong>，計算可得 $24$ 公分。",
+                    hint: "用小磁磚「向外拼成」更大的正方形 $\\rightarrow$ 邊長要找 $8$ 和 $6$ 的「最小公倍數」！",
+                    rescueHTML: `
+                        <div class="flex flex-col items-center">
+                            <p class="font-bold text-slate-700 mb-2">求 8 與 6 的最小公倍數：</p>
+                            ${generateShortDivisionHTML(8, 6, true)}
+                            <p class="mt-3 font-bold text-teal-800">L 型全部相乘：$2 \\times 4 \\times 3 = \\mathbf{24}$ 公分</p>
+                        </div>
+                    `
+                },
+                {
+                    type: 'input',
+                    prompt: "一張長 <strong>30 公分</strong>、寬 <strong>20 公分</strong>的長方形色紙，要剪成數個大小相同且最大的正方形（不能有剩餘），請問<strong>正方形的邊長最大是多少公分</strong>？（請輸入數字）",
+                    answer: "10",
+                    explanation: "把大色紙「向內切割」成正方形且不剩餘，正方形邊長必須是 $30$ 與 $20$ 的<strong>最大公因數</strong>，為 $10$ 公分。",
+                    hint: "把大色紙「向內裁剪」成小正方形 $\\rightarrow$ 邊長要找 $30$ 和 $20$ 的「最大公因數」！",
+                    rescueHTML: `
+                        <div class="flex flex-col items-center">
+                            <p class="font-bold text-slate-700 mb-2">求 30 與 20 的最大公因數：</p>
+                            ${generateShortDivisionHTML(30, 20, false)}
+                            <p class="mt-3 font-bold text-indigo-800">左側公因數相乘：$2 \\times 5 = \\mathbf{10}$ 公分</p>
+                        </div>
+                    `
+                },
+                {
+                    type: 'input',
+                    prompt: "一袋糖果數量在 <strong>40 到 50 顆之間</strong>，如果每 6 顆裝一盒或每 8 顆裝一盒都<strong>剛好分完沒有剩下</strong>，請問這袋糖果有幾顆？（請輸入數字）",
+                    answer: "48",
+                    explanation: "糖果數量既是 $6$ 的倍數，也是 $8$ 的倍數（公倍數）。$6$ 和 $8$ 的最小公倍數是 $24$，下一個公倍數是 $24 \\times 2 = 48$，剛好落在 40 到 50 之間！",
+                    hint: "先求出 $6$ 與 $8$ 的最小公倍數 $24$，再乘以 $2$ 倍找出介於 $40 \\sim 50$ 的數字！",
+                    rescueHTML: `
+                        <p class="font-bold text-slate-700 mb-2">先找 $6$ 和 $8$ 的公倍數：</p>
+                        <div class="bg-white p-3 rounded-xl border border-amber-200 text-slate-700 font-bold space-y-1">
+                            <div>最小公倍數：$24$ （不在 40~50 之間）</div>
+                            <div>第 2 個公倍數：$24 \\times 2 = \\mathbf{48}$ （剛好在 40~50 之間！）</div>
+                        </div>
+                    `
+                }
+            ]
+        };
 
         function startQuizStage(stageNum) {
             gameState.currentStage = stageNum;
-            gameState.currentWrongCount = 0;
-
+            gameState.lastPrompt = '';
             document.getElementById('quizStageSelectScreen').classList.add('hidden');
             document.getElementById('activeQuizArea').classList.remove('hidden');
 
-            const stageNames = ["", "關卡 1：因倍數", "關卡 2：公因數與最大公因數", "關卡 3：公倍數與最小公倍數", "關卡 4：生活應用大挑戰"];
+            const stageNames = {
+                1: "關卡 1：因倍數",
+                2: "關卡 2：公因數與最大公因數",
+                3: "關卡 3：公倍數與最小公倍數",
+                4: "關卡 4：生活應用大挑戰"
+            };
             document.getElementById('currentStageBadge').innerText = stageNames[stageNum];
-
-            loadNextQuestion();
+            loadRandomQuestion();
         }
 
         function exitQuizToStageSelect() {
-            const selectScreen = document.getElementById('quizStageSelectScreen');
+            const stageSelect = document.getElementById('quizStageSelectScreen');
             const activeArea = document.getElementById('activeQuizArea');
-            if (selectScreen) selectScreen.classList.remove('hidden');
+            if (stageSelect) stageSelect.classList.remove('hidden');
             if (activeArea) activeArea.classList.add('hidden');
             gameState.currentQuestion = null;
+        }
+
+        function loadRandomQuestion() {
+            const stageQuestions = QUESTION_BANK[gameState.currentStage];
+            if (!stageQuestions || stageQuestions.length === 0) return;
+
+            let candidateQuestions = stageQuestions;
+            if (stageQuestions.length > 1 && gameState.lastPrompt) {
+                candidateQuestions = stageQuestions.filter(q => q.prompt !== gameState.lastPrompt);
+            }
+
+            const chosen = candidateQuestions[Math.floor(Math.random() * candidateQuestions.length)];
+            gameState.currentQuestion = chosen;
+            gameState.lastPrompt = chosen.prompt;
             gameState.selectedOptionIndex = null;
             gameState.currentWrongCount = 0;
+
+            const qContainer = document.getElementById('quizQuestionContainer');
+            const aArea = document.getElementById('quizAnswerArea');
+            const feedbackBox = document.getElementById('quizFeedbackBox');
+            const actionContainer = document.getElementById('quizActionContainer');
+
+            const rescueCard = document.getElementById('quizRescueCard');
+            const btnRescueText = document.getElementById('btnQuizRescueText');
+            const rescueContent = document.getElementById('quizRescueContent');
+            if (rescueCard) rescueCard.classList.add('hidden');
+            if (btnRescueText) btnRescueText.innerText = '💡 需要提示救援嗎？（點擊展開短除法步驟圖解）';
+            if (rescueContent) rescueContent.innerHTML = chosen.rescueHTML || '觀察兩數的因倍數關係再算算看喔！';
+
+            feedbackBox.classList.add('hidden');
+            actionContainer.innerHTML = `
+                <button id="btnSubmitAnswer" onclick="submitCurrentAnswer()" class="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-extrabold rounded-2xl shadow-lg hover:shadow-indigo-300 hover:opacity-95 active:scale-98 transition-all text-lg cursor-pointer">
+                    提交答案
+                </button>
+            `;
+
+            qContainer.innerHTML = chosen.prompt;
+
+            if (chosen.type === 'choice') {
+                const letters = ['A', 'B', 'C', 'D'];
+                let optHTML = '<div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">';
+                chosen.options.forEach((optText, idx) => {
+                    optHTML += `
+                        <button onclick="selectChoiceOption(${idx})" id="quiz-opt-btn-${idx}" class="quiz-option-btn p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-indigo-400 hover:bg-indigo-50/40 text-left font-bold text-slate-700 text-lg transition-all flex items-center gap-3.5 cursor-pointer shadow-sm">
+                            <span class="w-9 h-9 rounded-xl bg-slate-100 text-slate-600 font-extrabold flex items-center justify-center shrink-0 border border-slate-200 opt-letter">${letters[idx]}</span>
+                            <span class="flex-1">${optText}</span>
+                        </button>
+                    `;
+                });
+                optHTML += '</div>';
+                aArea.innerHTML = optHTML;
+            } else {
+                aArea.innerHTML = `
+                    <div class="space-y-2">
+                        <label class="text-sm font-bold text-slate-500">請在下方輸入數字答案：</label>
+                        <input type="text" id="quizTextInput" placeholder="請在此輸入答案..." class="w-full p-4 rounded-2xl border-2 border-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white font-extrabold text-2xl text-indigo-900 shadow-inner">
+                    </div>
+                `;
+            }
+
+            triggerMathJax(qContainer);
+            triggerMathJax(aArea);
+            if (rescueContent) triggerMathJax(rescueContent);
         }
 
         function toggleQuizRescueHint() {
             const card = document.getElementById('quizRescueCard');
             const btnText = document.getElementById('btnQuizRescueText');
+            if (!card || !btnText) return;
+
             if (card.classList.contains('hidden')) {
                 card.classList.remove('hidden');
-                btnText.innerText = "收起提示救援卡";
+                btnText.innerText = '▲ 收起救援步驟圖解';
+                triggerMathJax(card);
             } else {
                 card.classList.add('hidden');
-                btnText.innerText = "💡 需要提示救援嗎？（點擊展開短除法步驟圖解）";
+                btnText.innerText = '💡 需要提示救援嗎？（點擊展開短除法步驟圖解）';
             }
         }
 
-        function loadNextQuestion() {
-            let q = null;
-            let tries = 0;
-            do {
-                if (gameState.currentStage === 1) q = generateStage1Question();
-                else if (gameState.currentStage === 2) q = generateStage2Question();
-                else if (gameState.currentStage === 3) q = generateStage3Question();
-                else q = generateStage4Question();
-                tries++;
-            } while (q.prompt === gameState.lastPrompt && tries < 10);
-
-            gameState.lastPrompt = q.prompt;
-            gameState.currentQuestion = q;
-            gameState.selectedOptionIndex = null;
-            gameState.currentWrongCount = 0;
-
-            const rescueCard = document.getElementById('quizRescueCard');
-            const btnRescueText = document.getElementById('btnQuizRescueText');
-            if (rescueCard) rescueCard.classList.add('hidden');
-            if (btnRescueText) btnRescueText.innerText = "💡 需要提示救援嗎？（點擊展開短除法步驟圖解）";
-            document.getElementById('quizRescueContent').innerHTML = q.rescueHTML || "<p>再仔細思考題目關鍵字喔！</p>";
-
-            const qContainer = document.getElementById('quizQuestionContainer');
-            const ansArea = document.getElementById('quizAnswerArea');
-            const feedbackBox = document.getElementById('quizFeedbackBox');
-            const btnSubmit = document.getElementById('btnSubmitAnswer');
-
-            feedbackBox.classList.add('hidden');
-            btnSubmit.classList.remove('hidden');
-            btnSubmit.disabled = false;
-            btnSubmit.innerText = "提交答案";
-
-            qContainer.innerHTML = q.prompt;
-
-            if (q.type === 'mc') {
-                let optionsHTML = '<div class="grid grid-cols-1 md:grid-cols-2 gap-3">';
-                q.options.forEach((opt, idx) => {
-                    optionsHTML += `
-                        <button onclick="selectQuizOption(${idx})" id="quiz-opt-${idx}" class="quiz-option-btn text-left p-4 rounded-2xl border-2 border-slate-200 hover:border-indigo-400 bg-white font-bold text-slate-700 transition-all flex items-center gap-3 cursor-pointer">
-                            <span class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-sm font-black shrink-0">${['A', 'B', 'C', 'D'][idx]}</span>
-                            <span class="text-lg">${opt}</span>
-                        </button>`;
-                });
-                optionsHTML += '</div>';
-                ansArea.innerHTML = optionsHTML;
-            } else {
-                ansArea.innerHTML = `
-                    <div class="max-w-md mx-auto">
-                        <input type="number" id="quizTextInput" min="1" placeholder="${q.placeholder}" class="w-full p-4 rounded-2xl border-2 border-indigo-200 focus:border-indigo-600 focus:outline-none text-center text-2xl font-black text-indigo-900 bg-indigo-50/30 shadow-inner" oninput="if(this.value<1)this.value=''" onkeypress="if(event.key==='Enter') submitCurrentAnswer()">
-                    </div>`;
-            }
-
-            triggerMathJax(document.getElementById('activeQuizArea'));
-        }
-
-        function selectQuizOption(idx) {
-            gameState.selectedOptionIndex = idx;
-            document.querySelectorAll('.quiz-option-btn').forEach((btn, i) => {
-                btn.classList.remove('border-indigo-600', 'bg-indigo-50', 'ring-2', 'ring-indigo-300');
-                btn.classList.add('border-slate-200', 'bg-white');
-                if (i === idx) {
-                    btn.classList.remove('border-slate-200', 'bg-white');
-                    btn.classList.add('border-indigo-600', 'bg-indigo-50', 'ring-2', 'ring-indigo-300');
+        function selectChoiceOption(index) {
+            gameState.selectedOptionIndex = index;
+            document.querySelectorAll('.quiz-option-btn').forEach((btn, idx) => {
+                const letterSpan = btn.querySelector('.opt-letter');
+                if (idx === index) {
+                    btn.className = "quiz-option-btn p-4 rounded-2xl border-2 border-indigo-600 bg-indigo-50 text-left font-extrabold text-indigo-900 text-lg transition-all flex items-center gap-3.5 cursor-pointer shadow-md";
+                    if (letterSpan) letterSpan.className = "w-9 h-9 rounded-xl bg-indigo-600 text-white font-extrabold flex items-center justify-center shrink-0 opt-letter";
+                } else {
+                    btn.className = "quiz-option-btn p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-indigo-400 hover:bg-indigo-50/40 text-left font-bold text-slate-700 text-lg transition-all flex items-center gap-3.5 cursor-pointer shadow-sm";
+                    if (letterSpan) letterSpan.className = "w-9 h-9 rounded-xl bg-slate-100 text-slate-600 font-extrabold flex items-center justify-center shrink-0 border border-slate-200 opt-letter";
                 }
             });
         }
@@ -4298,127 +4569,137 @@ let isLabFormulasRevealed = false;
             if (!q) return;
 
             let isCorrect = false;
+            let userAnsStr = '';
 
-            if (q.type === 'mc') {
+            if (q.type === 'choice') {
                 if (gameState.selectedOptionIndex === null) {
-                    alert("請先選擇一個選項喔！");
+                    alert("請先點選一個選項再提交喔！");
                     return;
                 }
-                isCorrect = (gameState.selectedOptionIndex === q.answerIndex);
+                isCorrect = (gameState.selectedOptionIndex === q.correctIndex);
             } else {
-                const inputVal = document.getElementById('quizTextInput').value.trim();
-                if (!inputVal) {
-                    alert("請輸入你的數字答案喔！");
+                const inputEl = document.getElementById('quizTextInput');
+                if (!inputEl) return;
+                userAnsStr = inputEl.value.trim();
+                if (!userAnsStr) {
+                    alert("請輸入你的答案再提交喔！");
                     return;
                 }
-                if (parseInt(inputVal) <= 0) {
-                    alert("請輸入大於 0 的有效正整數喔！");
-                    return;
-                }
-                isCorrect = (inputVal === q.answer);
+                isCorrect = (userAnsStr === q.answer);
             }
 
             const feedbackBox = document.getElementById('quizFeedbackBox');
-            const btnSubmit = document.getElementById('btnSubmitAnswer');
-            feedbackBox.classList.remove('hidden');
+            const actionContainer = document.getElementById('quizActionContainer');
 
             if (isCorrect) {
                 playCorrectSound();
-                triggerPetalRain(2500);
-                btnSubmit.classList.add('hidden');
+                triggerPetalRain(2200);
 
                 gameState.combo += 1;
-                gameState.totalCorrect += 1;
-
-                const stg = gameState.currentStage;
-                if (gameState.combo > (gameState.stageMaxCombo[stg] || 0)) {
-                    gameState.stageMaxCombo[stg] = gameState.combo;
+                const currentStage = gameState.currentStage;
+                if (gameState.combo > (gameState.stageMaxCombo[currentStage] || 0)) {
+                    gameState.stageMaxCombo[currentStage] = gameState.combo;
                 }
 
-                if (stg === 2 || stg === 3) {
+                gameState.totalCorrect += 1;
+                if (currentStage === 2 || currentStage === 3) {
                     gameState.gcdLcmCorrectCount += 1;
                 }
 
-                const basePoints = 10;
-                const comboBonus = gameState.combo > 1 ? (gameState.combo - 1) * 5 : 0;
-                const earnedPoints = basePoints + comboBonus;
-                gameState.score += earnedPoints;
+                const comboBonus = Math.min(gameState.combo * 5, 50);
+                const gainedStars = 10 + comboBonus;
+                gameState.score += gainedStars;
 
                 const praise = PRAISE_MESSAGES[Math.floor(Math.random() * PRAISE_MESSAGES.length)];
 
-                feedbackBox.className = "p-6 rounded-2xl space-y-4 border-2 border-emerald-400 bg-emerald-50 text-emerald-950 transition-all shadow-md";
+                feedbackBox.classList.remove('hidden');
+                feedbackBox.className = "p-6 rounded-2xl space-y-3 border-2 border-emerald-300 bg-emerald-50/90 text-emerald-950 transition-all shadow-md";
                 feedbackBox.innerHTML = `
-                    <div class="flex items-center justify-between flex-wrap gap-2">
-                        <div class="flex items-center gap-2 text-2xl font-black text-emerald-700">
-                            <i class="fa-solid fa-circle-check text-3xl"></i>
-                            <span>${praise}</span>
-                        </div>
-                        <div class="px-3.5 py-1 bg-amber-400 text-amber-950 font-black rounded-full text-sm shadow-sm">
-                            +${earnedPoints} 星 ${comboBonus > 0 ? `(含 ${gameState.combo} 連擊加碼 +${comboBonus}！)` : ''}
-                        </div>
+                    <div class="flex items-center gap-3 text-xl font-black text-emerald-700">
+                        <i class="fa-solid fa-circle-check text-2xl"></i>
+                        <span>${praise}</span>
                     </div>
-                    <div class="p-4 bg-white/80 rounded-xl border border-emerald-200 text-base leading-relaxed">
-                        <span class="font-bold text-emerald-800 block mb-1">💡 詳解：</span>
-                        ${q.explanation}
+                    <div class="flex flex-wrap gap-2 text-sm font-extrabold">
+                        <span class="px-3 py-1 bg-amber-100 text-amber-800 rounded-full">+${gainedStars} 星星積分</span>
+                        <span class="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full">+25 EXP 經驗值</span>
+                        ${gameState.combo >= 2 ? `<span class="px-3 py-1 bg-orange-100 text-orange-700 rounded-full">🔥 ${gameState.combo} 連擊加分！</span>` : ''}
                     </div>
-                    <button onclick="loadNextQuestion()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold rounded-2xl shadow-lg transition-all text-lg flex items-center justify-center gap-2 cursor-pointer">
+                    <div class="p-4 bg-white/80 rounded-xl border border-emerald-200 text-slate-700 text-base leading-relaxed">
+                        <span class="font-bold text-emerald-800">解析說明：</span>${q.explanation}
+                    </div>
+                `;
+
+                actionContainer.innerHTML = `
+                    <button onclick="loadRandomQuestion()" class="w-full py-4 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-extrabold rounded-2xl shadow-lg hover:opacity-95 active:scale-98 transition-all text-lg cursor-pointer flex items-center justify-center gap-2">
                         <span>挑戰下一題</span> <i class="fa-solid fa-arrow-right"></i>
-                    </button>`;
+                    </button>
+                `;
 
                 addExp(25);
+                triggerMathJax(feedbackBox);
+
             } else {
                 playWrongSound();
                 gameState.combo = 0;
                 gameState.currentWrongCount += 1;
-                updateGamificationUI();
-                saveGameState();
 
                 const encourage = ENCOURAGE_MESSAGES[Math.floor(Math.random() * ENCOURAGE_MESSAGES.length)];
 
-                if (gameState.currentWrongCount === 1) {
-                    feedbackBox.className = "p-6 rounded-2xl space-y-3 border-2 border-amber-400 bg-amber-50 text-amber-950 transition-all shadow-md";
-                    feedbackBox.innerHTML = `
-                        <div class="flex items-center gap-2 text-xl font-black text-amber-700">
-                            <i class="fa-solid fa-lightbulb text-2xl text-amber-500"></i>
-                            <span>${encourage}（還有再試一次的機會！）</span>
-                        </div>
-                        <p class="text-base text-slate-700 leading-relaxed">
-                            再仔細算一次看看，你一定能找出正確答案的！如果卡關了，也可以點擊上方的<b>「💡 需要提示救援嗎？」</b>查看提示喔！
-                        </p>`;
-                } else {
-                    btnSubmit.classList.add('hidden');
-                    feedbackBox.className = "p-6 rounded-2xl space-y-4 border-2 border-rose-400 bg-rose-50 text-rose-950 transition-all shadow-md";
-                    feedbackBox.innerHTML = `
-                        <div class="flex items-center gap-2 text-xl font-black text-rose-700">
-                            <i class="fa-solid fa-circle-xmark text-2xl"></i>
-                            <span>沒關係！看看解答，這題就學會囉！</span>
-                        </div>
-                        <div class="p-4 bg-white/90 rounded-xl border border-rose-200 text-base leading-relaxed">
-                            <span class="font-bold text-rose-800 block mb-1">📖 正確解答與解析：</span>
-                            ${q.explanation}
-                        </div>
-                        <button onclick="loadNextQuestion()" class="w-full py-4 bg-rose-600 hover:bg-rose-700 text-white font-extrabold rounded-2xl shadow-lg transition-all text-lg flex items-center justify-center gap-2 cursor-pointer">
-                            <span>學會了！繼續下一題</span> <i class="fa-solid fa-arrow-right"></i>
-                        </button>`;
-                }
-            }
+                feedbackBox.classList.remove('hidden');
+                feedbackBox.className = "p-6 rounded-2xl space-y-3 border-2 border-rose-300 bg-rose-50/90 text-rose-950 transition-all shadow-md";
 
-            triggerMathJax(feedbackBox);
+                if (gameState.currentWrongCount === 1) {
+                    feedbackBox.innerHTML = `
+                        <div class="flex items-center gap-3 text-xl font-black text-rose-700">
+                            <i class="fa-solid fa-circle-xmark text-2xl"></i>
+                            <span>${encourage}</span>
+                        </div>
+                        <div class="p-4 bg-white/80 rounded-xl border border-rose-200 text-slate-700 text-base leading-relaxed">
+                            <span class="font-bold text-rose-700">💡 解題小提示：</span>${q.hint}
+                        </div>
+                        <p class="text-sm font-bold text-rose-600">請重新調整你的答案後，再次按下提交按鈕吧！</p>
+                    `;
+                    if (q.type === 'input') {
+                        const inputEl = document.getElementById('quizTextInput');
+                        if (inputEl) {
+                            inputEl.value = '';
+                            inputEl.focus();
+                        }
+                    }
+                } else {
+                    const correctDisplay = q.type === 'choice' ? q.options[q.correctIndex] : q.answer;
+                    feedbackBox.innerHTML = `
+                        <div class="flex items-center gap-3 text-xl font-black text-rose-700">
+                            <i class="fa-solid fa-lightbulb text-2xl text-amber-500"></i>
+                            <span>別灰心！我們一起來看看正確解答吧！</span>
+                        </div>
+                        <div class="p-4 bg-white/90 rounded-xl border border-rose-200 text-slate-800 text-base space-y-2 leading-relaxed">
+                            <div class="text-lg font-extrabold text-indigo-900">正確答案：<span class="text-emerald-600">${correctDisplay}</span></div>
+                            <div><span class="font-bold text-slate-700">詳解說明：</span>${q.explanation}</div>
+                        </div>
+                    `;
+                    actionContainer.innerHTML = `
+                        <button onclick="loadRandomQuestion()" class="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-extrabold rounded-2xl shadow-lg hover:opacity-95 active:scale-98 transition-all text-lg cursor-pointer flex items-center justify-center gap-2">
+                            <span>繼續挑戰下一題</span> <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    `;
+                }
+
+                updateGamificationUI();
+                saveGameState();
+                triggerMathJax(feedbackBox);
+            }
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-			loadGameState();
 			initCandyChoiceGrid();
+			loadGameState();
+			updateBadgesUI();
 
 			switchTab('tab-prereq', {
-				prereqSubPage: 1,
-				conceptSubTab: 'c-sub-prime'
+				prereqSubPage: 1
 			});
-
-			checkBadgeUnlocks();
-			updateGamificationUI();
 		});
-
     </script>
 </body>
 </html>
